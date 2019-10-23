@@ -35,7 +35,7 @@ import {MatButtonModule, MatInputModule, MatSliderModule, MatDialogModule } from
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
-    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     BrowserAnimationsModule,
     MatButtonModule,
