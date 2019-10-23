@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../services/firebase.service';
 import { Router, Params } from '@angular/router';
+import { LoggerService } from '@services/logger/logger.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public firebaseService: FirebaseService,
-    private router: Router
+    private router: Router,
+    private logger: LoggerService
   ) { }
 
   ngOnInit() {

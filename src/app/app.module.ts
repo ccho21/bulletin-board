@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { RouterModule } from '@angular/router';
-import { rootRouterConfig } from './app.routes';
+// import { rootRouterConfig } from './app.routes';
+import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { AvatarDialogComponent } from './avatar-dialog/avatar-dialog.component';
@@ -34,7 +34,8 @@ import {MatButtonModule, MatInputModule, MatSliderModule, MatDialogModule } from
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(rootRouterConfig, { useHash: false }),
+    AppRoutingModule,
+    // RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     BrowserAnimationsModule,
