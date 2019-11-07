@@ -11,6 +11,10 @@ export class FirebaseService {
   getAvatars(){
       return this.db.collection('/avatar').valueChanges()
   }
+  createAvatars(){
+    return this.db.collection('/avatar')
+    .valueChanges()
+}
 
   getUser(userKey){
     return this.db.collection('users').doc(userKey).snapshotChanges();

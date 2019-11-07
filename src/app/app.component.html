@@ -17,3 +17,7 @@
  		<router-outlet></router-outlet>
 	</div>
 </div>
+<div>
+		<firebase-ui  (signInSuccessWithAuthResult)="successCallback($event)"
+		(signInFailure)="errorCallback($event)"></firebase-ui>
+</div>

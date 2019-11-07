@@ -6,19 +6,67 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { AvatarDialogComponent } from './avatar-dialog/avatar-dialog.component';
-import { EditUserComponent } from './edit-user/edit-user.component';
-import { EditUserResolver } from './edit-user/edit-user.resolver';
-import { NewUserComponent } from './new-user/new-user.component';
+import { AvatarDialogComponent } from './users/avatar-dialog/avatar-dialog.component';
+import { EditUserComponent } from './users/edit-user/edit-user.component';
+import { EditUserResolver } from './users/edit-user/edit-user.resolver';
+import { NewUserComponent } from './users/new-user/new-user.component';
 import { HomeComponent } from './home/home.component';
 
-import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { environment } from '../environments/environment';
-import { FirebaseService } from './services/firebase.service';
 
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatButtonModule, MatInputModule, MatSliderModule, MatDialogModule } from '@angular/material';
+// firebase modules
+import {FirebaseUIModule} from 'firebaseui-angular';
+import * as firebase from 'firebase/app';
+import * as firebaseui from 'firebaseui';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+
+// firebase services
+import { FirebaseService } from './services/firebase/firebase.service';
+
+import { environment } from '../environments/environment';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatSliderModule,
+  MatDialogModule
+} from '@angular/material';
+
+import { LoggerService } from '@app/services/logger/logger.service';
+import { ConsoleLoggerService } from '@services/logger/console-logger.service';
+
+
+const firebaseUiAuthConfig: firebaseui.auth.Config = {
+  signInFlow: 'popup',
+  signInOptions: [
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    // {
+    //   scopes: [
+    //     'public_profile',
+    //     'email',
+    //     'user_likes',
+    //     'user_friends'
+    //   ],
+    //   customParameters: {
+    //     'auth_type': 'reauthenticate'
+    //   },
+    //   provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID
+    // },
+    // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+    // firebase.auth.GithubAuthProvider.PROVIDER_ID,
+    {
+      requireDisplayName: false,
+      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID
+    },
+    // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+    // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+  ],
+  tosUrl: '<your-tos-link>',
+  privacyPolicyUrl: '<your-privacyPolicyUrl-link>',
+  credentialHelper: firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM
+};
 
 
 @NgModule({
@@ -38,16 +86,20 @@ import {MatButtonModule, MatInputModule, MatSliderModule, MatDialogModule } from
     // RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    AngularFireAuthModule,
+    FirebaseUIModule.forRoot(firebaseUiAuthConfig),
     BrowserAnimationsModule,
     MatButtonModule,
     MatInputModule,
     MatSliderModule,
     MatDialogModule
   ],
-  providers: [FirebaseService, EditUserResolver],
+  providers: [
+    FirebaseService,
+    EditUserResolver,
+    { provide: LoggerService, useClass: ConsoleLoggerService }
+  ],
   bootstrap: [AppComponent],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule { }
+export class AppModule {}

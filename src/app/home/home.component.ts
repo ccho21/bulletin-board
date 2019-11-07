@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from '../services/firebase.service';
+import { FirebaseService } from '../services/firebase/firebase.service';
 import { Router, Params } from '@angular/router';
-import { LoggerService } from '@services/logger/logger.service';
+import { LoggerService } from '@services/logger/logger.service'
 
 @Component({
   selector: 'app-home',
@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   constructor(
     public firebaseService: FirebaseService,
     private router: Router,
-    private logger: LoggerService
+    private logger : LoggerService
   ) { }
 
   ngOnInit() {
@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
   getData(){
     this.firebaseService.getUsers()
     .subscribe(result => {
+      this.logger.info('###', result);      
       this.items = result;
       this.age_filtered_items = result;
       this.name_filtered_items = result;
