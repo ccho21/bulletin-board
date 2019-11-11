@@ -22,6 +22,7 @@
       /* Common modules */
       "@app/*": [ "app/*" ],
       "@services/*": [ "app/services/*" ],
+      "@models/*": [ "app/models/*" ]
     }
   },
   "angularCompilerOptions": {

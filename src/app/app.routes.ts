@@ -10,3 +10,4 @@ export const rootRouterConfig: Routes = [
   { path: 'new-user', component: NewUserComponent },
   { path: 'details/:id', component: EditUserComponent, resolve:{data : EditUserResolver} }
 ];
+  

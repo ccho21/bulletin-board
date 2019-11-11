@@ -18,7 +18,7 @@ import { LoggerService } from '@app/services/logger/logger.service';
 })
 export class NewUserComponent implements OnInit {
   exampleForm: FormGroup;
-  avatarLink: string =
+  selectedPictureURL: string =
     'https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg';
 
   validation_messages = {
@@ -52,18 +52,15 @@ export class NewUserComponent implements OnInit {
       height: '400px',
       width: '400px'
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      this.logger.info('###', result);
+      this.logger.info('### after closed', result);
       if (result) {
-        this.avatarLink = result.link;
+        this.selectedPictureURL = result.url;
       }
     });
   }
 
   resetFields() {
-    this.avatarLink =
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg';
     this.exampleForm = this.fb.group({
       name: new FormControl('', Validators.required),
       surname: new FormControl('', Validators.required),
@@ -72,7 +69,7 @@ export class NewUserComponent implements OnInit {
   }
 
   onSubmit(value) {
-    this.firebaseService.createUser(value, this.avatarLink).then(res => {
+    this.firebaseService.createUser(value, this.selectedPictureURL).then(res => {
       this.resetFields();
       this.router.navigate(['/home']);
     });

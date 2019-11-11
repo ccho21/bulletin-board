@@ -1,31 +1,9 @@
+// angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-// import { rootRouterConfig } from './app.routes';
-import { AppRoutingModule } from './app-routing.module';
-
-import { AppComponent } from './app.component';
-import { AvatarDialogComponent } from './users/avatar-dialog/avatar-dialog.component';
-import { EditUserComponent } from './users/edit-user/edit-user.component';
-import { EditUserResolver } from './users/edit-user/edit-user.resolver';
-import { NewUserComponent } from './users/new-user/new-user.component';
-import { HomeComponent } from './home/home.component';
-
-
-// firebase modules
-import {FirebaseUIModule} from 'firebaseui-angular';
-import * as firebase from 'firebase/app';
-import * as firebaseui from 'firebaseui';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-
-// firebase services
-import { FirebaseService } from './services/firebase/firebase.service';
-
-import { environment } from '../environments/environment';
-
+// material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatButtonModule,
@@ -34,9 +12,33 @@ import {
   MatDialogModule
 } from '@angular/material';
 
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AvatarDialogComponent } from './users/avatar-dialog/avatar-dialog.component';
+import { EditUserComponent } from './users/edit-user/edit-user.component';
+import { EditUserResolver } from './users/edit-user/edit-user.resolver';
+import { NewUserComponent } from './users/new-user/new-user.component';
+import { HomeComponent } from './home/home.component';
+
+// firebase modules
+import {FirebaseUIModule} from 'firebaseui-angular';
+import * as firebase from 'firebase/app';
+import * as firebaseui from 'firebaseui';
+
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+
+// firebase services
+import { FirebaseService } from './services/firebase/firebase.service';
+import { environment } from '../environments/environment';
+
+// services 
 import { LoggerService } from '@app/services/logger/logger.service';
 import { ConsoleLoggerService } from '@services/logger/console-logger.service';
-
+import { UploadService } from './services/upload/upload.service';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -68,14 +70,13 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   credentialHelper: firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM
 };
 
-
 @NgModule({
   declarations: [
     AppComponent,
     AvatarDialogComponent,
     EditUserComponent,
     NewUserComponent,
-    HomeComponent
+    HomeComponent,
   ],
   entryComponents: [AvatarDialogComponent],
   imports: [
@@ -88,6 +89,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AngularFirestoreModule,
     AngularFireAuthModule,
     FirebaseUIModule.forRoot(firebaseUiAuthConfig),
+    AngularFireDatabaseModule,
+    AngularFireStorageModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatInputModule,
@@ -96,6 +99,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   ],
   providers: [
     FirebaseService,
+    UploadService,
     EditUserResolver,
     { provide: LoggerService, useClass: ConsoleLoggerService }
   ],

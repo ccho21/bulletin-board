@@ -4,10 +4,26 @@
       <h5>Select Avatar</h5>
     </div>
   </div>
-  <div class="d-flex align-content-center flex-wrap">
-    <div *ngFor="let avatar of avatars">
-      <img class="img-thumbnail" [src]=avatar.link (click)= "close(avatar)">
+  <div class="row">
+    <div class="col-sm-4" *ngFor="let picture of profilePictures">
+      <div>
+        <img
+          class="img-thumbnail"
+          [src]="picture.url"
+          (click)="updatePicture(picture)"
+        />
+      </div>
     </div>
   </div>
-  <button (click)="onSubmit()">OK</button>
+
+  <div class="row">
+    <div>
+      <label>
+          <input type="file" (change)="detectFiles($event)">
+        </label>
+      <button (click)="uploadFile()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </div>
+  </div>
 </div>
