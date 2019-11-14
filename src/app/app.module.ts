@@ -50,6 +50,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { ComponentsModule } from './components/components.module';
 import { ExamplesModule } from './examples/examples.module';
 import { PopupModule } from './popup/popup.module';
+import { ContainersModule } from './containers/containers.module';
 
 //
 
@@ -100,6 +101,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     ReactiveFormsModule,
     AppRoutingModule,
     NgbModule,
+    ContainersModule,
     PopupModule,
     // RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     AngularFireModule.initializeApp(environment.firebaseConfig),

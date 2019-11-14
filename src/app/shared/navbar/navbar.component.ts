@@ -1,6 +1,6 @@
-import {Component, OnInit, ElementRef, HostListener} from '@angular/core';
+import {Component, OnInit, ElementRef, HostListener, Input} from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, NavigationExtras } from '@angular/router';
-
+import {NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {
   Location,
   LocationStrategy,
@@ -25,6 +25,8 @@ export class NavbarComponent implements OnInit {
     private logger      : LoggerService,
     private popupService: PopupService,
     private router      : Router,
+    public activeModal: NgbActiveModal,
+    private modalService: NgbModal
   ) {
     this.sidebarVisible = false;
   }
@@ -47,11 +49,13 @@ export class NavbarComponent implements OnInit {
   signInOpen() {
     this.logger.info('sign in open ');
     /* Open Popup */
-    this.popupService
+   /*  this.popupService
       .logginPopup()
       .subscribe((_) => {
         this.logger.info(_);
-      });
+      }); */
+      const modalRef = this.modalService.open(NgbdModalContent);
+        modalRef.componentInstance.name = 'World';
   }
 
   // FUNCTIONS
@@ -108,4 +112,9 @@ export class NavbarComponent implements OnInit {
       return false;
     }
   }
+}
+export class NgbdModalContent {
+  @Input() name;
+
+  constructor(public activeModal: NgbActiveModal) {}
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-loggin-popup',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./loggin-popup.component.scss']
 })
 export class LogginPopupComponent implements OnInit {
-
+    test : Date = new Date();
+    focus;
+    focus1;
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 }
