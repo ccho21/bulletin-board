@@ -21,7 +21,7 @@ import { AvatarDialogComponent } from './users/avatar-dialog/avatar-dialog.compo
 import { EditUserComponent } from './users/edit-user/edit-user.component';
 import { EditUserResolver } from './users/edit-user/edit-user.resolver';
 import { NewUserComponent } from './users/new-user/new-user.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './containers/home/home.component';
 
 // firebase modules
 import {FirebaseUIModule} from 'firebaseui-angular';
@@ -49,7 +49,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 
 import { ComponentsModule } from './components/components.module';
 import { ExamplesModule } from './examples/examples.module';
-
+import { PopupModule } from './popup/popup.module';
 
 //
 
@@ -91,7 +91,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     NewUserComponent,
     HomeComponent,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
   ],
   entryComponents: [AvatarDialogComponent],
   imports: [
@@ -100,6 +100,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     ReactiveFormsModule,
     AppRoutingModule,
     NgbModule,
+    PopupModule,
     // RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,

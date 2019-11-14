@@ -1,24 +1,30 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import {Component, OnInit, ElementRef, HostListener} from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute, NavigationExtras } from '@angular/router';
+
 import {
   Location,
   LocationStrategy,
   PathLocationStrategy
 } from '@angular/common';
-import { LoggerService } from '@app/services/logger/logger.service';
+import {LoggerService} from '@app/services/logger/logger.service';
+import {PopupService} from '@app/services/popup/popup.service';
+
 @Component({
-  selector: 'app-navbar',
+  selector   : 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls  : ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  private toggleButton: any;
+  private toggleButton  : any;
   private sidebarVisible: boolean;
   private colorOnScroll = 500;
   navBackgroundColor: boolean;
   constructor(
-    public location: Location,
-    private element: ElementRef,
-    private loggerService: LoggerService
+    public  location    : Location,
+    private element     : ElementRef,
+    private logger      : LoggerService,
+    private popupService: PopupService,
+    private router      : Router,
   ) {
     this.sidebarVisible = false;
   }
@@ -26,21 +32,32 @@ export class NavbarComponent implements OnInit {
   @HostListener('window:scroll', ['$event'])
   scrollHandler(event) {
     const scrollTop = event.target.scrollingElement.scrollTop;
-    if(scrollTop > this.colorOnScroll) {
-        this.navBackgroundColor = true;
-    }
-    else {
-        this.navBackgroundColor = false;
+    if (scrollTop > this.colorOnScroll) {
+      this.navBackgroundColor = true;
+    } else {
+      this.navBackgroundColor = false;
     }
   }
 
   ngOnInit() {
     const navbar: HTMLElement = this.element.nativeElement;
-    this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
+          this.toggleButton   = navbar.getElementsByClassName('navbar-toggler')[0];
   }
+  // SIGN IN
+  signInOpen() {
+    this.logger.info('sign in open ');
+    /* Open Popup */
+    this.popupService
+      .logginPopup()
+      .subscribe((_) => {
+        this.logger.info(_);
+      });
+  }
+
+  // FUNCTIONS
   sidebarOpen() {
     const toggleButton = this.toggleButton;
-    const html = document.getElementsByTagName('html')[0];
+    const html         = document.getElementsByTagName('html')[0];
     // console.log(html);
     // console.log(toggleButton, 'toggle');
 
@@ -51,6 +68,7 @@ export class NavbarComponent implements OnInit {
 
     this.sidebarVisible = true;
   }
+
   sidebarClose() {
     const html = document.getElementsByTagName('html')[0];
     // console.log(html);
@@ -58,6 +76,7 @@ export class NavbarComponent implements OnInit {
     this.sidebarVisible = false;
     html.classList.remove('nav-open');
   }
+
   sidebarToggle() {
     if (this.sidebarVisible === false) {
       this.sidebarOpen();
@@ -65,6 +84,7 @@ export class NavbarComponent implements OnInit {
       this.sidebarClose();
     }
   }
+
   isHome() {
     var titlee = this.location.prepareExternalUrl(this.location.path());
     if (titlee.charAt(0) === '#') {
@@ -76,6 +96,7 @@ export class NavbarComponent implements OnInit {
       return false;
     }
   }
+  
   isDocumentation() {
     var titlee = this.location.prepareExternalUrl(this.location.path());
     if (titlee.charAt(0) === '#') {

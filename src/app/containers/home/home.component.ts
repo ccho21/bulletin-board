@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from '../services/firebase/firebase.service';
+import { FirebaseService } from '../../services/firebase/firebase.service';
 import { Router, Params } from '@angular/router';
 import { LoggerService } from '@services/logger/logger.service'
 

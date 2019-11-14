@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './containers/home/home.component';
 import { NewUserComponent } from './users/new-user/new-user.component';
 import { EditUserComponent } from './users/edit-user/edit-user.component';
 import { EditUserResolver } from './users/edit-user/edit-user.resolver';
@@ -13,7 +13,6 @@ import { NucleoiconsComponent } from './components/nucleoicons/nucleoicons.compo
 export const rootRouterConfig: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
-  // { path: 'home',             component: ComponentsComponent },
   { path: 'new-user', component: NewUserComponent },
   { path: 'details/:id', component: EditUserComponent, resolve:{data : EditUserResolver} },
   { path: 'user-profile',     component: ProfileComponent },
