@@ -1,4 +1,11 @@
-<div class="page-container">
+<div>
+	<app-navbar></app-navbar>
+</div>
+<router-outlet></router-outlet>
+<div>
+	<app-footer></app-footer>
+</div>
+<!-- <div class="page-container">
 	<div class="side-bar">
 		<ul class="nav flex-column">
 	  	<li class="nav-item">
@@ -13,11 +20,12 @@
 		  </li>
 		</ul>
 	</div>
-	<div class="content-container">
- 		<router-outlet></router-outlet>
-	</div>
+	
 </div>
+ -->
 <div>
-		<firebase-ui  (signInSuccessWithAuthResult)="successCallback($event)"
-		(signInFailure)="errorCallback($event)"></firebase-ui>
+  <firebase-ui
+    (signInSuccessWithAuthResult)="successCallback($event)"
+    (signInFailure)="errorCallback($event)"
+  ></firebase-ui>
 </div>

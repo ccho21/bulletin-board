@@ -12,8 +12,8 @@ import { NucleoiconsComponent } from './components/nucleoicons/nucleoicons.compo
 
 export const rootRouterConfig: Routes = [
   { path: '', component: HomeComponent },
-  // { path: 'home', component: HomeComponent },
-  { path: 'home',             component: ComponentsComponent },
+  { path: 'home', component: HomeComponent },
+  // { path: 'home',             component: ComponentsComponent },
   { path: 'new-user', component: NewUserComponent },
   { path: 'details/:id', component: EditUserComponent, resolve:{data : EditUserResolver} },
   { path: 'user-profile',     component: ProfileComponent },
