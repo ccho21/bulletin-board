@@ -80,17 +80,25 @@
         </li>
         <li class="nav-item ml-3">
           <button
+            *ngIf="!isLoggedIn"
             (click)="signInOpen($event)"
             class="btn btn-danger btn-round"
             >Sign in</button>
         </li>
         <li class="nav-item ml-3">
           <button
-          *ngIf="isLoggedIn"
+            *ngIf="!isLoggedIn"
             (click)="signUpOpen($event)"
             class="btn btn-danger btn-round"
             >Sign up</button>
         </li>
+        <li class="nav-item ml-3">
+            <button
+              *ngIf="isLoggedIn"
+              (click)="authService.signOut()"
+              class="btn btn-danger btn-round"
+              >Sign out</button>
+          </li>
         <li class="nav-item" *ngIf="isDocumentation()">
           <a
             href="https://github.com/creativetimofficial/paper-kit-2-angular/issues?ref=pk2-free-local"

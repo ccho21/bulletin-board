@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { AuthService } from '@app/core/services/auth/auth.service';

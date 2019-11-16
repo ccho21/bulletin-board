@@ -22,7 +22,8 @@
       /* Common modules */
       "@app/*": [ "app/*" ],
       "@services/*": [ "app/core/services/*" ],
-      "@models/*": [ "app/shared/models/*" ]
+      "@models/*": [ "app/shared/models/*" ],
+      "@forms/*": [ "app/shared/forms/*" ],
     }
   },
   "angularCompilerOptions": {

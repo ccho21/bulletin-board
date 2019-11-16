@@ -19,7 +19,7 @@ import {
 } from '@angular/common';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { PopupService } from '@app/core/services/popup/popup.service';
-import { SignInComponent } from '../../components/sign-in/sign-in.component';
+import { SignInComponent } from '../sign-in/sign-in.component';
 import { SignUpComponent } from '@app/components/sign-up/sign-up.component';
 import { AuthService } from '@app/core/services/auth/auth.service';
 @Component({
