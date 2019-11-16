@@ -49,11 +49,14 @@ import { FooterComponent } from './shared/footer/footer.component';
 
 import { ComponentsModule } from './components/components.module';
 import { ExamplesModule } from './examples/examples.module';
-import { PopupModule } from './shared/popup/popup.module';
 import { ContainersModule } from './containers/containers.module';
 import { AuthService } from './core/services/auth/auth.service';
-//
 
+// Import canActivate guard services
+import { SecureInnerPagesGuard } from './shared/guard/secure-inner-pages.guard';
+import { AuthGuard } from './shared/guard/auth.guard';
+
+AuthGuard
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [
@@ -90,7 +93,6 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AvatarDialogComponent,
     EditUserComponent,
     NewUserComponent,
-    HomeComponent,
     NavbarComponent,
     FooterComponent,
   ],
@@ -102,7 +104,6 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AppRoutingModule,
     NgbModule,
     ContainersModule,
-    PopupModule,
     // RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,

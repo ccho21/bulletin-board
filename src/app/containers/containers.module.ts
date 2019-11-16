@@ -4,8 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 
-import { ContainersComponent } from './containers.component';
-
+import { HomeComponent } from './home/home.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -14,9 +13,9 @@ import { ContainersComponent } from './containers.component';
         RouterModule,
     ],
     declarations: [
-        ContainersComponent
+        HomeComponent,
     ],
-    entryComponents: [ContainersComponent],
+    entryComponents: [HomeComponent],
     exports:[  ]
 })
 export class ContainersModule { }

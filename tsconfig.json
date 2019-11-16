@@ -21,8 +21,8 @@
     "paths": {
       /* Common modules */
       "@app/*": [ "app/*" ],
-      "@services/*": [ "app/services/*" ],
-      "@models/*": [ "app/models/*" ]
+      "@services/*": [ "app/core/services/*" ],
+      "@models/*": [ "app/shared/models/*" ]
     }
   },
   "angularCompilerOptions": {

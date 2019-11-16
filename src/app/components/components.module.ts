@@ -10,31 +10,42 @@ import { BasicelementsComponent } from './basicelements/basicelements.component'
 import { NavigationComponent } from './navigation/navigation.component';
 import { TypographyComponent } from './typography/typography.component';
 import { NucleoiconsComponent } from './nucleoicons/nucleoicons.component';
-import { ComponentsComponent } from './components.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NgbdModalComponent } from './modal/modal.component';
 import { NgbdModalContent } from './modal/modal.component';
 
+import { PopupService } from '@app/core/services/popup/popup.service';
+import { SignInComponent } from './sign-in/sign-in.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        NgbModule,
-        NouisliderModule,
-        RouterModule,
-        JwBootstrapSwitchNg2Module
-    ],
-    declarations: [
-        ComponentsComponent,
-        BasicelementsComponent,
-        NavigationComponent,
-        TypographyComponent,
-        NucleoiconsComponent,
-        NotificationComponent,
-        NgbdModalComponent,
-        NgbdModalContent
-    ],
-    entryComponents: [NgbdModalContent],
-    exports:[ ComponentsComponent ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgbModule,
+    NouisliderModule,
+    RouterModule,
+    JwBootstrapSwitchNg2Module,
+  ],
+  declarations: [
+    BasicelementsComponent,
+    NavigationComponent,
+    TypographyComponent,
+    NucleoiconsComponent,
+    NotificationComponent,
+    NgbdModalComponent,
+    NgbdModalContent,
+    SignUpComponent,
+    ForgotPasswordComponent,
+    VerifyEmailComponent,
+    DashboardComponent,
+    SignInComponent
+  ],
+  entryComponents   : [NgbdModalContent, SignInComponent],
+  exports           : [],
+  providers         : [PopupService]
 })
-export class ComponentsModule { }
+export class ComponentsModule {}
