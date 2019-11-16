@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {LogginPopupComponent} from '@app/popup/loggin-popup/loggin-popup.component';
+import {LogginPopupComponent} from '@app/shared/popup/loggin-popup/loggin-popup.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {Observable} from 'rxjs';
 @Injectable({

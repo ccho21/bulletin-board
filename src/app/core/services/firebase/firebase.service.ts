@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription, from  } from 'rxjs';
 import { Timeouts } from 'selenium-webdriver';
 import { LoggerService } from '../logger/logger.service';
-import { Upload } from '@app/models/upload';
+import { Upload } from '@app/shared/models/upload';
 @Injectable({
   providedIn: 'root'
 })

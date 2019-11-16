@@ -8,9 +8,9 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { AvatarDialogComponent } from '../avatar-dialog/avatar-dialog.component';
-import { FirebaseService } from '../../services/firebase/firebase.service';
+import { FirebaseService } from '../../core/services/firebase/firebase.service';
 import { Router } from '@angular/router';
-import { LoggerService } from '@app/services/logger/logger.service';
+import { LoggerService } from '@app/core/services/logger/logger.service';
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',

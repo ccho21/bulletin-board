@@ -6,7 +6,7 @@ import {
 } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-import { Upload } from '@app/models/upload';
+import { Upload } from '@app/shared/models/upload';
 
 import { LoggerService } from '../logger/logger.service';
 ``;

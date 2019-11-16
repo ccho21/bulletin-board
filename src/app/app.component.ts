@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoggerService } from '@app/services/logger/logger.service';
+import { LoggerService } from '@app/core/services/logger/logger.service';
 import { FirebaseUISignInSuccessWithAuthResult, FirebaseUISignInFailure } from 'firebaseui-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 

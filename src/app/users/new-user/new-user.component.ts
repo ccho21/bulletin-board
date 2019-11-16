@@ -8,8 +8,8 @@ import {
 import { MatDialog } from '@angular/material';
 import { AvatarDialogComponent } from '../avatar-dialog/avatar-dialog.component';
 import { Router } from '@angular/router';
-import { FirebaseService } from '../../services/firebase/firebase.service';
-import { LoggerService } from '@app/services/logger/logger.service';
+import { FirebaseService } from '../../core/services/firebase/firebase.service';
+import { LoggerService } from '@app/core/services/logger/logger.service';
 
 @Component({
   selector: 'app-new-user',

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FirebaseService } from '../../services/firebase/firebase.service';
+import { FirebaseService } from '../../core/services/firebase/firebase.service';
 import { MatDialogRef } from '@angular/material';
-import { LoggerService } from '@app/services/logger/logger.service';
-import { Upload } from '@app/models/upload';
-import { UploadService } from '@app/services/upload/upload.service';
+import { LoggerService } from '@app/core/services/logger/logger.service';
+import { Upload } from '@app/shared/models/upload';
+import { UploadService } from '@app/core/services/upload/upload.service';
 @Component({
   selector: 'app-avatar-dialog',
   templateUrl: './avatar-dialog.component.html',

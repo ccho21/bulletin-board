@@ -34,13 +34,13 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // firebase services
-import { FirebaseService } from './services/firebase/firebase.service';
+import { FirebaseService } from './core/services/firebase/firebase.service';
 import { environment } from '../environments/environment';
 
 // services 
-import { LoggerService } from '@app/services/logger/logger.service';
-import { ConsoleLoggerService } from '@services/logger/console-logger.service';
-import { UploadService } from './services/upload/upload.service';
+import { LoggerService } from '@app/core/services/logger/logger.service';
+import { ConsoleLoggerService } from '@app/core/services/logger/console-logger.service';
+import { UploadService } from './core/services/upload/upload.service';
 
 
 // Modules and Components
@@ -49,9 +49,9 @@ import { FooterComponent } from './shared/footer/footer.component';
 
 import { ComponentsModule } from './components/components.module';
 import { ExamplesModule } from './examples/examples.module';
-import { PopupModule } from './popup/popup.module';
+import { PopupModule } from './shared/popup/popup.module';
 import { ContainersModule } from './containers/containers.module';
-
+import { AuthService } from './core/services/auth/auth.service';
 //
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
@@ -121,6 +121,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     FirebaseService,
     UploadService,
     EditUserResolver,
+    AuthService,
     { provide: LoggerService, useClass: ConsoleLoggerService }
   ],
   bootstrap: [AppComponent],
