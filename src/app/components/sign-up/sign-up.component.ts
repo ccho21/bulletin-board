@@ -16,8 +16,9 @@ import { Subscription } from 'rxjs';
 export class SignUpComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
   file: Upload;
+  fileDTO;
   isRegisterValid: boolean = true;
-
+  isSubmitted: boolean = false;
   uploadSubscription: Subscription;
   constructor(
     public authService: AuthService,
@@ -25,25 +26,29 @@ export class SignUpComponent implements OnInit, OnDestroy {
     public activeModal: NgbActiveModal,
     private uploadService: UploadService
   ) {
-    this.uploadSubscription = this.uploadService.getUploadStatus().subscribe(res => {
-      this.logger.info(res);
-      if(res) {
-        this.isRegisterValid = true;
-      }
-    });
+    // subscribing to check uploading file and POST to DB is completed
+    this.uploadSubscription = this.uploadService
+      .getUploadStatus()
+      .subscribe(res => {
+        if (res) {
+          this.fileDTO = res;
+          this.isRegisterValid = true;
+          if (this.fileDTO) {
+            this.logger.info('### fileDTO', this.fileDTO);
+          }
+        }
+      });
   }
 
   ngOnInit() {
-
     this.userForm = new FormGroup({
       uid: new FormControl(''),
       email: new FormControl(''),
       photoURL: new FormControl(''),
       emailVerified: new FormControl(''),
-      fullName: new FormControl(''),
+      displayName: new FormControl(''),
       password: new FormControl('')
     });
-    this.logger.info(this.userForm);
   }
 
   uploadFile(e) {
@@ -57,14 +62,22 @@ export class SignUpComponent implements OnInit, OnDestroy {
     }
   }
   onSubmit() {
+    const userForm = this.userForm.value;
     if (!this.userForm.valid) {
       return;
     }
-    this.logger.info('## userForm', this.userForm);
-
-    this.authService.SignUp(null, null);
+    if (this.isSubmitted) {
+      return;
+    }
+    if (this.fileDTO) {
+      userForm.photoURL = this.fileDTO.url;
+    } else {
+      return;
+    }
+    this.authService.signUp(userForm);
+    this.isSubmitted = true;
   }
-  ngOnDestroy () {
+  ngOnDestroy() {
     this.uploadSubscription.unsubscribe();
   }
 }

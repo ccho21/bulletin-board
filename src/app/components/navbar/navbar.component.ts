@@ -60,6 +60,7 @@ export class NavbarComponent implements OnInit {
     const navbar                : HTMLElement = this.element.nativeElement;
     this.toggleButton           = navbar.getElementsByClassName('navbar-toggler')[0];
     this.isLoggedIn             = this.authService.isLoggedIn;
+    this.logger.info(this.isLoggedIn);
   }
   // SIGN IN
   signInOpen() {
@@ -69,6 +70,9 @@ export class NavbarComponent implements OnInit {
   signUpOpen() {
     this.logger.info('sign up open ');
     const modalRef              = this.modalService.open(SignUpComponent, {size: 'lg'});
+  }
+  signOut() {
+    this.authService.signOut();
   }
   // FUNCTIONS
   sidebarOpen() {

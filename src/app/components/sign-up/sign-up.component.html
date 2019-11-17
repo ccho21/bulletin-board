@@ -13,7 +13,7 @@
                 type="text"
                 class="form-control"
                 placeholder="First name"
-                formControlName="fullName"
+                formControlName="displayName"
               />
             </div>
             <div class="form-group">
@@ -63,7 +63,7 @@
 
         <div class="form-group">
           <input
-            [disabled]="!isRegisterValid"
+            [disabled]="!isRegisterValid || isSubmitted"
             type="button"
             class="btn btn-default btn-block btn-round"
             value="Register"

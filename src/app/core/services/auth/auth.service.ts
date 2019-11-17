@@ -5,10 +5,10 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from "@angular/router";
 import { LoggerService } from '../logger/logger.service';
+import { FirebaseService } from '../firebase/firebase.service';
 @Injectable({
   providedIn            : 'root'
 })
-
 export class AuthService {
   userData              : any; // Save logged in user data
 
@@ -17,7 +17,8 @@ export class AuthService {
     public afAuth       : AngularFireAuth, // Inject Firebase auth service
     public router       : Router,
     public ngZone       : NgZone, // NgZone service to remove outside scope warning,
-    private logger      : LoggerService
+    private logger      : LoggerService,
+    private fbService   : FirebaseService
   ) {    
     /* Saving user data in localstorage when 
     logged in and setting up null when logged out */
@@ -34,26 +35,49 @@ export class AuthService {
   }
 
   // Sign in with email/password
-  SignIn(email, password) {
+  signIn(email, password) {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.ngZone.run(() => {
-          this.router.navigate(['dashboard']);
+          this.logger.info('### sign in', result);
+          if(result.user.emailVerified) {
+            const user = this.afAuth.auth.currentUser;
+            this.logger.info(user);
+            this.router.navigate(['dashboard']);
+          }
+          else {
+            this.logger.info('not verified');
+            this.SendVerificationMail();
+            throw 'Email verification is required';    
+          }
         });
-        this.SetUserData(result.user);
       }).catch((error) => {
         window.alert(error.message)
       })
   }
 
   // Sign up with email/password
-  SignUp(email, password) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+  signUp(user) {
+    this.logger.info(user);
+    return this.afAuth.auth.createUserWithEmailAndPassword(user.email, user.password)
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
+        const userData: User = {
+          uid               : result.user.uid,
+          email             : result.user.email,
+          emailVerified     : result.user.emailVerified,
+          displayName       : user.displayName,
+          photoURL          : user.photoURL,
+        }
+        this.logger.info('### result from createUserWithEmailAndPassword' , result);
+        this.logger.info('### userdata DTO', userData);
+        this.afAuth.auth.currentUser.updateProfile({
+          displayName: user.displayName,
+          photoURL   : user.photoURL
+        });
         this.SendVerificationMail();
-        this.SetUserData(result.user);
+        this.SetUserData(userData);
       }).catch((error) => {
         window.alert(error.message)
       })
@@ -105,15 +129,8 @@ export class AuthService {
   /* Setting up user data when sign in with username/password, 
   sign up with username/password and sign in with social auth  
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  SetUserData(user) {
-    const userRef       : AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-    const userData: User = {
-      uid               : user.uid,
-      email             : user.email,
-      displayName       : user.displayName,
-      photoURL          : user.photoURL,
-      emailVerified     : user.emailVerified
-    }
+  SetUserData(userData) {
+    const userRef       : AngularFirestoreDocument<any> = this.afs.doc(`users/${userData.uid}`);
     return userRef.set(userData, {
       merge             : true
     })

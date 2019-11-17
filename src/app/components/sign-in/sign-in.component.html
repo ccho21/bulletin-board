@@ -26,11 +26,12 @@
         </div>
 
         <input
-          type="text"
+          type="email"
           class="form-control"
           placeholder="Email"
           (focus)="focus = true"
           (blur)="focus = false"
+          [formControl]="email"
         />
       </div>
 
@@ -42,14 +43,15 @@
           </span>
         </div>
         <input
-          type="text"
+          type="password"
           class="form-control"
           placeholder="Password"
           (focus)="focus1 = true"
           (blur)="focus1 = false"
+          [formControl]="password"
         />
       </div>
-      <button class="btn btn-danger btn-block btn-round">Log in</button>
+      <button class="btn btn-danger btn-block btn-round" (click)="signin()">Sign in</button>
     </form>
     <div class="text-center mb-5">
       <a href="#" class="btn btn-link btn-danger text-white"

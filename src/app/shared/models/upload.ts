@@ -3,7 +3,6 @@ export class Upload {
   file: File;
   name: string;
   url: string;
-  progress: number;
   createdAt: Date = new Date();
   path: string;
 

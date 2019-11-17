@@ -56,10 +56,11 @@ export class UploadService {
           name: upload.file.name,
           createdAt: upload.createdAt.toISOString(),
         };
-        this.logger.info('### the file is uploaded and is going to be posted with', fileDTO)
-        this.fbService.createProfilePicture(fileDTO);
+        this.fbService.createProfilePicture(fileDTO).subscribe(res =>{
+          this.logger.info('### the file is uploaded and is going to be posted with', res)
+          this.changeUploadStatus(fileDTO);
+        });
 
-        this.changeUploadStatus(true);
       })
     );
    return this.snapshot;
@@ -67,7 +68,7 @@ export class UploadService {
   getUploadStatus() {
     return this.uploadEmitted$.asObservable();
   }
-  changeUploadStatus(changed: boolean) {
-    this.uploadEmitted$.next(changed);
+  changeUploadStatus(fileDTO) {
+    this.uploadEmitted$.next(fileDTO);
   }
 }
