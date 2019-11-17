@@ -21,7 +21,6 @@ export class FirebaseService {
   }
 
   createProfilePicture(fileDTO) {
-    this.logger.info('### value', fileDTO);
     return from(this.db.collection('/profile-pictures').add(fileDTO));
   }
 

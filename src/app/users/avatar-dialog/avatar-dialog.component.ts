@@ -42,13 +42,17 @@ export class AvatarDialogComponent implements OnInit, OnDestroy {
   }
   detectFiles(event) {
     this.selectedFiles = event.target.files;
+    this.logger.info('### event', this.selectedFiles);
   }
   uploadFile() {
     let file = this.selectedFiles.item(0);
     this.currentUpload = new Upload(file);
     // created at, file, path
     this.logger.info('### current upload', this.currentUpload);
-    this.uploadService.startUpload(this.currentUpload);
+    this.uploadService.startUpload(this.currentUpload).subscribe(res => {
+      this.logger.info('is this working?', res);
+    });
+    this.logger.info('### everything done');
   }
   updatePicture(picture) {
     this.firebaseService.getProfilePicture(picture.id).subscribe(res =>{

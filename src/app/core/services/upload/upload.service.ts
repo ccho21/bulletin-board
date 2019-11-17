@@ -12,8 +12,8 @@ import { LoggerService } from '../logger/logger.service';
 ``;
 import { FirebaseService } from '../firebase/firebase.service';
 
-import { Observable, of } from 'rxjs';
-import { finalize, tap, mergeMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { finalize, tap, mergeMap, delayWhen, takeUntil, take } from 'rxjs/operators';
 
 @Injectable()
 export class UploadService {
@@ -21,8 +21,9 @@ export class UploadService {
   percentage: Observable<number>;
   snapshot: Observable<any>;
   downloadURL: string;
-  task: AngularFireUploadTask;
+  angularFireUploadTask: AngularFireUploadTask;
 
+  uploadEmitted$ = new Subject();
   constructor(
     private logger: LoggerService,
     private storage: AngularFireStorage,
@@ -37,32 +38,36 @@ export class UploadService {
     const ref = this.storage.ref(path);
 
     // The main task
-    this.task = this.storage.upload(path, upload.file);
+    this.angularFireUploadTask = this.storage.upload(path, upload.file);
 
     // Progress monitoring
-    this.percentage = this.task.percentageChanges();
+    this.percentage = this.angularFireUploadTask.percentageChanges();
 
-    this.snapshot = this.task.snapshotChanges().pipe(
-      tap(console.log),
+    this.snapshot = this.angularFireUploadTask.snapshotChanges().pipe(
+      tap((res) => {
+        return res;
+      }),
       // The file's download URL
       finalize(async () => {
         this.downloadURL = await ref.getDownloadURL().toPromise();
-        this.logger.info('### path', path);
-        this.logger.info('### downloadURL', this.downloadURL);
         const fileDTO = {
           path: path,
           url: this.downloadURL,
           name: upload.file.name,
           createdAt: upload.createdAt.toISOString(),
         };
-        return this.fbService.createProfilePicture(fileDTO);
+        this.logger.info('### the file is uploaded and is going to be posted with', fileDTO)
+        this.fbService.createProfilePicture(fileDTO);
+
+        this.changeUploadStatus(true);
       })
     );
-
-    this.snapshot.subscribe(res => {
-      if (res) {
-        this.logger.info('### profile picture is successfully created', res);
-      }
-    });
+   return this.snapshot;
+  }
+  getUploadStatus() {
+    return this.uploadEmitted$.asObservable();
+  }
+  changeUploadStatus(changed: boolean) {
+    this.uploadEmitted$.next(changed);
   }
 }
