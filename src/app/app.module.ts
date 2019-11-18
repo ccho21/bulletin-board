@@ -25,14 +25,15 @@ import { HomeComponent } from './containers/home/home.component';
 
 // firebase modules
 import {FirebaseUIModule} from 'firebaseui-angular';
-import * as firebase from 'firebase/app';
-import * as firebaseui from 'firebaseui';
+import {firebase, firebaseui} from 'firebaseui-angular';
+
+// import * as firebase from 'firebase/app';
+// import * as firebaseui from 'firebaseui';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
-
 // firebase services
 import { FirebaseService } from './core/services/firebase/firebase.service';
 import { environment } from '../environments/environment';
@@ -104,7 +105,6 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AppRoutingModule,
     NgbModule,
     ContainersModule,
-    // RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule,

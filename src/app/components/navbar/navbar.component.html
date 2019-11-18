@@ -81,14 +81,14 @@
         <li class="nav-item ml-3">
           <button
             *ngIf="!isLoggedIn"
-            (click)="signInOpen($event)"
+            (click)="signInOpen()"
             class="btn btn-danger btn-round"
             >Sign in</button>
         </li>
         <li class="nav-item ml-3">
           <button
             *ngIf="!isLoggedIn"
-            (click)="signUpOpen($event)"
+            (click)="signUpOpen()"
             class="btn btn-danger btn-round"
             >Sign up</button>
         </li>

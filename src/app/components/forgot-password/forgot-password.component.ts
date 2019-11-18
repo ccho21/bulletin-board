@@ -9,7 +9,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 export class ForgotPasswordComponent implements OnInit {
 
   constructor(
-    private authService: AuthService
+    public authService: AuthService
   ) { }
 
   ngOnInit() {

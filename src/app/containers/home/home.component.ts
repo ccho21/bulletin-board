@@ -16,6 +16,8 @@ export class HomeComponent implements OnInit {
   age_filtered_items: Array<any>;
   name_filtered_items: Array<any>;
 
+  focus;
+  focus1;
   constructor(
     public firebaseService: FirebaseService,
     private router: Router,
