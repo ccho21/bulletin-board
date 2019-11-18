@@ -3,6 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { FormControl } from '@angular/forms';
+import { throwError } from 'rxjs';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -26,12 +27,22 @@ export class SignInComponent implements OnInit {
     this.authService.GoogleAuth();
   }
   signin() {
-    
     const email = this.email.value;
     const password = this.password.value;
     if(email && password){
       this.logger.info(email, password);
-      this.authService.signIn(email, password);
+      this.authService.signIn(email, password).subscribe(res => {
+        this.logger.info(res);
+        if(res) {
+          this.close(true);
+        }
+      }, err => {
+        window.alert(err);
+      });
     }
+  }
+  close(valid?: boolean) {
+
+    this.activeModal.close(valid);
   }
 }

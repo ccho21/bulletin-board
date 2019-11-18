@@ -1,41 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '@app/core/services/logger/logger.service';
-import { FirebaseUISignInSuccessWithAuthResult, FirebaseUISignInFailure } from 'firebaseui-angular';
-import { AngularFireAuth } from '@angular/fire/auth';
-
+import {
+  FirebaseUISignInSuccessWithAuthResult,
+  FirebaseUISignInFailure
+} from 'firebaseui-angular';
+import { AuthService } from './core/services/auth/auth.service';
+import { User } from '@models/user';
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector                              : 'app-root',
+  templateUrl                           : './app.component.html',
+  styleUrls                             : ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'bulletin board';
-
+  title                                 = 'bulletin board';
+  signedIn: boolean = false;
+  user: User;
   constructor(
-    private readonly logger: LoggerService,
-    private readonly angularFireAuth: AngularFireAuth
-    ) {}
+    private readonly logger             : LoggerService,
+    private authService                 : AuthService
+  ) {}
 
   ngOnInit() {
-    this.angularFireAuth.authState.subscribe(this.firebaseAuthChangeListener);
     
-
-
   }
-  private firebaseAuthChangeListener(response) {
-    // if needed, do a redirect in here
-    if (response) {
-      console.log('Logged in :)');
-    } else {
-      console.log('Logged out :(');
-    }
-  }
-
-  successCallback(signInSuccessData: FirebaseUISignInSuccessWithAuthResult) {
-    this.logger.info('sign in success', signInSuccessData);
-  }
-
-  errorCallback(errorData: FirebaseUISignInFailure) {
-    this.logger.info('sign in error', errorData);
-  }
+ 
 }
