@@ -4,7 +4,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 //Boostrap 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,8 +12,10 @@ import {
   MatButtonModule,
   MatInputModule,
   MatSliderModule,
-  MatDialogModule
+  MatDialogModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -56,8 +58,7 @@ import { AuthService } from './core/services/auth/auth.service';
 // Import canActivate guard services
 import { SecureInnerPagesGuard } from './shared/guard/secure-inner-pages.guard';
 import { AuthGuard } from './shared/guard/auth.guard';
-
-AuthGuard
+import { ModalService } from './core/services/modal/modal.service';
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [
@@ -104,6 +105,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     ReactiveFormsModule,
     AppRoutingModule,
     NgbModule,
+    MatProgressSpinnerModule,
     ContainersModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
@@ -123,6 +125,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     UploadService,
     EditUserResolver,
     AuthService,
+    ModalService,
+    NgbActiveModal,
     { provide: LoggerService, useClass: ConsoleLoggerService }
   ],
   bootstrap: [AppComponent],

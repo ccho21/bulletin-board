@@ -54,7 +54,7 @@
       <button class="btn btn-danger btn-block btn-round" (click)="signin()">Sign in</button>
     </form>
     <div class="text-center mb-5">
-      <a href="#" class="btn btn-link btn-danger text-white"
+      <a href="#" (click)="goToLink($event)" class="btn btn-link btn-danger text-white"
         >Forgot password?</a
       >
     </div>
@@ -62,9 +62,8 @@
     <div class="redirectToLogin text-center">
       <span>Don't have an account?</span>
       <a
-        href="#"
         class="btn btn-link btn-danger text-white"
-        routerLink="/register-user"
+        (click)="goToSignUp($event)"
       >
         Sign Up</a>
     </div>

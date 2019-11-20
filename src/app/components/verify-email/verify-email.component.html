@@ -1,27 +1,61 @@
-<div class="displayTable">
-    <div class="displayTableCell">
-  
-      <div class="authBlock">
-        <h3>Thank You for Registering</h3>
-  
-        <div class="formGroup" *ngIf="authService.userData as user">
-          <p class="text-center">We have sent a confirmation email to <strong>{{user.email}}</strong>.</p>
-          <p class="text-center">Please check your email and click on the link to verfiy your email address.</p>
+<div class="page-background">
+  <div class="nav-cover"></div>
+  <div class="verify-email">
+    <div
+      class="container d-flex align-item-center h-100 justify-content-center mb-5"
+    >
+      <div class="d-flex flex-column justify-content-center page-content">
+        <div class="mt-5 mb-3 text-center">
+          <i class="fa fa-envelope super-large"></i>
         </div>
-        
-        <!-- Calling SendVerificationMail() method using authService Api -->
-        <div class="formGroup">
-          <button type="button" class="btn btnPrimary" (click)="authService.SendVerificationMail()">
+        <div class="mb-3">
+          <h3 class="text-center">Thank You for Registering</h3>
+        </div>
+        <div class="mb-4" *ngIf="getUserData() as user">
+          <p class="text-center">
+            We have sent a confirmation email to
+            <strong>{{ user.email }}</strong
+            >.
+          </p>
+          <p class="text-center">
+            Please check your email and click on the link to verfiy your email
+            address.
+          </p>
+        </div>
+
+        <div class="mb-2 text-center">
+          <button
+            type="button"
+            class="btn btn-info mr-3"
+            (click)="sendVerificationMail()"
+          >
             <i class="fas fa-redo-alt"></i>
-            Resend Verification Email
+            Resend Email
           </button>
+          <button
+          type="button"
+          class="btn btn-info"
+          (click)="goBack()"
+        >
+          <i class="fas fa-redo-alt"></i>
+          Back
+        </button>
         </div>
-  
+        <div class="mb-5 text-center">
+        
+        </div>
+        <div class="mb-5 text-center">
+          <span>
+            Go back to?
+            <span
+              class="btn btn-link btn-info text-white ml-3"
+              routerLink="/sign-in"
+            >
+              Sign in</span
+            >
+          </span>
+        </div>
       </div>
-  
-      <div class="redirectToLogin">
-        <span>Go back to?<span class="redirect" routerLink="/sign-in"> Sign in</span></span>
-      </div>
-  
     </div>
   </div>
+</div>

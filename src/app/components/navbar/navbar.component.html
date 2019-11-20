@@ -6,9 +6,7 @@
 >
   <div class="container">
     <div class="navbar-translate">
-      <a class="navbar-brand" href="https://www.creative-tim.com"
-        >Charles Cho</a
-      >
+      <a class="navbar-brand" routerLink="home">Charles Cho</a>
       <button
         class="navbar-toggler navbar-burger"
         type="button"
@@ -83,22 +81,28 @@
             *ngIf="!isLoggedIn"
             (click)="signInOpen()"
             class="btn btn-danger btn-round"
-            >Sign in</button>
+          >
+            Sign in
+          </button>
         </li>
         <li class="nav-item ml-3">
           <button
             *ngIf="!isLoggedIn"
             (click)="signUpOpen()"
             class="btn btn-danger btn-round"
-            >Sign up</button>
+          >
+            Sign up
+          </button>
         </li>
         <li class="nav-item ml-3">
-            <button
-              *ngIf="isLoggedIn"
-              (click)="signOut()"
-              class="btn btn-danger btn-round"
-              >Sign out</button>
-          </li>
+          <button
+            *ngIf="isLoggedIn"
+            (click)="signOut()"
+            class="btn btn-danger btn-round"
+          >
+            Sign out
+          </button>
+        </li>
         <li class="nav-item" *ngIf="isDocumentation()">
           <a
             href="https://github.com/creativetimofficial/paper-kit-2-angular/issues?ref=pk2-free-local"

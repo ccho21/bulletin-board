@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { FormControl } from '@angular/forms';
-import { throwError } from 'rxjs';
+import { throwError, from } from 'rxjs';
+import { Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -16,9 +17,10 @@ export class SignInComponent implements OnInit {
   password = new FormControl('');
   email = new FormControl('');
   constructor(
-    public activeModal                  : NgbActiveModal,
     private logger                      : LoggerService,
     private authService                 : AuthService,
+    private router                      : Router,
+    private activeModal                 : NgbActiveModal,
     
   ) {}
   ngOnInit() {
@@ -32,17 +34,28 @@ export class SignInComponent implements OnInit {
     if(email && password){
       this.logger.info(email, password);
       this.authService.signIn(email, password).subscribe(res => {
-        this.logger.info(res);
+        this.logger.info('Sign in status', res);
         if(res) {
-          this.close(true);
+          this.close();
         }
       }, err => {
         window.alert(err);
       });
     }
   }
-  close(valid?: boolean) {
 
-    this.activeModal.close(valid);
+  goToSignUp(e){
+    e.preventDefault();
+    this.activeModal.close('SignUp');
   }
+  goToLink(e){
+    e.preventDefault();
+    // this.close();
+    this.router.navigateByUrl('/forgot-password');
+  }
+ 
+  close(link?: string) {
+    this.activeModal.close();
+  }
+
 }

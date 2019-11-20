@@ -1,0 +1,32 @@
+.nav-cover {
+    height: 7rem;
+}
+
+.verify-email {
+    height: 80vh;
+    color: white;
+}
+.super-large {
+    font-size: 150px;
+    width: auto;
+}
+.page-background {
+    background-image: url("../../../assets/img/login-image.jpg");
+    z-index: -1;
+    &::before {
+        background-color: rgba(0, 0, 0, 0.7);
+        content: "";
+        display: block;
+        height: 100%;
+        left: 0;
+        top: 0;
+        position: absolute;
+        width: 100%;
+        z-index: 0;
+    }
+}
+.page-content {
+    z-index: 2;
+    margin: 3rem;
+    max-width: 450px;
+}

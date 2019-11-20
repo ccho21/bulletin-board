@@ -24,7 +24,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     public authService: AuthService,
     private logger: LoggerService,
     public activeModal: NgbActiveModal,
-    private uploadService: UploadService
+    private uploadService: UploadService,
   ) {
     // subscribing to check uploading file and POST to DB is completed
     this.uploadSubscription = this.uploadService
@@ -74,8 +74,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
     } else {
       return;
     }
-    this.authService.signUp(userForm);
+   this.authService.signUp(userForm).subscribe(res =>{
+     this.logger.info(res);
+     this.activeModal.close();
+   });
     this.isSubmitted = true;
+  }
+  goToSignIn() {
+    this.activeModal.close('SignIn');
   }
   ngOnDestroy() {
     this.uploadSubscription.unsubscribe();

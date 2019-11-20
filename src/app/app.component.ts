@@ -15,6 +15,10 @@ export class AppComponent implements OnInit {
   title                                 = 'bulletin board';
   signedIn: boolean = false;
   user: User;
+
+  color = 'primary';
+  mode = 'Indeterminate';
+  value = 50;
   constructor(
     private readonly logger             : LoggerService,
     private authService                 : AuthService

@@ -9,14 +9,15 @@ import {
 import { Router } from '@angular/router';
 import { LoggerService } from '../logger/logger.service';
 import { FirebaseService } from '../firebase/firebase.service';
-import { of, from, Observable } from 'rxjs';
+import { of, from, Observable, Subject } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   userData: any; // Save logged in user data
-
+  signInSource = new Subject<boolean>();
+  signInSourceEmitted$ = this.signInSource.asObservable();
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -48,13 +49,18 @@ export class AuthService {
       return response;
     }
   }
-
+  updateSignInSource(updated: boolean) {
+    this.signInSource.next(updated);
+  }
+  getSignInSource() {
+    return this.signInSourceEmitted$;
+  }
   // Sign in with email/password
   signIn(email, password) {
     return from(
       this.afAuth.auth.signInWithEmailAndPassword(email, password)
-    ).pipe(mergeMap(
-      (result) => {
+    ).pipe(
+      mergeMap(result => {
         let signSuccess: boolean;
         this.ngZone.run(() => {
           this.logger.info('### sign in', result);
@@ -66,19 +72,19 @@ export class AuthService {
           } else {
             signSuccess = false;
             this.logger.info('not verified');
-            this.SendVerificationMail();
+            this.sendVerificationMail();
             throw 'Email verification is required';
           }
         });
         return of(signSuccess);
-      }
-    ));
+      })
+    );
   }
 
   // Sign up with email/password
   signUp(user) {
     this.logger.info(user);
-    return this.afAuth.auth
+    return from(this.afAuth.auth
       .createUserWithEmailAndPassword(user.email, user.password)
       .then(result => {
         /* Call the SendVerificaitonMail() function when new user sign 
@@ -99,16 +105,16 @@ export class AuthService {
           displayName: user.displayName,
           photoURL: user.photoURL
         });
-        this.SendVerificationMail();
-        this.SetUserData(userData);
+        this.sendVerificationMail();
+        this.setUserData(userData);
       })
       .catch(error => {
         window.alert(error.message);
-      });
+      }));
   }
 
   // Send email verfificaiton when new user sign up
-  SendVerificationMail() {
+  sendVerificationMail() {
     return this.afAuth.auth.currentUser.sendEmailVerification().then(() => {
       this.router.navigate(['verify-email-address']);
     });
@@ -134,11 +140,11 @@ export class AuthService {
 
   // Sign in with Google
   GoogleAuth() {
-    return this.AuthLogin(new auth.GoogleAuthProvider());
+    return this.authLogin(new auth.GoogleAuthProvider());
   }
 
   // Auth logic to run auth providers
-  AuthLogin(provider) {
+  authLogin(provider) {
     return this.afAuth.auth
       .signInWithPopup(provider)
       .then(result => {
@@ -146,7 +152,7 @@ export class AuthService {
           this.logger.info('### auth logged in');
           this.router.navigate(['dashboard']);
         });
-        this.SetUserData(result.user);
+        this.setUserData(result.user);
       })
       .catch(error => {
         window.alert(error);
@@ -156,7 +162,7 @@ export class AuthService {
   /* Setting up user data when sign in with username/password, 
   sign up with username/password and sign in with social auth  
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  SetUserData(userData) {
+  setUserData(userData) {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(
       `users/${userData.uid}`
     );
