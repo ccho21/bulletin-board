@@ -55,7 +55,7 @@ import { SecureInnerPagesGuard } from './shared/guard/secure-inner-pages.guard';
 import { AuthGuard } from './shared/guard/auth.guard';
 import { ModalService } from './core/services/modal/modal.service';
 import { LoaderComponent } from './components/loader/loader.component';
-import { LoaderService } from './shared/loader/loader.service';
+import { LoaderService } from './core/services/loader/loader.service';
 import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {

@@ -7,7 +7,7 @@ import {
 } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { finalize } from "rxjs/operators";
-import { LoaderService } from "@app/shared/loader/loader.service";
+import { LoaderService } from "@app/core/services/loader/loader.service";
 import { LoggerService } from "../services/logger/logger.service";
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
@@ -19,15 +19,14 @@ export class LoaderInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    this.logger.info("###!", req);
+    this.logger.info("### loader service is called");
     this.loaderService.show();
     return next.handle(req).pipe(
-      finalize(() =>
+      finalize(() => {
         setTimeout(() => {
-            this.logger.info('hide after finalize', req);
           this.loaderService.hide();
-        }, 3000)
-      )
+        }, 2000);
+      })
     );
   }
 }

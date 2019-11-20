@@ -11,6 +11,7 @@ import { LoggerService } from '../logger/logger.service';
 import { FirebaseService } from '../firebase/firebase.service';
 import { of, from, Observable, Subject } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { LoaderService } from '../loader/loader.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -24,7 +25,8 @@ export class AuthService {
     public router: Router,
     public ngZone: NgZone, // NgZone service to remove outside scope warning,
     private logger: LoggerService,
-    private fbService: FirebaseService
+    private fbService: FirebaseService,
+    private loaderService: LoaderService
   ) {
     /* Saving user data in localstorage when 
     logged in and setting up null when logged out */
@@ -57,6 +59,8 @@ export class AuthService {
   }
   // Sign in with email/password
   signIn(email, password) {
+    // loader start
+    this.loaderService.show();
     return from(
       this.afAuth.auth.signInWithEmailAndPassword(email, password)
     ).pipe(
@@ -76,6 +80,8 @@ export class AuthService {
             throw 'Email verification is required';
           }
         });
+        // loader end;
+        this.loaderService.hide();
         return of(signSuccess);
       })
     );
@@ -83,7 +89,8 @@ export class AuthService {
 
   // Sign up with email/password
   signUp(user) {
-    this.logger.info(user);
+    // loader start
+    this.loaderService.show();
     return from(this.afAuth.auth
       .createUserWithEmailAndPassword(user.email, user.password)
       .then(result => {
@@ -107,6 +114,8 @@ export class AuthService {
         });
         this.sendVerificationMail();
         this.setUserData(userData);
+        // loader end
+        this.loaderService.hide();
       })
       .catch(error => {
         window.alert(error.message);
