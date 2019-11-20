@@ -2,12 +2,6 @@ import { Routes } from '@angular/router';
 // import { AuthGuard } from "../../shared/guard/auth.guard";
 
 import { HomeComponent } from './containers/home/home.component';
-import { NewUserComponent } from './users/new-user/new-user.component';
-import { EditUserComponent } from './users/edit-user/edit-user.component';
-import { EditUserResolver } from './users/edit-user/edit-user.resolver';
-
-import { ProfileComponent } from './examples/profile/profile.component';
-import { LandingComponent } from './examples/landing/landing.component';
 import { NucleoiconsComponent } from './components/nucleoicons/nucleoicons.component';
 
 // Import all the components for which navigation service has to be activated 
@@ -26,10 +20,6 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 export const rootRouterConfig: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'new-user', component: NewUserComponent },
-  { path: 'details/:id', component: EditUserComponent, resolve:{data : EditUserResolver} },
-  { path: 'user-profile',     component: ProfileComponent },
-  { path: 'landing',          component: LandingComponent },
   { path: 'nucleoicons',      component: NucleoiconsComponent },
   
   // { path: 'signup',           component: SignupComponent },

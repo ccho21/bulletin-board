@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
 import { LoggerService } from '@app/core/services/logger/logger.service';
-import {
-  FirebaseUISignInSuccessWithAuthResult,
-  FirebaseUISignInFailure
-} from 'firebaseui-angular';
 import { AuthService } from './core/services/auth/auth.service';
 import { User } from '@models/user';
 @Component({
   selector                              : 'app-root',
   templateUrl                           : './app.component.html',
-  styleUrls                             : ['./app.component.scss']
+  styleUrls                             : ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title                                 = 'bulletin board';
@@ -21,11 +19,17 @@ export class AppComponent implements OnInit {
   value = 50;
   constructor(
     private readonly logger             : LoggerService,
-    private authService                 : AuthService
+    private http                        : HttpClient
   ) {}
 
   ngOnInit() {
-    
+    this.callApi();
   }
  
+  callApi() {
+    this.http.get('https://reqres.in/api/users?page=2')
+      .subscribe(data => {
+        console.log('### ohoho',data);
+      })
+  }
 }

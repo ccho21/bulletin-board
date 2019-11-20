@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 //Boostrap 
 import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -13,17 +14,12 @@ import {
   MatInputModule,
   MatSliderModule,
   MatDialogModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
 } from '@angular/material';
 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AvatarDialogComponent } from './users/avatar-dialog/avatar-dialog.component';
-import { EditUserComponent } from './users/edit-user/edit-user.component';
-import { EditUserResolver } from './users/edit-user/edit-user.resolver';
-import { NewUserComponent } from './users/new-user/new-user.component';
-import { HomeComponent } from './containers/home/home.component';
 
 // firebase modules
 import {FirebaseUIModule} from 'firebaseui-angular';
@@ -51,7 +47,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 
 import { ComponentsModule } from './components/components.module';
-import { ExamplesModule } from './examples/examples.module';
 import { ContainersModule } from './containers/containers.module';
 import { AuthService } from './core/services/auth/auth.service';
 
@@ -59,6 +54,10 @@ import { AuthService } from './core/services/auth/auth.service';
 import { SecureInnerPagesGuard } from './shared/guard/secure-inner-pages.guard';
 import { AuthGuard } from './shared/guard/auth.guard';
 import { ModalService } from './core/services/modal/modal.service';
+import { LoaderComponent } from './components/loader/loader.component';
+import { LoaderService } from './shared/loader/loader.service';
+import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
+
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [
@@ -92,17 +91,16 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
 @NgModule({
   declarations: [
     AppComponent,
-    AvatarDialogComponent,
-    EditUserComponent,
-    NewUserComponent,
     NavbarComponent,
     FooterComponent,
+    LoaderComponent
   ],
-  entryComponents: [AvatarDialogComponent],
+  entryComponents: [AppComponent],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     AppRoutingModule,
     NgbModule,
     MatProgressSpinnerModule,
@@ -118,16 +116,16 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     MatSliderModule,
     MatDialogModule,
     ComponentsModule,
-    ExamplesModule,
   ],
   providers: [
     FirebaseService,
     UploadService,
-    EditUserResolver,
     AuthService,
     ModalService,
     NgbActiveModal,
-    { provide: LoggerService, useClass: ConsoleLoggerService }
+    { provide: LoggerService, useClass: ConsoleLoggerService },
+    LoaderService,
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

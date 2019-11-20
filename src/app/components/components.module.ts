@@ -21,6 +21,15 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatSliderModule,
+  MatDialogModule,
+  MatProgressSpinnerModule
+} from '@angular/material';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -30,6 +39,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     NouisliderModule,
     RouterModule,
     JwBootstrapSwitchNg2Module,
+
+    MatButtonModule,
+    MatInputModule,
+    MatSliderModule,
+    MatDialogModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     BasicelementsComponent,
@@ -43,7 +58,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     ForgotPasswordComponent,
     VerifyEmailComponent,
     DashboardComponent,
-    SignInComponent
+    SignInComponent,
   ],
   entryComponents   : [NgbdModalContent, SignInComponent],
   exports           : [],
