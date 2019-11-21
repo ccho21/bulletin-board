@@ -1,9 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 // @import "~bootstrap/scss/bootstrap";
-// @import "./assets/sass/paper-kit.scss";
+@import "./assets/sass/base/variables";
 @import "~nouislider/distribute/nouislider.min.css";
 @import '~firebaseui/dist/firebaseui.css';
-html, body { height: 100%; }
+   
+// This defines what 1rem is
+html, body { height: 100%; font-size: 85%;}
 body { margin: 0; font-family: Montserrat, Helvetica,Arial,sans-serif; }
 
 /* Customize website's scrollbar like Mac OS

@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { throwError, from } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoaderService } from '@app/core/services/loader/loader.service';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -21,7 +22,7 @@ export class SignInComponent implements OnInit {
     private authService                 : AuthService,
     private router                      : Router,
     private activeModal                 : NgbActiveModal,
-    
+    private loaderService               : LoaderService
   ) {}
   ngOnInit() {
   }
@@ -41,6 +42,8 @@ export class SignInComponent implements OnInit {
       }, err => {
         this.close();
         window.alert(err);
+        this.close();
+        this.loaderService.hide();
       });
     }
   }
