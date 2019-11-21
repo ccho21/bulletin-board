@@ -21,7 +21,7 @@ export class VerifyEmailComponent implements OnInit {
   sendVerificationMail() {
     this.authService.sendVerificationMail();
   }
-  goBack(signIn?: boolean) {
+  goBack(signIn?: string) {
     if(signIn) {
       this.authService.signOut();
       this.modalService.signInOpen();
