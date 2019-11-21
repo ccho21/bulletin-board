@@ -44,10 +44,10 @@ export class AuthService {
   firebaseAuthChangeListener(response) {
     // if needed, do a redirect in here
     if (response) {
-      console.log('Logged in :)', response);
+      console.log('Logged in :)');
       return response;
     } else {
-      console.log('Logged out :(', response);
+      console.log('Logged out :(');
       return response;
     }
   }
@@ -77,6 +77,7 @@ export class AuthService {
             signSuccess = false;
             this.logger.info('not verified');
             this.sendVerificationMail();
+            this.loaderService.hide();
             throw 'Email verification is required';
           }
         });
@@ -182,8 +183,10 @@ export class AuthService {
 
   // Sign out
   signOut() {
+    this.loaderService.show();
     return this.afAuth.auth.signOut().then(() => {
       localStorage.removeItem('user');
+      this.loaderService.hide();
       this.router.navigateByUrl('/');
     });
   }

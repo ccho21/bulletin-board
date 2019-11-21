@@ -39,6 +39,7 @@ export class SignInComponent implements OnInit {
           this.close();
         }
       }, err => {
+        this.close();
         window.alert(err);
       });
     }
@@ -50,12 +51,13 @@ export class SignInComponent implements OnInit {
   }
   goToLink(e){
     e.preventDefault();
-    // this.close();
+    this.close();
     this.router.navigateByUrl('/forgot-password');
   }
  
   close(link?: string) {
     this.activeModal.close();
+    this.router.navigateByUrl('/');
   }
 
 }
