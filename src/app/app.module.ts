@@ -32,10 +32,10 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+
 // firebase services
 import { FirebaseService } from './core/services/firebase/firebase.service';
 import { environment } from '../environments/environment';
-
 // services 
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { ConsoleLoggerService } from '@app/core/services/logger/console-logger.service';
@@ -59,10 +59,6 @@ import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 import { PostsModule } from './containers/posts/posts.module';
 
 import { HomeModule } from './containers/home/home.module';
-import { AboutComponent } from './containers/about/about.component';
-import { ContactUsComponent } from './containers/contact-us/contact-us.component';
-import { ProjectsComponent } from './containers/projects/projects.component';
-import { ResumeComponent } from './containers/resume/resume.component';
 
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {

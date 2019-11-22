@@ -27,6 +27,7 @@ import { PostsService } from './shared/posts.service';
 import { PostsRoutingModule } from './posts-routing.module';
 
 
+
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -50,7 +51,7 @@ import { PostsRoutingModule } from './posts-routing.module';
     MatButtonModule,
     MatInputModule,
     MatSliderModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   providers: [NgbActiveModal, PostsService],
   bootstrap: [PostListComponent],
