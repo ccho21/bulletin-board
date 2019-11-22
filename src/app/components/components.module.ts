@@ -6,19 +6,11 @@ import { JwBootstrapSwitchNg2Module } from 'jw-bootstrap-switch-ng2';
 import { RouterModule } from '@angular/router';
 
 import { NouisliderModule } from 'ng2-nouislider';
-import { BasicelementsComponent } from './basicelements/basicelements.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { TypographyComponent } from './typography/typography.component';
-import { NotificationComponent } from './notification/notification.component';
-import { NgbdModalComponent } from './modal/modal.component';
-import { NgbdModalContent } from './modal/modal.component';
-
 import { PopupService } from '@app/core/services/popup/popup.service';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 
 import {
   MatButtonModule,
@@ -46,19 +38,12 @@ import {
     MatProgressSpinnerModule
   ],
   declarations: [
-    BasicelementsComponent,
-    NavigationComponent,
-    TypographyComponent,
-    NotificationComponent,
-    NgbdModalComponent,
-    NgbdModalContent,
     SignUpComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
-    DashboardComponent,
     SignInComponent,
   ],
-  entryComponents   : [NgbdModalContent, SignInComponent],
+  entryComponents   : [SignInComponent, SignUpComponent],
   exports           : [],
   providers         : [PopupService]
 })

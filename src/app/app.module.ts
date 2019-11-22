@@ -47,7 +47,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 
 import { ComponentsModule } from './components/components.module';
-import { ContainersModule } from './containers/containers.module';
 import { AuthService } from './core/services/auth/auth.service';
 
 // Import canActivate guard services
@@ -57,7 +56,8 @@ import { ModalService } from './core/services/modal/modal.service';
 import { LoaderComponent } from './components/loader/loader.component';
 import { LoaderService } from './core/services/loader/loader.service';
 import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
-
+import { ForumModule } from './containers/forum/forum.module';
+import { HomeComponent } from './containers/home/home.component';
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [
@@ -91,6 +91,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     NavbarComponent,
     FooterComponent,
     LoaderComponent
@@ -98,13 +99,13 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   entryComponents: [AppComponent],
   imports: [
     BrowserModule,
+    ForumModule,
+    AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule,
     NgbModule,
     MatProgressSpinnerModule,
-    ContainersModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule,
