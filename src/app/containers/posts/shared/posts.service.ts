@@ -6,7 +6,7 @@ import {
 import { Post } from "../post";
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from } from 'rxjs';
-
+import { AuthService } from '@app/core/services/auth/auth.service';
 @Injectable({
   providedIn: "root"
 })

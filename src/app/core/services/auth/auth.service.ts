@@ -154,12 +154,14 @@ export class AuthService {
 
   // Auth logic to run auth providers
   authLogin(provider) {
+    this.logger.info('### provider', provider);
     return this.afAuth.auth
       .signInWithPopup(provider)
       .then(result => {
+        this.logger.info('###',result);
         this.ngZone.run(() => {
-          this.logger.info('### auth logged in');
-          this.router.navigate(['/']);
+          // this.logger.info('### auth logged in');
+          // this.router.navigate(['/']);
         });
         this.setUserData(result.user);
       })
@@ -178,6 +180,10 @@ export class AuthService {
     return userRef.set(userData, {
       merge: true
     });
+  }
+
+  getCurrentUser() {
+    return this.afAuth.auth.currentUser;
   }
 
   // Sign out
