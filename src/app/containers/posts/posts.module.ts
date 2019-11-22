@@ -18,35 +18,27 @@ import {
   MatProgressSpinnerModule
 } from "@angular/material";
 
-//Forum
-import { ForumRoutingModule } from "./forum-routing.module";
-import { ForumService } from "./shared/forum.service";
-import { ForumComponent } from "./forum.component";
-import { PostsComponent } from "./posts/posts.component";
-import { PostComponent } from "./post/post.component";
-import { CreatePostComponent } from "./create-post/create-post.component";
-import { DeletePostComponent } from "./delete-post/delete-post.component";
-import { EditPostComponent } from "./edit-post/edit-post.component";
+// Posts
+import { PostDetailComponent } from './post-detail/post-detail.component';
+import { PostNewComponent } from './post-new/post-new.component';
+import { PostEditComponent } from './post-edit/post-edit.component';
+import { PostListComponent } from './post-list/post-list.component';
+import { PostsService } from './shared/posts.service';
+import { PostsRoutingModule } from './posts-routing.module';
+
 
 @NgModule({
   declarations: [
-    PostsComponent,
-    PostComponent,
-    CreatePostComponent,
-    DeletePostComponent,
-    EditPostComponent,
-    ForumComponent
+    PostDetailComponent,
+    PostNewComponent,
+    PostEditComponent,
+    PostListComponent,
   ],
   entryComponents: [
-    PostsComponent,
-    PostComponent,
-    CreatePostComponent,
-    DeletePostComponent,
-    EditPostComponent,
-    ForumComponent
+    PostListComponent
   ],
   imports: [
-    ForumRoutingModule,
+    PostsRoutingModule,
     CommonModule,
     BrowserModule,
     FormsModule,
@@ -60,8 +52,8 @@ import { EditPostComponent } from "./edit-post/edit-post.component";
     MatSliderModule,
     MatDialogModule
   ],
-  providers: [NgbActiveModal, ForumService],
-  bootstrap: [ForumComponent],
+  providers: [NgbActiveModal, PostsService],
+  bootstrap: [PostListComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ForumModule {}
+export class PostsModule {}

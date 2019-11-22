@@ -56,8 +56,15 @@ import { ModalService } from './core/services/modal/modal.service';
 import { LoaderComponent } from './components/loader/loader.component';
 import { LoaderService } from './core/services/loader/loader.service';
 import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
-import { ForumModule } from './containers/forum/forum.module';
-import { HomeComponent } from './containers/home/home.component';
+import { PostsModule } from './containers/posts/posts.module';
+
+import { HomeModule } from './containers/home/home.module';
+import { AboutComponent } from './containers/about/about.component';
+import { ContactUsComponent } from './containers/contact-us/contact-us.component';
+import { ProjectsComponent } from './containers/projects/projects.component';
+import { ResumeComponent } from './containers/resume/resume.component';
+
+
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [
@@ -91,15 +98,15 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     NavbarComponent,
     FooterComponent,
-    LoaderComponent
+    LoaderComponent,
   ],
   entryComponents: [AppComponent],
   imports: [
     BrowserModule,
-    ForumModule,
+    PostsModule,
+    HomeModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,

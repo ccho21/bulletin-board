@@ -25,17 +25,6 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getData();
-  }
-
-  getData(){
-    this.firebaseService.getUsers()
-    .subscribe(result => {
-      this.logger.info('###', result);      
-      this.items = result;
-      this.age_filtered_items = result;
-      this.name_filtered_items = result;
-    })
   }
 
   viewDetails(item){

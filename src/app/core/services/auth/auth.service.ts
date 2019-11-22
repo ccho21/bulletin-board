@@ -71,7 +71,6 @@ export class AuthService {
           if (result.user.emailVerified) {
             const user = this.afAuth.auth.currentUser;
             this.logger.info(user);
-            // this.router.navigate(['dashboard']);
             signSuccess = true;
           } else {
             signSuccess = false;
@@ -160,7 +159,7 @@ export class AuthService {
       .then(result => {
         this.ngZone.run(() => {
           this.logger.info('### auth logged in');
-          this.router.navigate(['dashboard']);
+          this.router.navigate(['/']);
         });
         this.setUserData(result.user);
       })
