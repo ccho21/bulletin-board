@@ -6,8 +6,8 @@ import { LoggerService } from "@app/core/services/logger/logger.service";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { UploadService } from "@app/core/services/upload/upload.service";
 import { Upload } from "@app/shared/models/upload";
-import { Subscription, Observable } from "rxjs";
-import { mergeMap, tap, finalize } from "rxjs/operators";
+import { Subscription } from "rxjs";
+
 @Component({
   selector: "app-sign-up",
   templateUrl: "./sign-up.component.html",
@@ -29,84 +29,61 @@ export class SignUpComponent implements OnInit, OnDestroy {
     // subscribing to check uploading file and POST to DB is completed
     this.uploadSubscription = this.uploadService
       .getUploadStatus()
-      .subscribe(res => {
+      .subscribe((res: any) => {
+        const userForm = {...this.userForm.value};
         if (res) {
-          this.fileDTO = res;
+          const fileDTO = res;
           this.isRegisterValid = true;
-          if (this.fileDTO) {
-            this.logger.info("### fileDTO", this.fileDTO);
+          if (fileDTO) {
+            userForm.photoURL = fileDTO.url;
           }
         }
+        // call signup
+        this.signUp(userForm);
       });
   }
 
   ngOnInit() {
     this.userForm = new FormGroup({
-      uid: new FormControl(""),
-      email: new FormControl(""),
-      photoURL: new FormControl(""),
-      emailVerified: new FormControl(""),
-      displayName: new FormControl(""),
-      password: new FormControl("")
+      uid: new FormControl(''),
+      email: new FormControl(''),
+      photoURL: new FormControl(''),
+      emailVerified: new FormControl(''),
+      displayName: new FormControl(''),
+      password: new FormControl('')
     });
   }
-
+  signUp(userForm) {
+    this.authService.signUp(userForm).subscribe(res => {
+      this.activeModal.close();
+    });
+  }
   uploadFile(e) {
     this.file = new Upload(e.target.files.item(0));
     this.logger.info("files", this.file);
   }
   onSubmit() {
-    const userForm = this.userForm.value;
-    let fileRequest: Observable<any>;
+    // check form valid
     if (!this.userForm.valid) {
       return;
     }
+    // check submit valid
     if (this.isSubmitted) {
       return;
     }
-    if (this.fileDTO) {
-      userForm.photoURL = this.fileDTO.url;
-    } else {
-      return;
-    }
-    if (this.file) {
-      fileRequest = this.uploadService.startUpload(this.file).pipe(
-        tap(res => {
-          return res;
-        }),
-        finalize(async () => {
-          const { ref, path } = this.uploadService.getFilePathRef(this.file);
-          const downloadURL = await ref.getDownloadURL().toPromise();
-          const fileDTO = {
-            path: path,
-            url: downloadURL,
-            name: this.file.file.name,
-            createdAt: this.file.createdAt.toISOString()
-          };
-          this.uploadService.createProfile(fileDTO);
-          this.isRegisterValid = false;
-          this.activeModal.close();
-          this.authService.signUp(userForm).subscribe(res => {});
-        })
-      );
-    }
-    fileRequest
-      .pipe(
-        tap(res => {
-          return res;
-        }),
-        finalize(() => {
-          this.authService.signUp(userForm).subscribe(res => {
-            this.logger.info(res);
-            this.activeModal.close();
-          })
-        })
-      ).subscribe();
     this.isSubmitted = true;
+
+    // if file exists, start upload.
+    if (this.file) {
+      this.uploadService.startUpload(this.file).subscribe(res => {
+        this.isRegisterValid = false;
+      });
+    } else {
+      const userForm = {...this.userForm.value};
+      this.signUp(userForm);
+    }
   }
-  goToSignIn() {
-    this.activeModal.close("SignIn");
-  }
+
   ngOnDestroy() {
     this.uploadSubscription.unsubscribe();
   }
