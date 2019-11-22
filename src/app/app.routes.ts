@@ -10,8 +10,7 @@ import { AuthGuard } from "./shared/guard/auth.guard";
 import { SecureInnerPagesGuard } from "./shared/guard/secure-inner-pages.guard";
 
 export const rootRouterConfig: Routes = [
-  { path: "home", redirectTo:'' },
-  { path: "", component: HomeComponent },
+  { path: "home", component: HomeComponent, pathMatch: 'full' },
   {
     path: "forgot-password",
     component: ForgotPasswordComponent,
@@ -21,7 +20,9 @@ export const rootRouterConfig: Routes = [
     path: "verify-email-address",
     component: VerifyEmailComponent,
     canActivate: [SecureInnerPagesGuard]
-  }
+  },
+  { path: '',   redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', component: HomeComponent } // temporary
 ];
 
 const routes: Routes = [];
