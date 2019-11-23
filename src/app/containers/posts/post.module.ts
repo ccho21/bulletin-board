@@ -28,6 +28,7 @@ import { PostService } from './shared/post.service';
 import { PostRoutingModule } from './post-routing.module';
 import { DateFormatPipe } from '@app/core/pipes/date-format.pipe';
 import { CommentsComponent } from '@app/containers/posts/post-detail/comments/comments.component';
+import { LikeService } from '@app/core/services/like/like.service';
 
 @NgModule({
   declarations: [
@@ -56,8 +57,8 @@ import { CommentsComponent } from '@app/containers/posts/post-detail/comments/co
     MatSliderModule,
     MatDialogModule,
   ],
-  providers: [NgbActiveModal, PostService],
+  providers: [NgbActiveModal, PostService, LikeService],
   bootstrap: [PostListComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class PostModule {}
+export class PostModule { }

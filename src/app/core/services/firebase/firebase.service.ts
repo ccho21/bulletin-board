@@ -58,7 +58,7 @@ export class FirebaseService {
       .collection("users", ref =>
         ref
           .where("nameToSearch", ">=", searchValue)
-          .where("nameToSearch", "<=", searchValue + "\uf8ff")
+          .where("nameToSearch", "<=", searchValue + "\ ")
       )
       .snapshotChanges();
   }

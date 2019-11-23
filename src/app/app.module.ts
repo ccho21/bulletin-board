@@ -89,7 +89,6 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   privacyPolicyUrl: '<your-privacyPolicyUrl-link>',
   credentialHelper: firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM
 };
-
 @NgModule({
   declarations: [
     AppComponent,

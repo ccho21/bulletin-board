@@ -7,6 +7,9 @@ import { Observable, from } from 'rxjs';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { User } from '@app/shared/models/user';
 import { UserService } from '@app/core/services/user/user.service';
+import { LikeService } from '@app/core/services/like/like.service';
+import { Like } from '@app/shared/models/like';
+import { type } from 'os';
 @Component({
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
@@ -15,27 +18,47 @@ import { UserService } from '@app/core/services/user/user.service';
 export class PostDetailComponent implements OnInit {
   post: Post;
   user: User;
+  isPostLiked: boolean;
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
     private logger: LoggerService,
     private authService: AuthService,
     private userService: UserService,
+    private likeService: LikeService
   ) { }
 
   ngOnInit() {
-    this.getPost();
+    if (!this.post) {
+      this.getPost();
+    }
+
+    //is liked?
   }
   getPost(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.postService.getPost(id)
       .subscribe((data: any) => {
         this.post = data.payload.data() as Post;
-        this.user = {...this.post.author};
+        this.isLiked();
       });
   }
+  isLiked() {
+    this.likeService.isLiked(this.post.postId, 1);
+    // .subscribe(res => {
+    //   this.logger.info('### is liked result ', res);
+    //   this.isPostLiked = res.length ? true : false;
+    //   this.logger.info('### isPostLiked', this.isPostLiked);
+    // });
+  }
+
+  getCurrentUser() {
+    // Author
+    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
+    const user: User = { displayName, uid, photoURL, email, emailVerified };
+    return user;
+  }
   commentEmit(e) {
-    this.logger.info('post is updated ', e);
     const comment = e;
     this.logger.info('### update Post', this.post);
     this.logger.info(this.post.hasOwnProperty('comments'));
@@ -49,11 +72,39 @@ export class PostDetailComponent implements OnInit {
   }
   updatePost(post) {
     this.postService.updatePost(post.postId, post).subscribe(res => {
-      this.logger.info('post is successfully updated', res);
+      this.logger.info('### post is successfully updated', res);
     });
   }
-
-  checkLike(user): Post {
+  addLike() {
+    // go to remove like if it is already there
+    if (this.isPostLiked) {
+      this.deleteLike();
+      return;
+    }
+    const post = this.cleanUp(this.post);
+    const user = this.getCurrentUser();
+    const likeDTO: Like = {
+      type: 1,
+      post,
+      user
+    }
+    this.likeService.addLike(likeDTO);
+  }
+  deleteLike() {
+    this.logger.info('### delete like start');
+    const id = this.post.postId;
+    const type = 1;
+    this.likeService.deleteLike(id, type);
+  }
+  cleanUp(data) {
+    const copiedData = Object.assign({}, data);
+    if (copiedData.hasOwnProperty('comments')) {
+      delete copiedData.comments;
+      delete copiedData.author;
+    }
+    return copiedData;
+  }
+  /* checkLike(user): Post {
     //check if the post was liked by the current user.
     const post = { ...this.post };
     if (!post.hasOwnProperty('likes') || post.likes.length === 0) {
@@ -113,5 +164,5 @@ export class PostDetailComponent implements OnInit {
     from(this.userService.setUserData(user)).subscribe(res => {
       this.logger.info('### User update success', res);
     });
-  }
+  } */
 }

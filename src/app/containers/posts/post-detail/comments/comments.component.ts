@@ -29,10 +29,6 @@ export class CommentsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.commentForm = new FormControl('');
-    this.logger.info('### post comments in comments ###', this.post);
-    if(this.post) {
-      this.commentList = this.post.comments;
-    }
   }
   ngOnChanges(changes: SimpleChanges) {
     this.logger.info('#### changes', changes);
