@@ -43,11 +43,10 @@ export class AuthService {
   }
   firebaseAuthChangeListener(response) {
     // if needed, do a redirect in here
+    console.log('firebase Auth change Listener', response);
     if (response) {
-      console.log('Logged in :)');
       return response;
     } else {
-      console.log('Logged out :(');
       return response;
     }
   }
@@ -149,7 +148,7 @@ export class AuthService {
 
   // Sign in with Google
   GoogleAuth() {
-    return this.authLogin(new auth.GoogleAuthProvider());
+    return from(this.authLogin(new auth.GoogleAuthProvider()));
   }
 
   // Auth logic to run auth providers
@@ -158,12 +157,17 @@ export class AuthService {
     return this.afAuth.auth
       .signInWithPopup(provider)
       .then(result => {
-        this.logger.info('###',result);
         this.ngZone.run(() => {
-          // this.logger.info('### auth logged in');
-          // this.router.navigate(['/']);
+          const userData: User = {
+            uid: result.user.uid,
+            email: result.user.email,
+            emailVerified: result.user.emailVerified,
+            displayName: result.user.displayName,
+            photoURL: result.user.photoURL
+          };
+          this.setUserData(userData);
+          this.router.navigate(['/']);
         });
-        this.setUserData(result.user);
       })
       .catch(error => {
         window.alert(error);

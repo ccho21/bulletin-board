@@ -67,7 +67,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
             emailVerified
           };
           if (this.user) {
-            this.logger.info(this.user);
+            this.logger.info('user successfuly signed in', this.user);
             this.isLoggedIn = true;
           }
         }

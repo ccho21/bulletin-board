@@ -10,6 +10,7 @@ import { NgbModule, NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 // material
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+
 import {
   MatButtonModule,
   MatInputModule,
@@ -23,10 +24,10 @@ import { PostDetailComponent } from './post-detail/post-detail.component';
 import { PostNewComponent } from './post-new/post-new.component';
 import { PostEditComponent } from './post-edit/post-edit.component';
 import { PostListComponent } from './post-list/post-list.component';
-import { PostsService } from './shared/posts.service';
-import { PostsRoutingModule } from './posts-routing.module';
-
-
+import { PostService } from './shared/post.service';
+import { PostRoutingModule } from './post-routing.module';
+import { DateFormatPipe } from '@app/core/pipes/date-format.pipe';
+import { CommentsComponent } from '@app/containers/posts/post-detail/comments/comments.component';
 
 @NgModule({
   declarations: [
@@ -34,12 +35,14 @@ import { PostsRoutingModule } from './posts-routing.module';
     PostNewComponent,
     PostEditComponent,
     PostListComponent,
+    CommentsComponent,
+    DateFormatPipe,
   ],
   entryComponents: [
     PostListComponent
   ],
   imports: [
-    PostsRoutingModule,
+    PostRoutingModule,
     CommonModule,
     BrowserModule,
     FormsModule,
@@ -53,8 +56,8 @@ import { PostsRoutingModule } from './posts-routing.module';
     MatSliderModule,
     MatDialogModule,
   ],
-  providers: [NgbActiveModal, PostsService],
+  providers: [NgbActiveModal, PostService],
   bootstrap: [PostListComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class PostsModule {}
+export class PostModule {}

@@ -27,7 +27,10 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
   }
   googleAuth () {
-    this.authService.GoogleAuth();
+    this.authService.GoogleAuth().subscribe(res => {
+      this.logger.info('### successfully signed in ', res);
+      this.activeModal.close();
+    });
   }
   signin() {
     const email = this.email.value;
@@ -42,7 +45,6 @@ export class SignInComponent implements OnInit {
       }, err => {
         this.close();
         window.alert(err);
-        this.close();
         this.loaderService.hide();
       });
     }

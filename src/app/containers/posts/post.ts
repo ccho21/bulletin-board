@@ -1,9 +1,15 @@
+import { User } from '@app/shared/models/user';
+import { Comment } from '@app/containers/posts/post-detail/comments/comment';
 export interface Post {
-  $key?: number;
+  postId?: string;
   title: string;
-  createdAt: Date;
-  updtedAt?: Date;
+  createdAt: string;
+  updatedAt?: string;
   photoURL?: string;
-  Author?;
+  author: User;
   content: string;
+  comments?: Comment[];
+  likes?: User[];
 }
+
+// get comments by post id

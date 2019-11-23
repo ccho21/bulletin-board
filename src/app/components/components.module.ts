@@ -5,13 +5,6 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { JwBootstrapSwitchNg2Module } from 'jw-bootstrap-switch-ng2';
 import { RouterModule } from '@angular/router';
 
-import { NouisliderModule } from 'ng2-nouislider';
-import { PopupService } from '@app/core/services/popup/popup.service';
-import { SignInComponent } from './sign-in/sign-in.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { VerifyEmailComponent } from './verify-email/verify-email.component';
-
 import {
   MatButtonModule,
   MatInputModule,
@@ -19,6 +12,13 @@ import {
   MatDialogModule,
   MatProgressSpinnerModule
 } from '@angular/material';
+
+import { NouisliderModule } from 'ng2-nouislider';
+import { PopupService } from '@app/core/services/popup/popup.service';
+import { SignInComponent } from './sign-in/sign-in.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 
 @NgModule({

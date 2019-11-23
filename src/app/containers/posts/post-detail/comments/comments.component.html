@@ -1,0 +1,103 @@
+<div class="nav-cover"></div>
+<div class="nav-cover"></div>
+<div class="container">
+  <div class="col-md-8">
+    <div class="card card-user">
+      <div class="card-header"><h5 class="card-title">Create Post</h5></div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Comment</label
+              ><textarea
+                class="form-control textarea"
+                rows="10"
+                placeholder="Write anything..."
+                [formControl]="commentForm"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="update ml-auto mr-auto">
+            <button
+              class="btn btn-primary btn-round"
+              type="submit"
+              (click)="onSubmit()"
+            >
+              POST
+            </button>
+          </div>
+        </div>
+        <a
+          href="#"
+          class="btn btn-link btn-info"
+          [routerLink]="['/posts']"
+          routerLinkActive="router-link-active"
+          >go back</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<small *ngIf="commentList">
+    <h3> COMMENT LIST </h3>
+    <pre>
+              {{ commentList | json }}
+          </pre
+    >
+  </small>
+  
+<!-- <p>comments works!</p>
+<div class="container">
+  <div class="row">
+    <a
+      href="#"
+      class="btn btn-link btn-info"
+      [routerLink]="['/posts/create']"
+      routerLinkActive="router-link-active"
+      >create</a
+    >
+  </div>
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-center">#</th>
+          <th>Date</th>
+          <th>Title</th>
+          <th class="">Content</th>
+          <th class="">Author</th>
+          <th class="">Replies</th>
+          <th class="">Views</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="ng-star-inserted" *ngFor="let post of posts; index as i">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td>{{ post.createdAt | dateFormat | date: "fullDate" }}</td>
+          <td>
+            <a
+              routerLink="{{ post.postId }}"
+              routerLinkActive="router-link-active"
+              >{{ post.title }}</a
+            >
+          </td>
+          <td class="">{{ post.content }}</td>
+          <td class="">
+            <div class="author-profile">
+              <img
+                class="img-circle img-no-padding img-responsive"
+                [src]="post.author.photoURL"
+                [alt]="post.author.name"
+              />
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->

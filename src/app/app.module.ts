@@ -36,28 +36,27 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 // firebase services
 import { FirebaseService } from './core/services/firebase/firebase.service';
 import { environment } from '../environments/environment';
+
 // services 
+import { ModalService } from './core/services/modal/modal.service';
+import { LoaderComponent } from './components/loader/loader.component';
+import { LoaderService } from './core/services/loader/loader.service';
+import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { ConsoleLoggerService } from '@app/core/services/logger/console-logger.service';
 import { UploadService } from './core/services/upload/upload.service';
 
-
-// Modules and Components
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { FooterComponent } from './components/footer/footer.component';
-
-import { ComponentsModule } from './components/components.module';
 import { AuthService } from './core/services/auth/auth.service';
 
 // Import canActivate guard services
 import { SecureInnerPagesGuard } from './shared/guard/secure-inner-pages.guard';
 import { AuthGuard } from './shared/guard/auth.guard';
-import { ModalService } from './core/services/modal/modal.service';
-import { LoaderComponent } from './components/loader/loader.component';
-import { LoaderService } from './core/services/loader/loader.service';
-import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
-import { PostsModule } from './containers/posts/posts.module';
 
+// Modules and Components
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ComponentsModule } from './components/components.module';
+import { PostModule } from './containers/posts/post.module';
 import { HomeModule } from './containers/home/home.module';
 
 
@@ -101,7 +100,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   entryComponents: [AppComponent],
   imports: [
     BrowserModule,
-    PostsModule,
+    PostModule,
     HomeModule,
     AppRoutingModule,
     FormsModule,

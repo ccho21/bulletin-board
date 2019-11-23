@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 
-import { postsRouterConfig } from './posts.routes'; 
+import { postRouterConfig } from './post.routes'; 
 
-const postsRoutes: Routes = postsRouterConfig;
+const postsRoutes: Routes = postRouterConfig;
 @NgModule({
   imports: [
       RouterModule.forRoot(postsRoutes)
     ],
   exports: [RouterModule]
 })
-export class PostsRoutingModule { }
+export class PostRoutingModule { }

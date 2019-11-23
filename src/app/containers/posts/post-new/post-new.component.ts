@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { Post } from "../post";
 import { FormGroup, FormControl } from "@angular/forms";
 import { LoggerService } from '@app/core/services/logger/logger.service';
-import { PostsService } from '../shared/posts.service';
+import { PostService } from '../shared/post.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
+import { User } from '@app/shared/models/user';
+import { Post } from "../post";
 @Component({
   selector: "app-post-new",
   templateUrl: "./post-new.component.html",
@@ -14,9 +15,9 @@ export class PostNewComponent implements OnInit {
   postFormGroup: FormGroup;
   constructor(
     private logger: LoggerService,
-    private postsService: PostsService,
+    private postService: PostService,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.postFormGroup = new FormGroup({
@@ -27,15 +28,16 @@ export class PostNewComponent implements OnInit {
     this.logger.info(this.postFormGroup);
   }
   onSubmit() {
-    if(!this.postFormGroup.valid) {
-      return ;
+    if (!this.postFormGroup.valid) {
+      return;
     }
     this.logger.info('### form value', this.postFormGroup.value);
-    const post = {...this.postFormGroup.value};
-    const user = this.authService.getCurrentUser();
-    this.logger.info('### user ',user);
-    this.postsService.addPost(post).subscribe(res => {
-      this.logger.info('### successfully posted data');
+    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
+    const author: User = { displayName, uid, photoURL, email, emailVerified };
+    const post: Post = { ...this.postFormGroup.value, author, createdAt: new Date().toISOString() };
+    this.logger.info('###  post', post);
+    this.postService.addPost(post).subscribe(res => {
+      this.logger.info('### successfully posted data', res);
     })
   }
 }
