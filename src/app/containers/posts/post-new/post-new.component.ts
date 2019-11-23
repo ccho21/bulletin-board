@@ -4,7 +4,7 @@ import { LoggerService } from '@app/core/services/logger/logger.service';
 import { PostService } from '../shared/post.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { User } from '@app/shared/models/user';
-import { Post } from "../post";
+import { Post } from "../../../shared/models/post";
 @Component({
   selector: "app-post-new",
   templateUrl: "./post-new.component.html",

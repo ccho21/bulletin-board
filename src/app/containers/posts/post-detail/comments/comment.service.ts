@@ -7,7 +7,7 @@ import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from, of } from 'rxjs';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { mergeMap } from 'rxjs/operators';
-import { Comment } from './comment';
+import { Comment } from '../../../../shared/models/comment';
 
 @Injectable({
   providedIn: 'root'

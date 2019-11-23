@@ -6,8 +6,8 @@ import { UploadService } from '@app/core/services/upload/upload.service';
 import { CommentService } from './comment.service';
 import { User } from '@app/shared/models/user';
 import { PostService } from '../../shared/post.service';
-import { Post } from '../../post';
-import { Comment } from './comment';
+import { Post } from '../../../../shared/models/post';
+import { Comment } from '../../../../shared/models/comment';
 @Component({
   selector: 'app-comments',
   templateUrl: './comments.component.html',

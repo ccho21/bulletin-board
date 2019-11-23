@@ -12,6 +12,7 @@ import { FirebaseService } from '../firebase/firebase.service';
 import { of, from, Observable, Subject } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { LoaderService } from '../loader/loader.service';
+import { UserService } from '../user/user.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +27,8 @@ export class AuthService {
     public ngZone: NgZone, // NgZone service to remove outside scope warning,
     private logger: LoggerService,
     private fbService: FirebaseService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private userService: UserService
   ) {
     /* Saving user data in localstorage when 
     logged in and setting up null when logged out */
@@ -112,7 +114,7 @@ export class AuthService {
           photoURL: user.photoURL
         });
         this.sendVerificationMail();
-        this.setUserData(userData);
+        this.userService.setUserData(userData);
         // loader end
         this.loaderService.hide();
       })
@@ -165,25 +167,13 @@ export class AuthService {
             displayName: result.user.displayName,
             photoURL: result.user.photoURL
           };
-          this.setUserData(userData);
+          this.userService.setUserData(userData);
           this.router.navigate(['/']);
         });
       })
       .catch(error => {
         window.alert(error);
       });
-  }
-
-  /* Setting up user data when sign in with username/password, 
-  sign up with username/password and sign in with social auth  
-  provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  setUserData(userData) {
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(
-      `users/${userData.uid}`
-    );
-    return userRef.set(userData, {
-      merge: true
-    });
   }
 
   getCurrentUser() {

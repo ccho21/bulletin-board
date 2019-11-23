@@ -3,7 +3,7 @@ import {
   AngularFirestore,
   AngularFirestoreDocument
 } from '@angular/fire/firestore';
-import { Post } from "../post";
+import { Post } from "../../../shared/models/post";
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from, of } from 'rxjs';
 import { AuthService } from '@app/core/services/auth/auth.service';
