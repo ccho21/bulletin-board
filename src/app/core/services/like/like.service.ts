@@ -23,49 +23,27 @@ export class LikeService {
   addLike(data: Like) {
     const id = this.db.createId();
     data.likeId = id;
-    this.db.collection<Like>('likes').doc(id).set(data);
+    const query = this.db.collection<Like>('likes').doc(id).set(data);
+    return of(query);
   }
-  getLikesByUserId(type: number): Observable<any> { // by current user id
+  getLikesByUserId(type: number) { // by current user id
     const { uid } = this.authService.getCurrentUser();
-    this.logger.info('### uid', uid);
     const query = this.db.collection('likes', ref =>
-      ref.where("user.uid", "==", `${uid}`).where('type', '==', type)).valueChanges()
-      .pipe(mergeMap(res => {
-        this.logger.info('111?', res);
-        return res;
-      }));
+      ref.where("user.uid", "==", `${uid}`).where('type', '==', type)).valueChanges();
     return query;
   }
 
   isLiked(postId, type) { // get data from current User Id and match with post id. 
-    const query = this.getLikesByUserId(type);
-    query.subscribe(res => {
-      this.logger.info('working?');
-      this.logger.info('111',res);
-    });
+    const query = this.getLikesByUserId(type).pipe(mergeMap(results => {
+      const data = results.find((result: Like) => result.post.postId === postId);
+      return of(data);
+    }));
+    return query;
   }
 
-  deleteLike(postId: string, type: number) {
-    // const query = this.db.collection<Like>('likes').valueChanges();
-    // query.subscribe(res => {
-    //   this.logger.info('deleted', res);
-    // })
-    const query = this.getLikesByUserId(type);
-    this.logger.info(query);
-    query.pipe(mergeMap(res => {
-      this.logger.info('##### ,', res);
-      const data = res.length ? res[0] : null;
-      return of(data);
-    })).subscribe((res: any) => {
-      this.logger.info('mergemap 1', res);
-      this.db.doc(`likes/${res.likeId}`).delete();
-      /*  if(res) {
-        const likeId = res.likeId;
-        this.db.collection('likes').doc(likeId).delete().then(res => {
-          this.logger.info('### deleted success', res);
-        }, err => this.logger.info(err));
-      } */
-    });
+  deleteLike(like: Like) {
+    const query = this.db.collection('likes').doc(like.likeId).delete();
+    return of(query);
   }
 
 
