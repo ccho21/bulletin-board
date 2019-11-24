@@ -83,7 +83,10 @@ export class SignUpComponent implements OnInit, OnDestroy {
       this.signUp(userForm);
     }
   }
-
+  goToSignIn(e) {
+    e.preventDefault();
+    this.activeModal.close("SignIn");
+  }
   ngOnDestroy() {
     this.uploadSubscription.unsubscribe();
   }

@@ -27,7 +27,8 @@ export class ModalService {
         this.signUpOpen();
         return ;
       }
-      if(res) {
+      if(res && res !== 'SignUp') {
+        this.activeModal.close();
         this.authService.updateSignInSource(true);
       }
     });
@@ -42,7 +43,7 @@ export class ModalService {
         this.activeModal.close();
         this.signInOpen();
       }
-      if(res) {
+      if(res && res !== 'SignIn') {
         this.authService.updateSignInSource(true);
       }
       this.close();
