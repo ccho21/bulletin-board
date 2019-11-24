@@ -8,6 +8,9 @@ import { User } from '@app/shared/models/user';
 import { PostService } from '../../shared/post.service';
 import { Post } from '../../../../shared/models/post';
 import { Comment } from '../../../../shared/models/comment';
+import { LikeService } from '@app/core/services/like/like.service';
+import { UserService } from '@app/core/services/user/user.service';
+import { Like } from '@app/shared/models/like';
 @Component({
   selector: 'app-comments',
   templateUrl: './comments.component.html',
@@ -17,6 +20,7 @@ export class CommentsComponent implements OnInit, OnChanges {
   commentForm: FormControl;
   comment: Comment;
   commentList: Comment[] = [];
+  isCommentLiked: boolean;
   @Input() post: Post;
   @Output() commentEmit: EventEmitter<Comment> = new EventEmitter();
   constructor(
@@ -24,7 +28,9 @@ export class CommentsComponent implements OnInit, OnChanges {
     private authService: AuthService,
     private uploadService: UploadService,
     private commentService: CommentService,
-    private postService: PostService
+    private postService: PostService,
+    private likeService: LikeService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -36,6 +42,53 @@ export class CommentsComponent implements OnInit, OnChanges {
     if(data) {
       this.commentList = data.comments;
     }
+  }
+  // isLiked() {
+  //   this.likeSubscription = this.likeService.isLiked(this.post.postId, 1).subscribe((res: Like) => {
+  //      this.like = res;
+  //      this.isPostLiked = this.like ? true : false;
+  //      this.logger.info('### isPostlike', this.isPostLiked);
+  //      this.logger.info('### this.like', this.like);
+  //    })
+  //  }
+  
+  addLike(data) {
+    // go to remove like if it is already there
+    if (this.isCommentLiked) {
+      this.deleteLike(data);
+      return;
+    }
+    const comment = this.cleanUp(data);
+    const user = this.getCurrentUser();
+    const likeDTO: Like = {
+      type: 2,
+      comment,
+      user
+    }
+    this.likeService.addLike(likeDTO).subscribe(res => {
+      this.logger.info('### successfully liked ');
+      this.isCommentLiked = true;
+    });
+  }
+  deleteLike(comment) {
+    this.logger.info('### delete like start');
+    this.likeService.deleteLike(comment).subscribe(res => {
+      this.logger.info('### like successfully deleted');
+      this.isCommentLiked = false;
+    });
+  }
+  getCurrentUser() {
+    // Author
+    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
+    const user: User = { displayName, uid, photoURL, email, emailVerified };
+    return user;
+  }
+  cleanUp(data) {
+    const copiedData = Object.assign({}, data);
+    if (copiedData.hasOwnProperty('author')) {
+      delete copiedData.author;
+    }
+    return copiedData;
   }
   onSubmit() {
     if (!this.commentForm.valid) {
@@ -62,14 +115,6 @@ export class CommentsComponent implements OnInit, OnChanges {
         this.comment = res;
         this.logger.info('will be emitted',this.commentEmit)
         this.commentEmit.emit(this.comment);
-        
-        // if comment created then update post detail
-        // if (this.post.comments === null) {
-        //   this.post.comments = [this.comment];
-        // } else {
-        //   this.post.comments.push(this.comment);
-        // }
-        // this.postService.updatePost(postId, this.post);
       }
     })
   }

@@ -41,62 +41,35 @@
   </div>
 </div>
 
-<!-- <small *ngIf="commentList">
+<div class="comments">
+  <ul class="list-group">
+    <li *ngFor="let comment of commentList; index as i" class="list-group-item">
+      <div class="d-flex justify-content-between w-50">
+        <div>
+          {{ comment.comment }}
+        </div>
+        <div>
+          {{ comment.createdAt }}
+        </div>
+        <div>
+          {{ comment.author.displayName }}
+        </div>
+        <div>
+          <button
+            type="button"
+            (click)="addLike(comment)"
+            class="btn btn-info btn-just-icon"
+          >
+            <i class="fa fa-heart"></i>Like
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+<small *ngIf="commentList">
   <h3>COMMENT LIST</h3>
   <pre>
       {{ commentList | json }}
   </pre>
-</small> -->
-
-<!-- <p>comments works!</p>
-<div class="container">
-  <div class="row">
-    <a
-      href="#"
-      class="btn btn-link btn-info"
-      [routerLink]="['/posts/create']"
-      routerLinkActive="router-link-active"
-      >create</a
-    >
-  </div>
-  <div class="row">
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="text-center">#</th>
-          <th>Date</th>
-          <th>Title</th>
-          <th class="">Content</th>
-          <th class="">Author</th>
-          <th class="">Replies</th>
-          <th class="">Views</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="ng-star-inserted" *ngFor="let post of posts; index as i">
-          <td class="text-center">{{ i + 1 }}</td>
-          <td>{{ post.createdAt | dateFormat | date: "fullDate" }}</td>
-          <td>
-            <a
-              routerLink="{{ post.postId }}"
-              routerLinkActive="router-link-active"
-              >{{ post.title }}</a
-            >
-          </td>
-          <td class="">{{ post.content }}</td>
-          <td class="">
-            <div class="author-profile">
-              <img
-                class="img-circle img-no-padding img-responsive"
-                [src]="post.author.photoURL"
-                [alt]="post.author.name"
-              />
-            </div>
-          </td>
-          <td></td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div> -->
+</small>
