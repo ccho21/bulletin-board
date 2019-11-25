@@ -18,7 +18,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   post: Post;
   user: User;
   isPostLiked: boolean;
-  like: Like;
   likeSubscription: Subscription
   constructor(
     private route: ActivatedRoute,
@@ -46,10 +45,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
   isLiked() {
    this.likeSubscription = this.likeService.isLiked(this.post.postId, 1).subscribe((res: Like) => {
-      this.like = res;
-      this.isPostLiked = this.like ? true : false;
+      this.isPostLiked = res ? true : false;
       this.logger.info('### isPostlike', this.isPostLiked);
-      this.logger.info('### this.like', this.like);
     })
   }
 
@@ -95,7 +92,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
   deleteLike() {
     this.logger.info('### delete like start');
-    this.likeService.deleteLike(this.like).subscribe(res => {
+    this.likeService.deleteLike(this.post.postId, 1).subscribe(res => {
       this.logger.info('### like successfully deleted');
     });
   }

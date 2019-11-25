@@ -43,7 +43,7 @@
 
 <div class="comments">
   <ul class="list-group">
-    <li *ngFor="let comment of commentList; index as i" class="list-group-item">
+    <li *ngFor="let comment of updatedCommentList; index as i" class="list-group-item">
       <div class="d-flex justify-content-between w-50">
         <div>
           {{ comment.comment }}
@@ -62,6 +62,9 @@
           >
             <i class="fa fa-heart"></i>Like
           </button>
+        </div>
+        <div>
+          {{comment.isLiked}}
         </div>
       </div>
     </li>

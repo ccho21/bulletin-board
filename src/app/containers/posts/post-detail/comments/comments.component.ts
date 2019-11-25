@@ -20,7 +20,7 @@ export class CommentsComponent implements OnInit, OnChanges {
   commentForm: FormControl;
   comment: Comment;
   commentList: Comment[] = [];
-  isCommentLiked: boolean;
+  updatedCommentList = [];
   @Input() post: Post;
   @Output() commentEmit: EventEmitter<Comment> = new EventEmitter();
   constructor(
@@ -35,26 +35,37 @@ export class CommentsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.commentForm = new FormControl('');
+   
   }
   ngOnChanges(changes: SimpleChanges) {
-    this.logger.info('#### changes', changes);
     const data = changes.post.currentValue;
-    if(data) {
+    if (data) {
       this.commentList = data.comments;
+      this.post = data;
+      this.isLiked(this.post);
     }
   }
-  // isLiked() {
-  //   this.likeSubscription = this.likeService.isLiked(this.post.postId, 1).subscribe((res: Like) => {
-  //      this.like = res;
-  //      this.isPostLiked = this.like ? true : false;
-  //      this.logger.info('### isPostlike', this.isPostLiked);
-  //      this.logger.info('### this.like', this.like);
-  //    })
-  //  }
-  
+  isLiked(post) {
+    this.likeService.isCommentLiked(post.postId, 2).subscribe((results: Like[]) => {
+      this.logger.info('### isLiked ', results);
+      const { uid } = this.authService.getCurrentUser();
+      this.updatedCommentList = this.commentList.map((cur: any) => {
+        if(cur.author.uid === uid) {
+          cur.isLiked = true;
+        }
+        else {
+          cur.isLiked = false;
+        }
+        return cur;
+      });
+      this.updatedCommentList;
+      this.logger.info('### updated comment list', this.updatedCommentList);
+    })
+  }
+
   addLike(data) {
     // go to remove like if it is already there
-    if (this.isCommentLiked) {
+    if (data.isLiked) {
       this.deleteLike(data);
       return;
     }
@@ -65,16 +76,16 @@ export class CommentsComponent implements OnInit, OnChanges {
       comment,
       user
     }
+
     this.likeService.addLike(likeDTO).subscribe(res => {
       this.logger.info('### successfully liked ');
-      this.isCommentLiked = true;
+      data.isLiked = true;
     });
   }
   deleteLike(comment) {
-    this.logger.info('### delete like start');
-    this.likeService.deleteLike(comment).subscribe(res => {
+    this.likeService.deleteLike(comment.commentId, 2).subscribe(res => {
       this.logger.info('### like successfully deleted');
-      this.isCommentLiked = false;
+      comment.isLiked = false;
     });
   }
   getCurrentUser() {
@@ -111,9 +122,9 @@ export class CommentsComponent implements OnInit, OnChanges {
     };
     this.commentService.addComment(commentDTO).subscribe(res => {
       this.logger.info('### successfully created a comment ', res);
-      if(res) {
+      if (res) {
         this.comment = res;
-        this.logger.info('will be emitted',this.commentEmit)
+        this.logger.info('will be emitted', this.commentEmit)
         this.commentEmit.emit(this.comment);
       }
     })
