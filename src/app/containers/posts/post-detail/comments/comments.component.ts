@@ -49,16 +49,20 @@ export class CommentsComponent implements OnInit, OnChanges {
     this.likeService.isCommentLiked(post.postId, 2).subscribe((results: Like[]) => {
       this.logger.info('### isLiked ', results);
       const { uid } = this.authService.getCurrentUser();
-      this.updatedCommentList = this.commentList.map((cur: any) => {
-        if(cur.author.uid === uid) {
-          cur.isLiked = true;
-        }
-        else {
-          cur.isLiked = false;
-        }
-        return cur;
-      });
-      this.updatedCommentList;
+      this.likeService.getLikesBypostId(this.post.postId, 2).subscribe(res => {
+        this.updatedCommentList = this.commentList.map((cur: any) => {
+          this.logger.info('### get likes by post id', cur);
+          if(cur.author.uid === uid) {
+            cur.isLiked = true;
+          }
+          else {
+            cur.isLiked = false;
+          }
+          return cur;
+        });
+      })
+     
+    
       this.logger.info('### updated comment list', this.updatedCommentList);
     })
   }
@@ -71,10 +75,12 @@ export class CommentsComponent implements OnInit, OnChanges {
     }
     const comment = this.cleanUp(data);
     const user = this.getCurrentUser();
+    const postId = this.post.postId;
     const likeDTO: Like = {
       type: 2,
       comment,
-      user
+      user,
+      postId,
     }
 
     this.likeService.addLike(likeDTO).subscribe(res => {

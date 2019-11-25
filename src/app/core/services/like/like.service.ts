@@ -32,6 +32,12 @@ export class LikeService {
       ref.where("user.uid", "==", `${uid}`).where('type', '==', type)).valueChanges();
     return query;
   }
+  getLikesBypostId(postId: string, type: number) { // by current user id
+    const { uid } = this.authService.getCurrentUser();
+    const query = this.db.collection('likes', ref =>
+      ref.where("post.postId", "==", `${postId}`).where('type', '==', type).where("user.uid", "==", `${uid}`)).valueChanges();
+    return query;
+  }
 
   isLiked(postId, type) { // get data from current User Id and match with post id. 
     const query = this.getLikesByUserId(type).pipe(mergeMap(results => {

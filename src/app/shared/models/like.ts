@@ -7,4 +7,5 @@ export interface Like {
     user : User;
     post?   : Post; // get rid of other linked properties;
     comment?: Comment; 
+    postId?: string;
 }
