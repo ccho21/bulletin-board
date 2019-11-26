@@ -1,7 +1,7 @@
 <div class="nav-cover"></div>
 <div class="nav-cover"></div>
 <p>post-detail works!</p>
-<button type="button" (click)="addLike()" class="btn btn-info btn-just-icon">
+<button type="button" (click)="checkLike()" class="btn btn-info btn-just-icon">
   <i class="fa fa-heart"></i>Like
 </button>
 <app-comments [post]="post" (commentEmit)="commentEmit($event)"></app-comments>
