@@ -22,8 +22,8 @@ export class PostService {
         return res.set(post);
       })
     );
-
   }
+
 
   /* Get post */
   getPost(id: string) {
@@ -32,7 +32,7 @@ export class PostService {
 
   /* Get post list */
   getPosts() {
-    return from(this.db.collection('posts').snapshotChanges());
+    return from(this.db.collection('posts').valueChanges(['added', 'removed']));
   }
 
   /* Update post */
@@ -41,6 +41,28 @@ export class PostService {
       .collection('posts')
       .doc(id)
       .set(post));
+  }
+
+  updatePostViews(post: Post) {
+    let count = 0;
+    if(post.hasOwnProperty('views')) {
+      count = post.views += 1;
+    } else {
+      count = post.views = 1;
+    }
+    post.views = count;
+    this.updatePost(post.postId, post).subscribe();
+  }
+
+  updatePostLikes(post: Post, value: number) {
+    let count = 0;
+    if(post.hasOwnProperty('likes')) {
+      count = post.likes += value;
+    } else {
+      count = post.likes = 1;
+    }
+    post.likes = count;
+    return this.updatePost(post.postId, post);
   }
 
   /* Delete post */

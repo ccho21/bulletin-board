@@ -9,7 +9,8 @@ export interface Post {
   author        : User;
   content       : string;
   comments?     : Comment[];
-  likes?        : User[];
+  likes?        : number;
+  views?         : number;
 }
 
 // get comments by post id

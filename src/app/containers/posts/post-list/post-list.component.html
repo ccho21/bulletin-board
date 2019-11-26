@@ -16,6 +16,8 @@
             <th class="">Author</th>
             <th class="text-center">Replies</th>
             <th class="text-center">Views</th>
+            <th class="text-center">Likes</th>
+            <th class="text-center">click Like</th>
           </tr>
         </thead>
         <tbody >
@@ -36,16 +38,20 @@
             <td class="text-center">
               {{post.hasOwnProperty('comments')? post.comments.length : 0}}
             </td>
-            <td></td>
+            <td>{{post.views}}</td>
+            <td>{{post.likes}}</td>
+            <td><button type="button" (click)="addLike(post)" class="btn btn-info btn-just-icon">
+              <i class="fa fa-heart"></i>Like
+            </button></td>
           </tr>
         </tbody>
       </table>
     </div>
 </div>
 
-<!-- <small *ngIf="posts">
+<small *ngIf="posts">
     <h3>POST LIST</h3>
     <pre>
         {{ posts | json }}
     </pre>
-</small> -->
+</small>

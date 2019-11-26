@@ -23,13 +23,5 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.callApi();
-  }
- 
-  callApi() {
-    this.http.get('https://reqres.in/api/users?page=2')
-      .subscribe(data => {
-        console.log('### ohoho',data);
-      })
   }
 }

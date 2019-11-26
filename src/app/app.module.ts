@@ -59,7 +59,6 @@ import { ComponentsModule } from './components/components.module';
 import { PostModule } from './containers/posts/post.module';
 import { HomeModule } from './containers/home/home.module';
 
-
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [

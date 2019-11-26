@@ -29,7 +29,7 @@ import { PostRoutingModule } from './post-routing.module';
 import { DateFormatPipe } from '@app/core/pipes/date-format.pipe';
 import { CommentsComponent } from '@app/containers/posts/post-detail/comments/comments.component';
 import { LikeService } from '@app/core/services/like/like.service';
-
+import { ViewService } from '@app/core/services/view/view.service';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -57,7 +57,7 @@ import { LikeService } from '@app/core/services/like/like.service';
     MatSliderModule,
     MatDialogModule,
   ],
-  providers: [NgbActiveModal, PostService, LikeService],
+  providers: [NgbActiveModal, PostService, LikeService, ViewService],
   bootstrap: [PostListComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -26,39 +26,29 @@ export class LikeService {
     const query = this.db.collection<Like>('likes').doc(id).set(data);
     return of(query);
   }
+  
   getLikesByUserId(type: number) { // by current user id
     const { uid } = this.authService.getCurrentUser();
     const query = this.db.collection('likes', ref =>
       ref.where("user.uid", "==", `${uid}`).where('type', '==', type)).valueChanges();
     return query;
   }
-  getLikesBypostId(postId: string, type: number) { // by current user id
-    const { uid } = this.authService.getCurrentUser();
-    const query = this.db.collection('likes', ref =>
-      ref.where("post.postId", "==", `${postId}`).where('type', '==', type).where("user.uid", "==", `${uid}`)).valueChanges();
-    return query;
-  }
-
   isLiked(postId, type) { // get data from current User Id and match with post id. 
-    const query = this.getLikesByUserId(type).pipe(mergeMap(results => {
+    const query = this.getLikesByUserId(type).pipe(take(1), mergeMap(results => {
       const data = results.find((result: Like) => result.post.postId === postId);
       return of(data);
     }));
     return query;
   }
-  isCommentLiked(postId, type) {
-    const { uid } = this.authService.getCurrentUser();
-    const query = this.db.collection('posts', ref =>
-      ref.where('postId', '==', `${postId}`)).valueChanges();
-      // where('post.postId', '==', `${post.postId}`).where('type', '==', type)
-      return query;
+
+  getLikesBypostId(postId: string, uid: string,  type: number) {
+    const query = this.db.collection('likes', ref =>
+      ref.where('user.uid', '==', uid).where("postId", "==", `${postId}`).where('type', '==', type)).valueChanges();
+    return query;
   }
 
   getLikesByData(id: string, type) {
     const q = type === 1 ? 'post.postId' : 'comment.commentId';
-    // this.logger.info('### q ', q);
-    // this.logger.info('### id ', id);
-    // this.logger.info('### type ', type);
     const query = this.db.collection('likes', ref =>
     ref.where(`${q}`, '==', id).where('type', '==', type)).valueChanges();
     return query;

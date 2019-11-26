@@ -7,10 +7,11 @@ import { CommentService } from './comment.service';
 import { User } from '@app/shared/models/user';
 import { PostService } from '../../shared/post.service';
 import { Post } from '../../../../shared/models/post';
-import { Comment } from '../../../../shared/models/comment';
 import { LikeService } from '@app/core/services/like/like.service';
 import { UserService } from '@app/core/services/user/user.service';
 import { Like } from '@app/shared/models/like';
+import { Comment } from '@app/shared/models/comment';
+import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-comments',
   templateUrl: './comments.component.html',
@@ -35,10 +36,11 @@ export class CommentsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.commentForm = new FormControl('');
-   
+    this.logger.info('### ngOnInit in comments');
   }
   ngOnChanges(changes: SimpleChanges) {
     const data = changes.post.currentValue;
+    this.logger.info('### ng change', data);
     if (data) {
       this.commentList = data.comments;
       this.post = data;
@@ -46,25 +48,17 @@ export class CommentsComponent implements OnInit, OnChanges {
     }
   }
   isLiked(post) {
-    this.likeService.isCommentLiked(post.postId, 2).subscribe((results: Like[]) => {
-      this.logger.info('### isLiked ', results);
       const { uid } = this.authService.getCurrentUser();
-      this.likeService.getLikesBypostId(this.post.postId, 2).subscribe(res => {
-        this.updatedCommentList = this.commentList.map((cur: any) => {
-          this.logger.info('### get likes by post id', cur);
-          if(cur.author.uid === uid) {
-            cur.isLiked = true;
-          }
-          else {
-            cur.isLiked = false;
-          }
-          return cur;
-        });
+      this.likeService.getLikesBypostId(post.postId, uid , 2).pipe(take(1)).subscribe(results => {
+        // O(N+M)
+        if(this.commentList) {
+          this.updatedCommentList = this.commentList.map((comment: Comment) => {
+            const valid = results.some((like: Like) => comment.commentId === like.comment.commentId);
+            return {...comment, isLiked: valid};
+          });
+        }
+        this.logger.info('### updated comment list', this.updatedCommentList);
       })
-     
-    
-      this.logger.info('### updated comment list', this.updatedCommentList);
-    })
   }
 
   addLike(data) {
@@ -114,7 +108,7 @@ export class CommentsComponent implements OnInit, OnChanges {
     //comment
     const comment = this.commentForm.value;
     this.logger.info('### form value', this.commentForm.value);
-    // Author
+    // Author 
     const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
     const author: User = { displayName, uid, photoURL, email, emailVerified };
 
