@@ -26,10 +26,12 @@ export class ViewService {
   addView(post:Post, uid) {
     const viewId = this.db.createId();
     const postId = post.postId;
+    const postViews = post.hasOwnProperty('views') ? post.views : 0;
     const view = {
       viewId,
       postId,
       uid,
+      postViews,
     }
     const query = this.db.collection<Like>('views').doc(viewId).set(view)
     of(query).subscribe(res => {
@@ -43,10 +45,12 @@ export class ViewService {
     // add it.
     const { uid } = this.authService.getCurrentUser();
     const query = this.db.collection('views', ref =>
-      ref.where('uid', '==', uid)).valueChanges().subscribe(res => {
+      ref.where('uid', '==', uid).where('postId', '==', post.postId)).valueChanges().subscribe(res => {
         this.logger.info('view ??', res);
         if(res.length === 0) {
           this.addView(post, uid);
+        } else {
+
         }
       });
   }

@@ -4,7 +4,7 @@ import {
   AngularFirestoreDocument
 } from '@angular/fire/firestore';
 import { LoggerService } from "@app/core/services/logger/logger.service";
-import { from, of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { Like } from '@app/shared/models/like';
 import { Post } from '@app/shared/models/post';
