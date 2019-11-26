@@ -47,11 +47,13 @@
         </tbody>
       </table>
     </div>
+    <!-- sample data -->
+    <small *ngIf="posts">
+      <h3>POST LIST</h3>
+      <pre>
+          {{ posts | json }}
+      </pre>
+  </small>
+  <!-- sample -->
 </div>
 
-<small *ngIf="posts">
-    <h3>POST LIST</h3>
-    <pre>
-        {{ posts | json }}
-    </pre>
-</small>
