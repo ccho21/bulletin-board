@@ -8,6 +8,8 @@ export interface Post {
   photoURL?     : string;
   author        : User;
   content       : string;
+  categoryId    : string;
+  tagIds        : string;
   comments?     : Comment[];
   likes?        : number;
   views?         : number;

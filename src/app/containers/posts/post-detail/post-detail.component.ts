@@ -20,6 +20,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   user: User;
   isPostLiked: boolean;
   likeSubscription: Subscription
+  hasPost: boolean;
+  hasImage: boolean;
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
@@ -41,6 +43,10 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.postService.getPost(id)
       .subscribe((data: any) => {
         this.post = data.payload.data() as Post;
+        if(this.post.photoURL) {
+          this.hasImage = true;
+        }
+        this.hasPost = true;
         this.isLiked();
         this.viewService.checkViewed(this.post);
       });
@@ -52,8 +58,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       this.logger.info('### isPostlike', this.isPostLiked);
     })
   }
-
-  
 
   commentEmit(e) {
     const comment = e;

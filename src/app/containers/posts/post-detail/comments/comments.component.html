@@ -1,78 +1,99 @@
-<div class="nav-cover"></div>
-<div class="nav-cover"></div>
-<div class="container">
-  <div class="col-md-8">
-    <div class="card card-user">
-      <div class="card-header"><h5 class="card-title">Create Post</h5></div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label>Comment</label
-              ><textarea
-                class="form-control textarea"
-                rows="10"
-                placeholder="Write anything..."
-                [formControl]="commentForm"
-              ></textarea>
+<div class="row">
+  <div class="comments media-area">
+    <h3 class="text-center">Comments</h3>
+    <!-- COMMENT -->
+    <div class="container">
+      <div class="">
+        <div class="my-3"><h5 class="">Add comment</h5></div>
+        <div class="">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <!-- <label>Comment</label> -->
+                <textarea
+                  class="form-control textarea"
+                  rows="2"
+                  placeholder="Write anything..."
+                  [formControl]="commentForm"
+                ></textarea>
+              </div>
+            </div>
+            <div class="col-md-12 text-right">
+              <div class="update ml-auto mr-auto mb-3">
+                <button
+                  class="btn btn-primary btn-round"
+                  type="submit"
+                  (click)="onSubmit()"
+                >
+                  POST
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="update ml-auto mr-auto">
-            <button
-              class="btn btn-primary btn-round"
-              type="submit"
-              (click)="onSubmit()"
-            >
-              POST
-            </button>
+      </div>
+    </div>
+    <!--  -->
+
+    <div class="media" *ngFor="let comment of updatedCommentList; index as i">
+      <a class="pull-left" href="#"
+        ><div class="avatar">
+          <img
+            alt="Tim Picture"
+            class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+            src="{{ comment.author.photoURL }}"
+          /></div
+      ></a>
+      <div class="media-body">
+        <h5 class="media-heading">{{ comment.displayName }}</h5>
+        <div class="pull-right">
+          <h6 class="text-muted">{{ comment.createdAt | date }}</h6>
+          <a
+            class="btn btn-info btn-link pull-right "
+            href="javascript:void(0)"
+            (click)="addReply(comment)"
+            ><i class="fa fa-reply"></i> Reply</a
+          >
+        </div>
+        <p class="c-body-content">
+          {{ comment.comment }}
+        </p>
+        <div *ngIf="comment.addCommentValid">
+          <app-fln-comment
+            [comment]="comment"
+            (subCommentEmit)="updateSubcomment($event)"
+          ></app-fln-comment>
+        </div>
+        <div *ngIf="comment.hasOwnProperty('comments')">
+          <div class="media" *ngFor="let c of comment.comments">
+            <a class="pull-left" href="#"
+              ><div class="avatar">
+                <img
+                  alt="64x64"
+                  class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+                  src="{{ c.author.photoURL }}"
+                /></div
+            ></a>
+            <div class="media-body">
+              <h5 class="media-heading">{{ c.author.displayName }}</h5>
+              <div class="pull-right">
+                <h6 class="text-muted">{{ c.createdAt | date }}</h6>
+              </div>
+              <p>
+                {{ c.comment }}
+              </p>
+              <div></div>
+            </div>
           </div>
         </div>
-        <a
-          href="#"
-          class="btn btn-link btn-info"
-          [routerLink]="['/posts']"
-          routerLinkActive="router-link-active"
-          >go back</a
-        >
       </div>
     </div>
   </div>
 </div>
-
-<div class="comments">
-  <ul class="list-group">
-    <li *ngFor="let comment of updatedCommentList; index as i" class="list-group-item">
-      <div class="d-flex justify-content-between w-50">
-        <div>
-          {{ comment.comment }}
-        </div>
-        <div>
-          {{ comment.createdAt }}
-        </div>
-        <div>
-          {{ comment.author.displayName }}
-        </div>
-        <div>
-          <button
-            type="button"
-            (click)="addLike(comment)"
-            class="btn btn-info btn-just-icon"
-          >
-            <i class="fa fa-heart"></i>Like
-          </button>
-        </div>
-        <div>
-          {{comment.isLiked}}
-        </div>
-      </div>
-    </li>
-  </ul>
-</div>
-<small *ngIf="commentList">
+<!-- <small *ngIf="commentList">
   <h3>COMMENT LIST</h3>
   <pre>
       {{ updatedCommentList | json }}
   </pre>
 </small>
+ -->

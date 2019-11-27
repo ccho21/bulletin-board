@@ -1,18 +1,77 @@
 <div class="nav-cover"></div>
 <div class="nav-cover"></div>
-<p>post-detail works!</p>
-<button type="button" (click)="checkLike()" class="btn btn-info btn-just-icon">
-  <i class="fa fa-heart"></i>Like
-</button>
-<app-comments [post]="post" (commentEmit)="commentEmit($event)"></app-comments>
+<div class="container" *ngIf="hasPost">
+  <div class="row">
+    <div class="col-md-10 ml-auto mr-auto">
+      <div class="text-center">
+        <span class="label label-warning main-tag">post category</span
+        ><a
+          ><h3 class="title">
+            {{ post.title }}
+          </h3></a
+        >
+        <h6 class="title-uppercase">{{ post.createdAt | date }}</h6>
+      </div>
+    </div>
+    <div class="col-md-8 ml-auto mr-auto">
+     
+      <a
+        ><div class="" *ngIf="hasImage">
+          <img src="{{ post.photoURL }}" alt="post.name" class="img-fluid" />
+        </div>
+        <p class="image-thumb text-center"></p
+      ></a>
+      <div class="article-content">
+        <blockquote class="blockquote">
+          <p>
+            {{ post.content }}
+          </p>
+          <footer>
+            - {{ post.author.displayName }}
+            <cite title="Source Title">Trust Agents</cite>
+          </footer>
+        </blockquote>
+      </div>
+      <br />
+      <div class="article-footer">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h5>Tags:</h5>
+              <span class="label label-default mb-2 mr-2 ">Motivational</span
+              ><span class="label label-default mb-2 mr-2">Newsletter</span
+              ><span class="label label-warning mb-2 mr-2">Trending</span>
+            </div>
+            <div class="col-md-6">
+                <div class="text-right">
+                    <button
+                      type="button"
+                      (click)="checkLike()"
+                      class="btn btn-info"
+                    >
+                      <i class="fa fa-heart" [ngClass]="{heart: isPostLiked}"></i>Like
+                    </button>
+                  </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div>
+          <app-comments [post]="post" (commentEmit)="commentEmit($event)"></app-comments>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!-- <small *ngIf="post">
+
+<small *ngIf="post">
   <h3>POST DETAIL</h3>
   <pre>
     {{ post | json }}
 </pre
   >
-</small> -->
+</small>
 
 <!-- <small *ngIf="user">
   <h3>USER DETAIL</h3>

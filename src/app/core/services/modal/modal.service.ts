@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from '../logger/logger.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { from } from 'rxjs';
+import { from, of } from 'rxjs';
 import { SignUpComponent } from '@app/components/sign-up/sign-up.component';
 import { SignInComponent } from '@app/components/sign-in/sign-in.component';
 import { AuthService } from '../auth/auth.service';
@@ -56,5 +56,11 @@ export class ModalService {
   }
   close() {
     this.activeModal.close();
+  }
+  open(component) {
+    const modalRef              = this.modalService.open(component).result;
+    of(modalRef).subscribe(res => {
+      this.logger.info('### modal result ', res);
+    });
   }
 }

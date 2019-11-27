@@ -12,6 +12,7 @@ import { UserService } from '@app/core/services/user/user.service';
 import { Like } from '@app/shared/models/like';
 import { Comment } from '@app/shared/models/comment';
 import { take } from 'rxjs/operators';
+import { ModalService } from '@app/core/services/modal/modal.service';
 @Component({
   selector: 'app-comments',
   templateUrl: './comments.component.html',
@@ -22,6 +23,7 @@ export class CommentsComponent implements OnInit, OnChanges {
   comment: Comment;
   commentList: Comment[] = [];
   updatedCommentList = [];
+  addCommentValid: boolean;
   @Input() post: Post;
   @Output() commentEmit: EventEmitter<Comment> = new EventEmitter();
   constructor(
@@ -31,7 +33,8 @@ export class CommentsComponent implements OnInit, OnChanges {
     private commentService: CommentService,
     private postService: PostService,
     private likeService: LikeService,
-    private userService: UserService
+    private userService: UserService,
+    private modalService: ModalService
   ) { }
 
   ngOnInit() {
@@ -47,6 +50,8 @@ export class CommentsComponent implements OnInit, OnChanges {
       this.isLiked(this.post);
     }
   }
+
+  // *** LIKE *** // 
   isLiked(post) {
       const { uid } = this.authService.getCurrentUser();
       this.likeService.getLikesBypostId(post.postId, uid , 2).pipe(take(1)).subscribe(results => {
@@ -88,19 +93,8 @@ export class CommentsComponent implements OnInit, OnChanges {
       comment.isLiked = false;
     });
   }
-  getCurrentUser() {
-    // Author
-    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
-    const user: User = { displayName, uid, photoURL, email, emailVerified };
-    return user;
-  }
-  cleanUp(data) {
-    const copiedData = Object.assign({}, data);
-    if (copiedData.hasOwnProperty('author')) {
-      delete copiedData.author;
-    }
-    return copiedData;
-  }
+  
+  //  ***  SUBMIT ***
   onSubmit() {
     if (!this.commentForm.valid) {
       return;
@@ -128,5 +122,30 @@ export class CommentsComponent implements OnInit, OnChanges {
         this.commentEmit.emit(this.comment);
       }
     })
+  }
+
+  // *** SUB COMMENTS ***
+  updateSubcomment(e) {
+    this.logger.info('should be?', e);
+    this.commentEmit.emit(e);
+  }
+
+  addReply(comment) {
+    this.logger.info('comment', comment);
+    comment.addCommentValid = !comment.addCommentValid;
+  }
+
+  // *** HELPER *** 
+  getCurrentUser() {
+    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
+    const user: User = { displayName, uid, photoURL, email, emailVerified };
+    return user;
+  }
+  cleanUp(data) {
+    const copiedData = Object.assign({}, data);
+    if (copiedData.hasOwnProperty('author')) {
+      delete copiedData.author;
+    }
+    return copiedData;
   }
 }

@@ -24,4 +24,11 @@ export class CommentService {
       })
     );
   }
+
+  updateComment(comment: Comment) {
+    return from(this.db
+      .collection('comments')
+      .doc(comment.commentId)
+      .set(comment));
+  }
 }
