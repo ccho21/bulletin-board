@@ -59,18 +59,18 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     })
   }
 
-  commentEmit(e) {
-    const comment = e;
-    this.logger.info('### update Post', this.post);
-    this.logger.info(this.post.hasOwnProperty('comments'));
-    if (this.post.hasOwnProperty('comments')) {
-      this.post.comments.push(comment);
-    }
-    else {
-      this.post.comments = [comment];
-    }
-    this.updatePost(this.post);
-  }
+  // commentEmit(e) {
+  //   const comment = e;
+  //   this.logger.info('### update Post', this.post);
+  //   this.logger.info(this.post.hasOwnProperty('comments'));
+  //   if (this.post.hasOwnProperty('comments')) {
+  //     this.post.comments.push(comment);
+  //   }
+  //   else {
+  //     this.post.comments = [comment];
+  //   }
+  //   this.updatePost(this.post);
+  // }
 
   updatePost(post) {
     this.postService.updatePost(post.postId, post).subscribe(res => {

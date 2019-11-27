@@ -25,7 +25,7 @@ export class CommentsComponent implements OnInit, OnChanges {
   updatedCommentList = [];
   addCommentValid: boolean;
   @Input() post: Post;
-  @Output() commentEmit: EventEmitter<Comment> = new EventEmitter();
+  // @Output() commentEmit: EventEmitter<Comment> = new EventEmitter();
   constructor(
     private logger: LoggerService,
     private authService: AuthService,
@@ -50,6 +50,14 @@ export class CommentsComponent implements OnInit, OnChanges {
       this.isLiked(this.post);
     }
   }
+
+
+  // updatecomment, 
+  // add commnet
+  // likes also goes to ites component
+  // it should be imported whenever we need
+  // comment should be separated from posts
+  // ex) comments : post id, and comments:[], etc
 
   // *** LIKE *** // 
   isLiked(post) {
@@ -93,41 +101,41 @@ export class CommentsComponent implements OnInit, OnChanges {
       comment.isLiked = false;
     });
   }
-  
+
+//  Comment
+  addComment() {
+    this.logger.info('### form value', this.commentForm.value);
+    // Author 
+    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
+    const author: User = { displayName, uid, photoURL, email, emailVerified };
+    const comment = this.commentForm.value;
+    // pass post Id and comment
+    this.commentService.addComment(this.post.postId, comment).subscribe(res => {
+      this.logger.info('### successfully created a comment ', res);
+      if (res) {
+        this.comment = res;
+        // this.logger.info('will be emitted', this.commentEmit)
+        // this.commentEmit.emit(this.comment);
+      }
+    })
+  }
+  // when sub comment is here or just want to edit the comment that I write
+  updateComment(comment) {
+    this.commentService.updateComment(comment);
+  }
   //  ***  SUBMIT ***
   onSubmit() {
     if (!this.commentForm.valid) {
       return;
     }
     //comment
-    const comment = this.commentForm.value;
-    this.logger.info('### form value', this.commentForm.value);
-    // Author 
-    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
-    const author: User = { displayName, uid, photoURL, email, emailVerified };
-
-    // Post detail
-    const postId = this.post.postId;
-    const commentDTO: Comment = {
-      postId,
-      author,
-      comment,
-      createdAt: new Date().toISOString(),
-    };
-    this.commentService.addComment(commentDTO).subscribe(res => {
-      this.logger.info('### successfully created a comment ', res);
-      if (res) {
-        this.comment = res;
-        this.logger.info('will be emitted', this.commentEmit)
-        this.commentEmit.emit(this.comment);
-      }
-    })
+    this.addComment();
   }
 
   // *** SUB COMMENTS ***
   updateSubcomment(e) {
     this.logger.info('should be?', e);
-    this.commentEmit.emit(e);
+    // this.commentEmit.emit(e);
   }
 
   addReply(comment) {
