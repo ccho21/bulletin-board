@@ -10,7 +10,7 @@ export interface Post {
   content       : string;
   categoryId    : string;
   tagIds        : string;
-  comments?     : Comment[];
+  // comments?     : Comment[];
   likes?        : number;
   views?         : number;
 }

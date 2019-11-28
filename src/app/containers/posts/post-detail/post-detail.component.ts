@@ -116,8 +116,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   cleanUp(data) {
     const copiedData = Object.assign({}, data);
-    if (copiedData.hasOwnProperty('comments')) {
-      delete copiedData.comments;
+    if (copiedData.hasOwnProperty('author')) {
       delete copiedData.author;
     }
     return copiedData;
