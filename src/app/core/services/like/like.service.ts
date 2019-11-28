@@ -20,10 +20,10 @@ export class LikeService {
     private authService: AuthService
   ) { }
 
-  addLike(data: Like) {
+  addLike(likeDTO: Like) {
     const id = this.db.createId();
-    data.likeId = id;
-    const query = this.db.collection<Like>('likes').doc(id).set(data);
+    likeDTO.likeId = id;
+    const query = this.db.collection<Like>('likes').doc(id).set(likeDTO);
     return of(query);
   }
   

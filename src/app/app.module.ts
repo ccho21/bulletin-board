@@ -93,7 +93,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AppComponent,
     NavbarComponent,
     FooterComponent,
-    LoaderComponent
+    LoaderComponent,
   ],
   entryComponents: [AppComponent],
   imports: [

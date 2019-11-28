@@ -44,13 +44,7 @@
             </div>
             <div class="col-md-6">
                 <div class="text-right">
-                    <button
-                      type="button"
-                      (click)="checkLike()"
-                      class="btn btn-info"
-                    >
-                      <i class="fa fa-heart" [ngClass]="{heart: isPostLiked}"></i>Like
-                    </button>
+                   <app-fln-like [post]="post"></app-fln-like>
                   </div>
             </div>
           </div>

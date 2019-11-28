@@ -177,7 +177,10 @@ export class AuthService {
   }
 
   getCurrentUser() {
-    return this.afAuth.auth.currentUser;
+      // Author
+      const { displayName, uid, photoURL, email, emailVerified } = this.afAuth.auth.currentUser;
+      const user: User = { displayName, uid, photoURL, email, emailVerified };
+      return user;
   }
 
   // Sign out

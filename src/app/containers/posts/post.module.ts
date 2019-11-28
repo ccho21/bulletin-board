@@ -31,6 +31,7 @@ import { CommentsComponent } from '@app/containers/posts/post-detail/comments/co
 import { LikeService } from '@app/core/services/like/like.service';
 import { ViewService } from '@app/core/services/view/view.service';
 import { FlnCommentComponent } from '@app/core/widget/fln-comment/fln-comment.component';
+import { FlnLikeComponent } from '@app/core/widget/fln-like/fln-like.component';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -39,7 +40,8 @@ import { FlnCommentComponent } from '@app/core/widget/fln-comment/fln-comment.co
     PostListComponent,
     CommentsComponent,
     DateFormatPipe,
-    FlnCommentComponent
+    FlnCommentComponent,
+    FlnLikeComponent
   ],
   entryComponents: [
     PostListComponent,

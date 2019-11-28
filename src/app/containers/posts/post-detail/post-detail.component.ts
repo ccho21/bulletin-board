@@ -47,17 +47,11 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           this.hasImage = true;
         }
         this.hasPost = true;
-        this.isLiked();
+        // this.isLiked();
         this.viewService.checkViewed(this.post);
       });
   }
 
-  isLiked() {
-    this.likeSubscription = this.likeService.isLiked(this.post.postId, 1).subscribe((res: Like) => {
-      this.isPostLiked = res ? true : false;
-      this.logger.info('### isPostlike', this.isPostLiked);
-    })
-  }
 
   // commentEmit(e) {
   //   const comment = e;
@@ -72,41 +66,21 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   //   this.updatePost(this.post);
   // }
 
+  
+  isLiked() {
+    this.likeSubscription = this.likeService.isLiked(this.post.postId, 1).subscribe((res: Like) => {
+      this.isPostLiked = res ? true : false;
+      this.logger.info('### isPostlike', this.isPostLiked);
+    })
+  }
+
   updatePost(post) {
     this.postService.updatePost(post.postId, post).subscribe(res => {
       this.logger.info('### post is successfully updated', res);
     });
   }
 
-  checkLike() {
-    const post = this.cleanUp(this.post);
-    const user = this.getCurrentUser();
-    const likeDTO: Like = {
-      type: 1,
-      post,
-      user
-    }
-    // go to remove like if it is already there
-    if (this.isPostLiked) {
-      this.deleteLike();
-      return;
-    } else {
-      this.addLike(likeDTO);
-    }
-   
-  }
-  addLike(likeDTO) {
-    this.likeService.addLike(likeDTO).subscribe(_ => {
-      this.postService.updatePostLikes(this.post, 1);
-      this.logger.info('### successfully liked ');
-    });
-  }
-  deleteLike() {
-    this.likeService.deleteLike(this.post.postId, 1).subscribe(res => {
-      this.postService.updatePostLikes(this.post, -1);
-      this.logger.info('### like successfully deleted');
-    });
-  }
+  
   getCurrentUser() {
     // Author
     const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
@@ -114,13 +88,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     return user;
   }
 
-  cleanUp(data) {
-    const copiedData = Object.assign({}, data);
-    if (copiedData.hasOwnProperty('author')) {
-      delete copiedData.author;
-    }
-    return copiedData;
-  }
+  
   ngOnDestroy() {
     this.likeSubscription.unsubscribe();
   }
