@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Post } from '../../../shared/models/post';
 import { ActivatedRoute } from '@angular/router';
 import { PostService } from '../shared/post.service';
@@ -15,7 +15,7 @@ import { ViewService } from '@app/core/services/view/view.service';
   templateUrl: './post-detail.component.html',
   styleUrls: ['./post-detail.component.scss']
 })
-export class PostDetailComponent implements OnInit, OnDestroy {
+export class PostDetailComponent implements OnInit {
   post: Post;
   user: User;
   isPostLiked: boolean;
@@ -53,26 +53,26 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
 
-  // commentEmit(e) {
-  //   const comment = e;
-  //   this.logger.info('### update Post', this.post);
-  //   this.logger.info(this.post.hasOwnProperty('comments'));
-  //   if (this.post.hasOwnProperty('comments')) {
-  //     this.post.comments.push(comment);
-  //   }
-  //   else {
-  //     this.post.comments = [comment];
-  //   }
-  //   this.updatePost(this.post);
-  // }
+  commentEmit(e) {
+    const comment = e;
+    this.logger.info('### update Post', this.post);
+    // this.logger.info(this.post.hasOwnProperty('comments'));
+    // if (this.post.hasOwnProperty('comments')) {
+    //   this.post.comments.push(comment);
+    // }
+    // else {
+    //   this.post.comments = [comment];
+    // }
+    // this.updatePost(this.post);
+  }
 
   
-  isLiked() {
+  /* isLiked() {
     this.likeSubscription = this.likeService.isLiked(this.post.postId, 1).subscribe((res: Like) => {
       this.isPostLiked = res ? true : false;
       this.logger.info('### isPostlike', this.isPostLiked);
     })
-  }
+  } */
 
   updatePost(post) {
     this.postService.updatePost(post.postId, post).subscribe(res => {
@@ -86,10 +86,5 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
     const user: User = { displayName, uid, photoURL, email, emailVerified };
     return user;
-  }
-
-  
-  ngOnDestroy() {
-    this.likeSubscription.unsubscribe();
   }
 }

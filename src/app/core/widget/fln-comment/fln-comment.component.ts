@@ -15,7 +15,7 @@ import { Comment } from '@app/shared/models/comment';
 export class FlnCommentComponent implements OnInit, OnChanges {
   commentForm
   @Input() comment: Comment;
-  @Output() subCommentEmit: EventEmitter<any> = new EventEmitter();
+  @Output() commentEmit: EventEmitter<any> = new EventEmitter();
   constructor(
     private logger: LoggerService,
     private authService: AuthService,
@@ -23,42 +23,24 @@ export class FlnCommentComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
+    // check parent is comment/post
     this.commentForm = new FormControl('');
+    this.logger.info('COMMENT',this.comment);
   }
   ngOnChanges(changes: SimpleChanges) {
-    this.logger.info(changes);
   }
   onSubmit() {
     if (!this.commentForm.valid) {
       return;
     }
-    //comment
     const comment = this.commentForm.value;
-    this.logger.info('### form value', this.commentForm.value);
-    // Author 
-    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
-    const author: User = { displayName, uid, photoURL, email, emailVerified };
-
-    // Post detail
-    const commentId = this.comment.commentId;
+    const author: User = this.authService.getCurrentUser();
     const commentDTO: Comment = {
-      commentId,
       author,
       comment,
       createdAt: new Date().toISOString(),
     };
-
-    if(this.comment.hasOwnProperty('comments')) {
-      this.comment.comments.push(commentDTO);
-    } else {
-      this.comment.comments = [commentDTO];
-    }
-    const subComment = Object.assign({}, this.comment);
-    this.subCommentEmit.emit(subComment);
-    this.logger.info('### successfully updated a comment ', this.comment);
-    // this.commentService.updateComment(this.comment).subscribe(res => {
-      
-      
-    // })
+    this.logger.info('###comment DTO ready to go', commentDTO);
+    this.commentEmit.emit(commentDTO);
   }
 }

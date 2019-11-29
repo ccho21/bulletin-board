@@ -21,43 +21,31 @@ export class CommentService {
   ) {}
 
   getComments(postId) {
-    return from(this.db.collection('comments', ref => ref.where("postId", "==", `${postId}`)).valueChanges(['added', 'removed']));
+    return this.db.collection('comments').valueChanges(['added', 'removed']);
   }
 
-  addComment(postId: string, comment: Comment) {
-    const {
-      displayName,
-      uid,
-      photoURL,
-      email,
-      emailVerified
-    } = this.authService.getCurrentUser();
-    const author: User = { displayName, uid, photoURL, email, emailVerified };
+  addComment(commentDTO: Comment) {
     const id = this.db.createId();
     // Post detail
-    const commentDTO: Comment = {
-      commentId: id,
-      postId,
-      author,
-      comment: comment.comment,
-      createdAt: new Date().toISOString()
-    };
-
-    return from(this.db.collection("comments").add(commentDTO)).pipe(
-      mergeMap(res => {
-        comment.commentId = res.id;
-        res.set(comment);
-        return of(comment);
-      })
-    );
+    commentDTO.commentId = id;
+    const query = this.db.collection("comments").doc(id).set(commentDTO);
+    return of(query);
   }
 
-  updateComment(comment: Comment) {
+  updateSubComment(sub: Comment, main: Comment) {
+    const id = this.db.createId();
+    sub.commentId = id;
+    if(main.hasOwnProperty('comments')) {
+      main.comments.push(sub);
+    }
+    else {
+      main.comments = [sub];
+    }
     return from(
       this.db
         .collection("comments")
-        .doc(comment.commentId)
-        .set(comment)
+        .doc(main.commentId)
+        .set(main)
     );
   }
 }

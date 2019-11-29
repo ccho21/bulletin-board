@@ -2,8 +2,6 @@ import {
   Component,
   OnInit,
   Input,
-  Output,
-  EventEmitter,
   OnChanges,
   SimpleChanges
 } from "@angular/core";
@@ -13,14 +11,8 @@ import { AuthService } from "@app/core/services/auth/auth.service";
 import { UploadService } from "@app/core/services/upload/upload.service";
 import { CommentService } from "./comment.service";
 import { User } from "@app/shared/models/user";
-import { PostService } from "../../shared/post.service";
 import { Post } from "../../../../shared/models/post";
-import { LikeService } from "@app/core/services/like/like.service";
-import { UserService } from "@app/core/services/user/user.service";
-import { Like } from "@app/shared/models/like";
 import { Comment } from "@app/shared/models/comment";
-import { take } from "rxjs/operators";
-import { ModalService } from "@app/core/services/modal/modal.service";
 @Component({
   selector: "app-comments",
   templateUrl: "./comments.component.html",
@@ -37,12 +29,7 @@ export class CommentsComponent implements OnInit, OnChanges {
   constructor(
     private logger: LoggerService,
     private authService: AuthService,
-    private uploadService: UploadService,
     private commentService: CommentService,
-    private postService: PostService,
-    private likeService: LikeService,
-    private userService: UserService,
-    private modalService: ModalService
   ) {}
 
   ngOnInit() {
@@ -51,122 +38,48 @@ export class CommentsComponent implements OnInit, OnChanges {
    
   }
   ngOnChanges(changes: SimpleChanges) {
-    const data = changes.post.currentValue;
-    this.logger.info("### ng change", data);
-    if (data) {
-      this.post = data;
-      this.isLiked(this.post);
-      this.initComments(this.post);
-    }
+    // const data = changes.post.currentValue;
+    // this.post = data;
+    this.initComments(this.post);
   }
 
   initComments(post: Post) {
+    this.logger.info('post', post);
     this.commentService.getComments(post.postId).subscribe(res => {
-      this.logger.info("### get comments called");
+      this.logger.info('### get comments', res);
       const data = res;
       if (data.length) {
-        this.commentList = data as Comment[];
+        this.commentList = data.map((comment: Comment) => {
+          return comment;
+        });
       }
     });
   }
 
-  // updatecomment,
-  // add commnet
-  // likes also goes to ites component
-  // it should be imported whenever we need
-  // comment should be separated from posts
-  // ex) comments : post id, and comments:[], etc
-
-  // *** LIKE *** //
-  isLiked(post) {
-    const { uid } = this.authService.getCurrentUser();
-    this.likeService
-      .getLikesBypostId(post.postId, uid, 2)
-      .pipe(take(1))
-      .subscribe(results => {
-        // O(N+M)
-        if (this.commentList) {
-          this.updatedCommentList = this.commentList.map((comment: Comment) => {
-            const valid = results.some(
-              (like: Like) => comment.commentId === like.comment.commentId
-            );
-            return { ...comment, isLiked: valid };
-          });
-        }
-        this.logger.info("### updated comment list", this.updatedCommentList);
-      });
-  }
-
-  addLike(data) {
-    // go to remove like if it is already there
-    if (data.isLiked) {
-      this.deleteLike(data);
-      return;
-    }
-    const comment = this.cleanUp(data);
-    const user = this.getCurrentUser();
-    const postId = this.post.postId;
-    const likeDTO: Like = {
-      type: 2,
-      comment,
-      user,
-      postId
-    };
-
-    this.likeService.addLike(likeDTO).subscribe(res => {
-      this.logger.info("### successfully liked ");
-      data.isLiked = true;
-    });
-  }
-  deleteLike(comment) {
-    this.likeService.deleteLike(comment.commentId, 2).subscribe(res => {
-      this.logger.info("### like successfully deleted");
-      comment.isLiked = false;
-    });
-  }
 
   //  Comment
-  addComment() {
-    this.logger.info("### form value", this.commentForm.value);
-    // Author
-    const {
-      displayName,
-      uid,
-      photoURL,
-      email,
-      emailVerified
-    } = this.authService.getCurrentUser();
-    const author: User = { displayName, uid, photoURL, email, emailVerified };
-    const comment = this.commentForm.value;
-    // pass post Id and comment
-    this.commentService.addComment(this.post.postId, comment).subscribe(res => {
-      this.logger.info("### successfully created a comment ", res);
-      if (res) {
-        this.comment = res;
-        // this.logger.info('will be emitted', this.commentEmit)
-        // this.commentEmit.emit(this.comment);
-      }
+  addComment(comment) {
+    const postId = this.post.postId;
+    comment.postId = postId;
+    this.commentService.addComment(comment).subscribe(res => {
+      this.logger.info("### a comment was succesfully added", comment);
     });
   }
-  // when sub comment is here or just want to edit the comment that I write
-  updateComment(comment) {
-    this.commentService.updateComment(comment);
+  
+  // *** SUB COMMENTS ***
+  updateSubcomment(sub, main) {
+    this.logger.info("this is subcomment", sub);
+    this.logger.info("this is main comment", main);
+    this.commentService.updateSubComment(sub, main);
   }
+
   //  ***  SUBMIT ***
   onSubmit() {
     if (!this.commentForm.valid) {
       return;
     }
-    //comment
-    this.addComment();
+   
   }
-
-  // *** SUB COMMENTS ***
-  updateSubcomment(e) {
-    this.logger.info("should be?", e);
-    // this.commentEmit.emit(e);
-  }
-
   addReply(comment) {
     this.logger.info("comment", comment);
     comment.addCommentValid = !comment.addCommentValid;
@@ -192,3 +105,58 @@ export class CommentsComponent implements OnInit, OnChanges {
     return copiedData;
   }
 }
+
+  // updatecomment,
+  // add commnet
+  // likes also goes to ites component
+  // it should be imported whenever we need
+  // comment should be separated from posts
+  // ex) comments : post id, and comments:[], etc
+
+  // *** LIKE *** //
+  /* isLiked(post) {
+    const { uid } = this.authService.getCurrentUser();
+    this.likeService
+      .getLikesByData(post.postId, 2)
+      .pipe(take(1))
+      .subscribe(results => {
+        // O(N+M)
+        if (this.commentList) {
+          this.updatedCommentList = this.commentList.map((comment: Comment) => {
+            const valid = results.some(
+              (like: Like) => comment.commentId === like.commentId
+            );
+            return { ...comment, isLiked: valid };
+          });
+        }
+        this.logger.info("### updated comment list", this.updatedCommentList);
+      });
+  } */
+
+  /* addLike(data) {
+    // go to remove like if it is already there
+    if (data.isLiked) {
+      this.deleteLike(data);
+      return;
+    }
+    const comment = this.cleanUp(data);
+    const user = this.getCurrentUser();
+    const postId = this.post.postId;
+    const likeDTO: Like = {
+      type: 2,
+      commentId: comment.commentId,
+      user,
+      postId
+    };
+
+    this.likeService.addLike(likeDTO).subscribe(res => {
+      this.logger.info("### successfully liked ");
+      data.isLiked = true;
+    });
+  }
+  deleteLike(comment) {
+    this.likeService.deleteLike(comment.commentId, 2).subscribe(res => {
+      this.logger.info("### like successfully deleted");
+      comment.isLiked = false;
+    });
+  } */

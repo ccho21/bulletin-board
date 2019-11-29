@@ -33,11 +33,11 @@ export class PostListComponent implements OnInit, OnDestroy {
       }
     });
   }
-  isLiked(data) {
+ /*  isLiked(data) {
     return this.likeService.isLiked(data.postId, 1);
-  }
+  } */
 
-  addLike(data) {
+  /* addLike(data) {
     this.isLiked(data).subscribe((res: Like) => {
       this.isPostLiked = res ? true : false;
       this.logger.info('### isPostlike', this.isPostLiked);
@@ -46,7 +46,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       const user = this.getCurrentUser();
       const likeDTO: Like = {
         type: 1,
-        post,
+        postId: post.postId,
         user
       }
       // go to remove like if it is already there
@@ -65,7 +65,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.logger.info('### successfully liked ');
       });
     });
-  }
+  } */
 
   getCurrentUser() {
     // Author
@@ -74,9 +74,9 @@ export class PostListComponent implements OnInit, OnDestroy {
     return user;
   }
 
-  deleteLike(data) {
+  /* deleteLike(data) {
     return this.likeService.deleteLike(data.postId, 1);
-  }
+  } */
 
   cleanUp(data) {
     const copiedData = Object.assign({}, data);
