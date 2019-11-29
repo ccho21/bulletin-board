@@ -30,16 +30,6 @@ export class LikeService {
     const query = this.db.collection<Like>('likes').doc(id).set(likeDTO);
     return of(query);
   }
-  cleanUndefined(dto) {
-    const keys = Object.keys(dto);
-    keys.forEach(cur => {
-      this.logger.info(cur);
-      if(!dto[cur]) {
-        delete dto[cur];
-      }
-    })
-    return dto;
-  }
 
   getLikesByUserId(type: number) { // by current user id
     const { uid } = this.authService.getCurrentUser();
@@ -76,5 +66,17 @@ export class LikeService {
       return of(this.db.collection('likes').doc(like.likeId).delete());
     }));
     return query;
+  }
+  
+  // HELPER
+  cleanUndefined(dto) {
+    const keys = Object.keys(dto);
+    keys.forEach(cur => {
+      this.logger.info(cur);
+      if(!dto[cur]) {
+        delete dto[cur];
+      }
+    })
+    return dto;
   }
 }

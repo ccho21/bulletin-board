@@ -102,12 +102,14 @@ export class FlnLikeComponent implements OnInit, OnChanges {
       this.logger.info('### like successfully added');
     });
   }
+  
   deleteLike(data) {
     const id = this.getId();
     this.likeService.deleteLike(id, this.type).subscribe(_ => {
       this.logger.info('### like successfully deleted');
     });
   }
+
   cleanUp(data) {
     const copiedData      = Object.assign({}, data);
     if (copiedData.hasOwnProperty('author')) {

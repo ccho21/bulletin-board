@@ -33,39 +33,6 @@ export class PostListComponent implements OnInit, OnDestroy {
       }
     });
   }
- /*  isLiked(data) {
-    return this.likeService.isLiked(data.postId, 1);
-  } */
-
-  /* addLike(data) {
-    this.isLiked(data).subscribe((res: Like) => {
-      this.isPostLiked = res ? true : false;
-      this.logger.info('### isPostlike', this.isPostLiked);
-
-      const post = this.cleanUp(data);
-      const user = this.getCurrentUser();
-      const likeDTO: Like = {
-        type: 1,
-        postId: post.postId,
-        user
-      }
-      // go to remove like if it is already there
-      if (this.isPostLiked) {
-        this.deleteLike(data).pipe(mergeMap(res =>{
-          return this.postService.updatePostLikes(data, -1);
-        })).subscribe(_ => {
-          this.logger.info('### successfully deleted ');
-        });
-        return;
-      }
-
-      this.likeService.addLike(likeDTO).pipe(mergeMap(res =>{
-        return this.postService.updatePostLikes(data, 1);
-      })).subscribe(_ => {
-        this.logger.info('### successfully liked ');
-      });
-    });
-  } */
 
   getCurrentUser() {
     // Author
@@ -73,10 +40,6 @@ export class PostListComponent implements OnInit, OnDestroy {
     const user: User = { displayName, uid, photoURL, email, emailVerified };
     return user;
   }
-
-  /* deleteLike(data) {
-    return this.likeService.deleteLike(data.postId, 1);
-  } */
 
   cleanUp(data) {
     const copiedData = Object.assign({}, data);

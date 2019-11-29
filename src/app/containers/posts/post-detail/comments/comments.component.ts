@@ -56,7 +56,6 @@ export class CommentsComponent implements OnInit, OnChanges {
     });
   }
 
-
   //  Comment
   addComment(comment) {
     const postId = this.post.postId;
@@ -80,9 +79,10 @@ export class CommentsComponent implements OnInit, OnChanges {
     }
    
   }
-  addReply(comment) {
+  addReply(comment: Comment) {
     this.logger.info("comment", comment);
-    comment.addCommentValid = !comment.addCommentValid;
+    // comment.addCommentValid = !comment.addCommentValid;
+    
   }
 
   // *** HELPER ***
