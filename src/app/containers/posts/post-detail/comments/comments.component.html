@@ -1,13 +1,14 @@
 <div class="row">
-  <div class="comments media-area">
+  <div class="comments media-area w-100">
     <h3 class="text-center">Comments</h3>
+    <div class="col-md-12">
+      <app-fln-comment
+        [comment]="comment"
+        (commentEmit)="addComment($event)"
+      ></app-fln-comment>
+    </div>
 
-    <app-fln-comment
-      [comment]="comment"
-      (commentEmit)="addComment($event)"
-    ></app-fln-comment>
-
-    <div class="media" *ngFor="let comment of commentList; index as i">
+    <div class="media" *ngFor="let comment of filteredCommentList; index as i">
       <div class="pull-left" href="#">
         <div class="avatar">
           <img
@@ -18,12 +19,11 @@
         </div>
       </div>
       <div class="media-body">
-        <h5 class="media-heading">{{ comment.displayName }}</h5>
+        <h6 class="media-heading">{{ comment.author.displayName }}</h6>
         <div class="pull-right">
           <h6 class="text-muted">{{ comment.createdAt | date }}</h6>
           <a
             class="btn btn-info btn-link pull-right "
-            href="javascript:void(0)"
             (click)="addReply(comment)"
             ><i class="fa fa-reply"></i> Reply</a
           >
@@ -48,7 +48,7 @@
                 /></div
             ></a>
             <div class="media-body">
-              <h5 class="media-heading">{{ c.author.displayName }}</h5>
+              <h6 class="media-heading">{{ c.author.displayName }}</h6>
               <div class="pull-right">
                 <h6 class="text-muted">{{ c.createdAt | date }}</h6>
               </div>
@@ -56,15 +56,22 @@
                 {{ c.comment }}
               </p>
             </div>
+            <div>
+
+            </div>
             <app-fln-like
             [comment]="c"
           ></app-fln-like>
           </div>
         </div>
       </div>
-      <app-fln-like
-        [comment]="comment"
-      ></app-fln-like>
+      <div class="function-box d-flex">
+        <app-fln-like
+          [comment]="comment"
+        ></app-fln-like>
+        <button class="btn btn-warning">edit</button>
+        <button class="btn btn-danger" (click)="deleteComment(comment)">delete</button>
+      </div>
     </div>
   </div>
 </div>

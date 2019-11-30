@@ -21,7 +21,7 @@ export class CommentService {
   ) {}
 
   getComments(postId) {
-    return this.db.collection('comments').valueChanges(['added', 'removed']);
+    return this.db.collection('comments', ref => ref.where('postId', '==', `${postId}`)).valueChanges(['added', 'removed']);
   }
 
   addComment(commentDTO: Comment) {
@@ -30,6 +30,9 @@ export class CommentService {
     commentDTO.commentId = id;
     const query = this.db.collection("comments").doc(id).set(commentDTO);
     return of(query);
+  }
+  updateComment(commentDTO) {
+
   }
 
   updateSubComment(sub: Comment, main: Comment) {
@@ -47,5 +50,10 @@ export class CommentService {
         .doc(main.commentId)
         .set(main)
     );
+  }
+
+  deleteComment(comment) {
+    const query = this.db.collection('comments').doc(comment.commentId).delete();
+    return of(query);
   }
 }

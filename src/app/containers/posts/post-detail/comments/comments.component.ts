@@ -22,7 +22,7 @@ export class CommentsComponent implements OnInit, OnChanges {
   commentForm: FormControl;
   comment: Comment;
   commentList: Comment[] = [];
-  updatedCommentList = [];
+  filteredCommentList = [];
   addCommentValid: boolean;
   @Input() post: Post;
   // @Output() commentEmit: EventEmitter<Comment> = new EventEmitter();
@@ -52,6 +52,8 @@ export class CommentsComponent implements OnInit, OnChanges {
         this.commentList = data.map((comment: Comment) => {
           return comment;
         });
+        this.filteredCommentList = this.commentList.map( cur => ({...cur}));
+        this.logger.info(this.filteredCommentList);
       }
     });
   }
@@ -64,14 +66,20 @@ export class CommentsComponent implements OnInit, OnChanges {
       this.logger.info("### a comment was succesfully added", comment);
     });
   }
-  
+  updateComment(comment) {
+    this.commentService.updateComment(comment);
+  }
   // *** SUB COMMENTS ***
   updateSubcomment(sub, main) {
     this.logger.info("this is subcomment", sub);
     this.logger.info("this is main comment", main);
     this.commentService.updateSubComment(sub, main);
   }
-
+  deleteComment(comment) {
+    this.commentService.deleteComment(comment).subscribe(res => {
+      this.logger.info('comment is successfully deleted', res);
+    });
+  }
   //  ***  SUBMIT ***
   onSubmit() {
     if (!this.commentForm.valid) {
@@ -79,10 +87,9 @@ export class CommentsComponent implements OnInit, OnChanges {
     }
    
   }
-  addReply(comment: Comment) {
+  addReply(comment) {
     this.logger.info("comment", comment);
-    // comment.addCommentValid = !comment.addCommentValid;
-    
+    comment.addCommentValid = !comment.addCommentValid;
   }
 
   // *** HELPER ***
