@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Post } from '@app/shared/models/post';
 import { LoggerService } from '@app/core/services/logger/logger.service';
@@ -12,7 +12,7 @@ import { Comment } from '@app/shared/models/comment';
   templateUrl: './fln-comment.component.html',
   styleUrls: ['./fln-comment.component.scss']
 })
-export class FlnCommentComponent implements OnInit, OnChanges {
+export class FlnCommentComponent implements OnInit {
   commentForm
   @Input() comment: Comment;
   @Output() commentEmit: EventEmitter<any> = new EventEmitter();
@@ -25,9 +25,6 @@ export class FlnCommentComponent implements OnInit, OnChanges {
   ngOnInit() {
     // check parent is comment/post
     this.commentForm = new FormControl('');
-    this.logger.info('COMMENT',this.comment);
-  }
-  ngOnChanges(changes: SimpleChanges) {
   }
   onSubmit() {
     if (!this.commentForm.valid) {
@@ -38,6 +35,7 @@ export class FlnCommentComponent implements OnInit, OnChanges {
     const commentDTO: Comment = {
       author,
       comment,
+      depth: 1,
       createdAt: new Date().toISOString(),
     };
     this.logger.info('###comment DTO ready to go', commentDTO);

@@ -39,18 +39,16 @@ export class ViewService {
       this.postService.updatePostViews(post);
     });
   }
-  checkViewed(post: Post) {
+  updateViews(post: Post) {
     // postID, userID,
     // view tables does not have user id on post id, 
     // add it.
     const { uid } = this.authService.getCurrentUser();
     const query = this.db.collection('views', ref =>
       ref.where('uid', '==', uid).where('postId', '==', post.postId)).valueChanges().subscribe(res => {
-        this.logger.info('view ??', res);
+        this.logger.info('### views', res);
         if(res.length === 0) {
           this.addView(post, uid);
-        } else {
-
         }
       });
   }

@@ -24,7 +24,6 @@ export class PostService {
     );
   }
 
-
   /* Get post */
   getPost(id: string) {
     return from(this.db.collection('posts').doc(id).snapshotChanges());
@@ -40,7 +39,7 @@ export class PostService {
     return from(this.db
       .collection('posts')
       .doc(id)
-      .set(post));
+      .set(post)).subscribe();
   }
 
   updatePostViews(post: Post) {
@@ -51,7 +50,7 @@ export class PostService {
       count = post.views = 1;
     }
     post.views = count;
-    this.updatePost(post.postId, post).subscribe();
+    this.updatePost(post.postId, post);
   }
 
   updatePostLikes(post: Post, value: number) {

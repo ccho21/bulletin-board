@@ -3,11 +3,8 @@ import { PostService } from '../shared/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
 import { LikeService } from '@app/core/services/like/like.service';
-import { mergeMap } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
-import { AuthService } from '@app/core/services/auth/auth.service';
-import { Like } from '@app/shared/models/like';
-import { User } from '@app/shared/models/user';
+import { mergeMap, toArray, take, tap, map } from 'rxjs/operators';
+import { of, Subscription, from } from 'rxjs';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -17,39 +14,61 @@ export class PostListComponent implements OnInit, OnDestroy {
   likeSubscription: Subscription
   posts: Array<Post> = [];
   isPostLiked;
+  postSubscription: Subscription;
   constructor(
     private logger: LoggerService,
     private postService: PostService,
     private likeService: LikeService,
-    private authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.postService.getPosts().subscribe(res => {
-      this.logger.info('is this called again?');
-      const data = res;
-      if (data.length) {
-        this.posts = data as Post[];
-      }
-    });
+    this.initData();
   }
 
-  getCurrentUser() {
-    // Author
-    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
-    const user: User = { displayName, uid, photoURL, email, emailVerified };
-    return user;
+  initData() {
+    const posts: Post[] = [];
+    let p: Post;
+    let length: number;
+    const postSubs = this.postService.getPosts().pipe(mergeMap((posts) => {
+      length = posts.length;
+      this.logger.info('length ', length);
+      this.logger.info('posts ', posts);
+      const a = [1,2,3,4];
+      return posts;
+    }),
+    mergeMap(res => {
+      this.logger.info('### res', res);
+      return res;
+    }),
+    // take(2),
+    toArray(),
+    )
+
+    postSubs.subscribe(val => console.log(val));
+
+    const source = from([1,2,3,4,5]);
+  const example = source.pipe(
+      mergeMap(res => of(res)),
+    toArray()
+    );
+    
+const subscribe = example.subscribe(val => console.log('### val', val));
   }
 
-  cleanUp(data) {
-    const copiedData = Object.assign({}, data);
-    if (copiedData.hasOwnProperty('comments')) {
-      delete copiedData.comments;
-      delete copiedData.author;
-    }
-    return copiedData;
-  }
   ngOnDestroy() {
-    // this.likeSubscription.unsubscribe();
+    this.logger.info('### post list detail is destroyed');
   }
 }
+
+// tap(res => this.logger.info('### tap', res)),
+// mergeMap((post: Post) => {
+//   this.logger.info('### each post', post);
+//   const postId = post.postId;
+//   p = post;
+//   return this.likeService.getNumLikes(postId);
+// }),
+// mergeMap(res => {
+//   this.logger.info('#2', res);
+//   return of(p);
+// }),
+// take(length),

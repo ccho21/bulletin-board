@@ -1,4 +1,4 @@
-export interface User {
+export interface View {
   viewId: string;
   postId: string;
   uid: string;

@@ -16,7 +16,7 @@ import { Comment } from '@app/shared/models/comment';
   templateUrl             : './fln-like.component.html',
   styleUrls               : ['./fln-like.component.scss']
 })
-export class FlnLikeComponent implements OnInit, OnChanges {
+export class FlnLikeComponent implements OnInit, OnDestroy {
   mode : MODE;
   constructor(
     private route         : ActivatedRoute,
@@ -31,16 +31,15 @@ export class FlnLikeComponent implements OnInit, OnChanges {
   data : Post | Comment;
   type: number;
   user: User;
+  likeSubscription: Subscription;
   @Input() post: Post;
   @Input() comment: Comment;
   
   ngOnInit() {
-   
-  }
-  ngOnChanges() {
     this.initData();
     const id = this.getId();
-    this.likeService.isLiked(id, this.type).subscribe(res => {
+    const dto = this.getDTO(this.data);
+    this.likeSubscription = this.likeService.isLiked(dto, id, this.type).subscribe(res => {
       this.logger.info('like returned', res);
       this.isLiked = res;
     });
@@ -58,15 +57,15 @@ export class FlnLikeComponent implements OnInit, OnChanges {
       this.type = 2;
     }
   }
-  checkLike() {
+  clickLike() {
     const data = this.data;
     // go to remove like if it is already there
-    this.logger.info('### isLiked', this.isLiked);
+ /*    this.logger.info('### isLiked', this.isLiked);
     this.logger.info('### data', this.data);
     this.logger.info('### type', this.type);
-    this.logger.info('### mode', this.mode);
+    this.logger.info('### mode', this.mode); */
     if (this.isLiked) {
-      this.deleteLike(data);
+      this.removeLike(data);
       return;
     } else {
       this.addLike(data);
@@ -89,23 +88,26 @@ export class FlnLikeComponent implements OnInit, OnChanges {
     }
   }
   addLike(data) {
-    let dto: Like;
-    if(this.mode === MODE.COMMENT) {
-      dto = this.createCommentDTO(data);
-    }
-    else {
-      dto = this.createPostDTO(data);
-    }
-
+    let dto: Like = this.getDTO(data);
+    const id = this.getId();
     this.logger.info('### likeDTO', dto);
-    this.likeService.addLike(dto).subscribe(_ => {
+    this.likeService.addLike(id, dto, this.type).subscribe(_ => {
       this.logger.info('### like successfully added');
     });
   }
-  
-  deleteLike(data) {
+
+  getDTO(data) {
+    if(this.mode === MODE.COMMENT) {
+      return this.createCommentDTO(data);
+    }
+    else {
+      return this.createPostDTO(data);
+    }
+  }
+  removeLike(data) {
+    let dto: Like = this.getDTO(data);
     const id = this.getId();
-    this.likeService.deleteLike(id, this.type).subscribe(_ => {
+    this.likeService.deleteLike(dto, id, this.type).subscribe(_ => {
       this.logger.info('### like successfully deleted');
     });
   }
@@ -119,6 +121,11 @@ export class FlnLikeComponent implements OnInit, OnChanges {
   }
   getId() {
     return this.type === 1 ? this.post.postId : this.comment.commentId;
+  }
+  
+  ngOnDestroy() {
+    this.logger.info('########### fln-like destroyed');
+    // this.likeSubscription.unsubscribe();
   }
 }
 

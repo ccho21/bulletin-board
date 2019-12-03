@@ -17,7 +17,7 @@
             <th class="text-center">Replies</th>
             <th class="text-center">Views</th>
             <th class="text-center">Likes</th>
-            <th class="text-center">click Like</th>
+            <th class="text-center"></th>
           </tr>
         </thead>
         <tbody >
@@ -40,7 +40,13 @@
             </td>
             <td>{{post.views}}</td>
             <td>{{post.likes}}</td>
-            <td><app-fln-like [post]="post"></app-fln-like></td>
+            <td>
+              <div class="d-flex">
+                <app-fln-like [post]="post"></app-fln-like>
+                <button class="btn btn-warning" (click)="editComment(post)">edit</button>
+                <button class="btn btn-danger" (click)="deleteComment(post)">delete</button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>

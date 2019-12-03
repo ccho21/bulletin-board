@@ -4,7 +4,7 @@ import {
   AngularFirestoreDocument
 } from '@angular/fire/firestore';
 import { LoggerService } from "@app/core/services/logger/logger.service";
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { Like } from '@app/shared/models/like';
 import { Post } from '@app/shared/models/post';
@@ -20,29 +20,19 @@ export class LikeService {
     private authService: AuthService
   ) { }
 
-  addLike(like: Like) {
+  addLike(dataId: string, like: Like, type: number) {
     const id = this.db.createId();
     const likeDTO = this.cleanUndefined(like);
     like.likeId = id;
-    
     this.logger.info('### final like dto', likeDTO);
-    
-    const query = this.db.collection<Like>('likes').doc(id).set(likeDTO);
+    const query = this.getLikeCollectionByType(likeDTO, type).collection<Like>('likes').doc(likeDTO.likeId).set(likeDTO);
     return of(query);
   }
 
-  getLikesByUserId(type: number) { // by current user id
-    const { uid } = this.authService.getCurrentUser();
-    const query = this.db.collection('likes', ref =>
-      ref.where("user.uid", "==", `${uid}`).where('type', '==', type)).valueChanges();
-    return query;
-  }
-
-  isLiked(id, type) { // get data from current User Id and match with post id. 
-    const query = this.getLikesByData(id, type).pipe(mergeMap(res => {
-      this.logger.info(`### is type ${type} liked returned`,res);
+  isLiked(data, dataId: string, type: number) { // get data from current User Id and match with post id. 
+    const query = this.getLikesByData(data, dataId, type).pipe(mergeMap(res => {
       if (res.length) {
-       return of(true);
+        return of(true);
       }
       else {
         return of(false)
@@ -51,32 +41,44 @@ export class LikeService {
     return query;
   }
 
-  getLikesByData(id: string, type) {
+  getLikesByData(data: Like, dataId: string, type) {
     const { uid } = this.authService.getCurrentUser();
-    const q = type === 1 ? 'postId' : 'commentId';
-    this.logger.info('### type is', type, '### id is', q, ': ', id);
-    
-    const query = this.db.collection('likes', ref =>
-      ref.where(`${q}`, "==", `${id}`).where('type', '==', type).where('user.uid', '==', uid)).valueChanges();
+    const q = type === 1 ? 'posts' : 'comments';
+    // this.logger.info('### type is', type, '### id is', q, ': ', dataId);
+    const query = this.getLikeCollectionByType(data, type).collection('likes', ref =>
+      ref.where('user.uid', '==', uid)).valueChanges();
     return query;
   }
 
-  deleteLike(id: string, type: number) {
-    const query = this.getLikesByData(id, type).pipe(mergeMap(res => res),take(1), mergeMap((like: any) => {
-      return of(this.db.collection('likes').doc(like.likeId).delete());
+  deleteLike(data, dataId: string, type: number) {
+    const query = this.getLikesByData(data, dataId, type).pipe(mergeMap(res => res), take(1), mergeMap((like: any) => {
+      this.logger.info('like is comming?' , like);
+      return of(this.getLikeCollectionByType(data, type).collection('likes').doc(like.likeId).delete());
     }));
     return query;
   }
-  
+
   // HELPER
   cleanUndefined(dto) {
     const keys = Object.keys(dto);
     keys.forEach(cur => {
-      this.logger.info(cur);
-      if(!dto[cur]) {
+      if (!dto[cur]) {
         delete dto[cur];
       }
     })
     return dto;
+  }
+
+  getLikeCollectionByType(data, type) {
+    if (type === 1) {
+      return this.db.collection<Post>('posts').doc(data.postId);
+    }
+    if (type === 2) {
+      return this.db.collection<Post>('posts').doc(data.postId).collection<Comment>('comments').doc(data.commentId);
+    }
+  }
+
+  getNumLikes(postId: string) {
+    return this.db.collection<Post>('posts').doc(postId).collection<Like>('likes').valueChanges();
   }
 }

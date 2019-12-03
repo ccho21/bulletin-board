@@ -47,44 +47,10 @@ export class PostDetailComponent implements OnInit {
           this.hasImage = true;
         }
         this.hasPost = true;
-        // this.isLiked();
-        this.viewService.checkViewed(this.post);
+        this.viewService.updateViews(this.post);
       });
   }
-
-
-  commentEmit(e) {
-    const comment = e;
-    this.logger.info('### update Post', this.post);
-    // this.logger.info(this.post.hasOwnProperty('comments'));
-    // if (this.post.hasOwnProperty('comments')) {
-    //   this.post.comments.push(comment);
-    // }
-    // else {
-    //   this.post.comments = [comment];
-    // }
-    // this.updatePost(this.post);
-  }
-
-  
-  /* isLiked() {
-    this.likeSubscription = this.likeService.isLiked(this.post.postId, 1).subscribe((res: Like) => {
-      this.isPostLiked = res ? true : false;
-      this.logger.info('### isPostlike', this.isPostLiked);
-    })
-  } */
-
   updatePost(post) {
-    this.postService.updatePost(post.postId, post).subscribe(res => {
-      this.logger.info('### post is successfully updated', res);
-    });
-  }
-
-  
-  getCurrentUser() {
-    // Author
-    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
-    const user: User = { displayName, uid, photoURL, email, emailVerified };
-    return user;
+    this.postService.updatePost(post.postId, post);
   }
 }

@@ -13,6 +13,7 @@ import { CommentService } from "./comment.service";
 import { User } from "@app/shared/models/user";
 import { Post } from "../../../../shared/models/post";
 import { Comment } from "@app/shared/models/comment";
+import { PostService } from '../../shared/post.service';
 @Component({
   selector: "app-comments",
   templateUrl: "./comments.component.html",
@@ -30,12 +31,13 @@ export class CommentsComponent implements OnInit, OnChanges {
     private logger: LoggerService,
     private authService: AuthService,
     private commentService: CommentService,
-  ) {}
+    private postService: PostService
+  ) { }
 
   ngOnInit() {
     this.commentForm = new FormControl("");
     this.logger.info("### ngOnInit in comments");
-   
+
   }
   ngOnChanges(changes: SimpleChanges) {
     // const data = changes.post.currentValue;
@@ -47,123 +49,121 @@ export class CommentsComponent implements OnInit, OnChanges {
     this.logger.info('post', post);
     this.commentService.getComments(post.postId).subscribe(res => {
       this.logger.info('### get comments', res);
-      const data = res;
+      const data = this.generateComentList(res);
+      this.generateComentList(data);
       if (data.length) {
         this.commentList = data.map((comment: Comment) => {
           return comment;
         });
-        this.filteredCommentList = this.commentList.map( cur => ({...cur}));
+        this.filteredCommentList = this.commentList.map(cur => ({ ...cur }));
         this.logger.info(this.filteredCommentList);
       }
     });
   }
 
-  //  Comment
-  addComment(comment) {
+  generateComentList(data): Array<Comment> {
+    const commentObj = {};
+    const subCommentObj = {};
+    const comments: Array<Comment> = [];
+    data.forEach((c) => {
+      if (c.depth === 1) {
+        commentObj[c.commentId] = c;
+      }
+      if (c.depth === 2) {
+        subCommentObj[c.commentId] = c;
+      }
+    });
+
+    // generating keys for sub comment 
+    const keys = Object.keys(subCommentObj);
+    keys.forEach(scId => {
+      const id = subCommentObj[scId].parentCommentId;
+      if (commentObj[id].hasOwnProperty('comments')) {
+        commentObj[id].comments.push(subCommentObj[scId]);
+      }
+      else {
+        commentObj[id].comments = [subCommentObj[scId]];
+      }
+    });
+
+    // return to array 
+    for(const key in commentObj) {
+      comments.push(commentObj[key]);
+    }
+    return comments;
+
+  }
+  deleteComment(comment): void {
+    const postId = this.post.postId;
+    this.commentService.deleteComment(postId, comment).subscribe(res => {
+      this.logger.info('comment is successfully deleted', res);
+      // comment.replies = comment.replies - 1;
+      // this.postService.updatePost(postId, comment);
+    });
+  }
+
+  addComment(comment) : void {
     const postId = this.post.postId;
     comment.postId = postId;
-    this.commentService.addComment(comment).subscribe(res => {
+    this.closeComment(comment);
+    this.commentService.addComment(postId, comment).subscribe(res => {
       this.logger.info("### a comment was succesfully added", comment);
+      // comment.replies = comment.replies + 1;
+      // this.postService.updatePost(postId, comment);
     });
   }
-  updateComment(comment) {
-    this.commentService.updateComment(comment);
-  }
+
   // *** SUB COMMENTS ***
-  updateSubcomment(sub, main) {
-    this.logger.info("this is subcomment", sub);
-    this.logger.info("this is main comment", main);
-    this.commentService.updateSubComment(sub, main);
+  addSubcomment(sub: Comment, main: Comment) : void {
+    const postId = main.postId;
+    sub.parentCommentId = main.commentId;
+    sub.postId = postId;
+    if (main.depth) {
+      sub.depth = main.depth + 1;
+    }
+    this.commentService.addComment(postId, sub);
   }
-  deleteComment(comment) {
-    this.commentService.deleteComment(comment).subscribe(res => {
-      this.logger.info('comment is successfully deleted', res);
-    });
+
+  updateComment(comment): void {
+    // let depth: number;
+    // this.closeComment(comment);
+    // this.commentService.addComment(comment);
   }
+
+
+
   //  ***  SUBMIT ***
-  onSubmit() {
+  onSubmit(): void {
     if (!this.commentForm.valid) {
       return;
     }
-   
   }
-  addReply(comment) {
+
+  addReply(comment): void {
     this.logger.info("comment", comment);
     comment.addCommentValid = !comment.addCommentValid;
   }
 
-  // *** HELPER ***
-  getCurrentUser() {
-    const {
-      displayName,
-      uid,
-      photoURL,
-      email,
-      emailVerified
-    } = this.authService.getCurrentUser();
-    const user: User = { displayName, uid, photoURL, email, emailVerified };
-    return user;
-  }
-  cleanUp(data) {
+  cleanUp(data): Comment {
     const copiedData = Object.assign({}, data);
     if (copiedData.hasOwnProperty("author")) {
       delete copiedData.author;
     }
     return copiedData;
   }
-}
 
-  // updatecomment,
-  // add commnet
-  // likes also goes to ites component
-  // it should be imported whenever we need
-  // comment should be separated from posts
-  // ex) comments : post id, and comments:[], etc
-
-  // *** LIKE *** //
-  /* isLiked(post) {
-    const { uid } = this.authService.getCurrentUser();
-    this.likeService
-      .getLikesByData(post.postId, 2)
-      .pipe(take(1))
-      .subscribe(results => {
-        // O(N+M)
-        if (this.commentList) {
-          this.updatedCommentList = this.commentList.map((comment: Comment) => {
-            const valid = results.some(
-              (like: Like) => comment.commentId === like.commentId
-            );
-            return { ...comment, isLiked: valid };
-          });
-        }
-        this.logger.info("### updated comment list", this.updatedCommentList);
-      });
-  } */
-
-  /* addLike(data) {
-    // go to remove like if it is already there
-    if (data.isLiked) {
-      this.deleteLike(data);
-      return;
-    }
-    const comment = this.cleanUp(data);
-    const user = this.getCurrentUser();
-    const postId = this.post.postId;
-    const likeDTO: Like = {
-      type: 2,
-      commentId: comment.commentId,
-      user,
-      postId
-    };
-
-    this.likeService.addLike(likeDTO).subscribe(res => {
-      this.logger.info("### successfully liked ");
-      data.isLiked = true;
-    });
+  // COMMENTW WRITE
+  openComment(comment): void {
+    comment.addCommentValid = true;
   }
-  deleteLike(comment) {
-    this.likeService.deleteLike(comment.commentId, 2).subscribe(res => {
-      this.logger.info("### like successfully deleted");
-      comment.isLiked = false;
-    });
-  } */
+
+  editComment(comment): void {
+    this.openComment(comment);
+  }
+
+  closeComment(comment): void {
+    if (comment.addCommentValid) {
+      delete comment.addCommentValid;
+    }
+  }
+}

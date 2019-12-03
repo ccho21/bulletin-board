@@ -10,9 +10,9 @@ export interface Post {
   content       : string;
   categoryId    : string;
   tagIds        : string;
-  // comments?     : Comment[];
+  replies?      : number;
   likes?        : number;
-  views?         : number;
+  views?        : number;
 }
 
 // get comments by post id

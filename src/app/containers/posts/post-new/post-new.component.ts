@@ -66,7 +66,6 @@ export class PostNewComponent implements OnInit, OnDestroy {
       return;
     }
 
-
     const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
     const author: User = { displayName, uid, photoURL, email, emailVerified };
     const postDTO: Post = { ...this.postFormGroup.value, author, createdAt: new Date().toISOString(), likes: 0, views: 0 };
