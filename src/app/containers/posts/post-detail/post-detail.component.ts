@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../../../shared/models/post';
 import { ActivatedRoute } from '@angular/router';
 import { PostService } from '../shared/post.service';
@@ -15,11 +15,11 @@ import { ViewService } from '@app/core/services/view/view.service';
   templateUrl: './post-detail.component.html',
   styleUrls: ['./post-detail.component.scss']
 })
-export class PostDetailComponent implements OnInit {
+export class PostDetailComponent implements OnInit, OnDestroy {
   post: Post;
   user: User;
   isPostLiked: boolean;
-  likeSubscription: Subscription
+  postSubscription: Subscription
   hasPost: boolean;
   hasImage: boolean;
   constructor(
@@ -40,7 +40,7 @@ export class PostDetailComponent implements OnInit {
 
   getPost(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.postService.getPost(id)
+    this.postSubscription = this.postService.getPost(id)
       .subscribe((data: any) => {
         this.post = data.payload.data() as Post;
         if(this.post.photoURL) {
@@ -52,5 +52,10 @@ export class PostDetailComponent implements OnInit {
   }
   updatePost(post) {
     this.postService.updatePost(post.postId, post);
+  }
+
+  ngOnDestroy(){
+    this.logger.info('### post detail destroyed ####');
+    this.postSubscription.unsubscribe();
   }
 }

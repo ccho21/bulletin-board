@@ -3,7 +3,7 @@ import { PostService } from '../shared/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
 import { LikeService } from '@app/core/services/like/like.service';
-import { mergeMap, toArray, take, tap, map } from 'rxjs/operators';
+import { mergeMap, concatAll, finalize } from 'rxjs/operators';
 import { of, Subscription, from } from 'rxjs';
 @Component({
   selector: 'app-post-list',
@@ -15,6 +15,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   posts: Array<Post> = [];
   isPostLiked;
   postSubscription: Subscription;
+  filteredPostList;
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -26,37 +27,38 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   initData() {
-    const posts: Post[] = [];
-    let p: Post;
-    let length: number;
-    const postSubs = this.postService.getPosts().pipe(mergeMap((posts) => {
-      length = posts.length;
-      this.logger.info('length ', length);
-      this.logger.info('posts ', posts);
-      const a = [1,2,3,4];
-      return posts;
-    }),
-    mergeMap(res => {
-      this.logger.info('### res', res);
-      return res;
-    }),
-    // take(2),
-    toArray(),
-    )
-
-    postSubs.subscribe(val => console.log(val));
-
-    const source = from([1,2,3,4,5]);
-  const example = source.pipe(
-      mergeMap(res => of(res)),
-    toArray()
-    );
-    
-const subscribe = example.subscribe(val => console.log('### val', val));
+    this.postSubscription = this.postService.getPosts().subscribe((results) => {
+      this.logger.info('### snapshot changes', results);
+      this.posts = results.map(post => ({...post.payload.doc.data()}));
+      // this.posts = results.map(post => ({...post}));
+      const data = this.posts.map(cur => ({...cur}));
+      if (data.length) {
+        this.posts = data.map((post: Post) => {
+          return post;
+        });
+        this.filteredPostList = this.posts.map(cur => ({ ...cur }));
+        this.logger.info('filtered postlist ', this.filteredPostList);
+      }
+    });
   }
 
+  deletePost(post) {
+    const postId = post.postId;
+    this.postService.deletePost(postId).subscribe(res => {
+      this.logger.info('deleting post', post);
+      this.logger.info('call delete');
+      this.initData();
+    });
+  }
+  editPost(post) {
+    this.postService.deletePost(post.postId);
+  }
+  
   ngOnDestroy() {
-    this.logger.info('### post list detail is destroyed');
+    this.logger.info('### post list is destroyed#######');
+    if(this.postSubscription) {
+      this.postSubscription.unsubscribe();
+    }
   }
 }
 

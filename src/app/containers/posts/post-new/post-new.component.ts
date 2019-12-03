@@ -85,6 +85,8 @@ export class PostNewComponent implements OnInit, OnDestroy {
     }
   }
   ngOnDestroy() {
-    this.uploadSubscription.unsubscribe();
+    if(this.uploadSubscription) {
+      this.uploadSubscription.unsubscribe();
+    }
   }
 }

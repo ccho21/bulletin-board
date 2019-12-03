@@ -2,8 +2,7 @@ import {
   Component,
   OnInit,
   Input,
-  OnChanges,
-  SimpleChanges
+  OnDestroy
 } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { LoggerService } from "@app/core/services/logger/logger.service";
@@ -14,17 +13,19 @@ import { User } from "@app/shared/models/user";
 import { Post } from "../../../../shared/models/post";
 import { Comment } from "@app/shared/models/comment";
 import { PostService } from '../../shared/post.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: "app-comments",
   templateUrl: "./comments.component.html",
   styleUrls: ["./comments.component.scss"]
 })
-export class CommentsComponent implements OnInit, OnChanges {
+export class CommentsComponent implements OnInit, OnDestroy {
   commentForm: FormControl;
   comment: Comment;
   commentList: Comment[] = [];
   filteredCommentList = [];
   addCommentValid: boolean;
+  commentSubscription: Subscription;
   @Input() post: Post;
   // @Output() commentEmit: EventEmitter<Comment> = new EventEmitter();
   constructor(
@@ -37,20 +38,14 @@ export class CommentsComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.commentForm = new FormControl("");
     this.logger.info("### ngOnInit in comments");
-
-  }
-  ngOnChanges(changes: SimpleChanges) {
-    // const data = changes.post.currentValue;
-    // this.post = data;
     this.initComments(this.post);
   }
 
   initComments(post: Post) {
     this.logger.info('post', post);
-    this.commentService.getComments(post.postId).subscribe(res => {
+    this.commentSubscription = this.commentService.getComments(post.postId).subscribe(res => {
       this.logger.info('### get comments', res);
       const data = this.generateComentList(res);
-      this.generateComentList(data);
       if (data.length) {
         this.commentList = data.map((comment: Comment) => {
           return comment;
@@ -165,5 +160,9 @@ export class CommentsComponent implements OnInit, OnChanges {
     if (comment.addCommentValid) {
       delete comment.addCommentValid;
     }
+  }
+
+  ngOnDestroy() {
+    this.commentSubscription.unsubscribe();
   }
 }

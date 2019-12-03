@@ -19,26 +19,28 @@ export class CommentService {
     private db: AngularFirestore,
     private logger: LoggerService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   getComments(postId) {
-    return this.db.collection<Post>('posts').doc(postId).collection<Comment>('comments').valueChanges(['added', 'removed']);
+    return this.db.collection<Comment>('comments').valueChanges(['added', 'removed']);
   }
 
   addComment(postId, commentDTO: Comment) {
     const id = this.db.createId();
     // Post detail
     commentDTO.commentId = id;
-    const query = this.db.collection<Post>('posts').doc(postId).collection<Comment>('comments').doc(commentDTO.commentId).set(commentDTO);
+    const query = this.db.collection<Comment>('comments').doc(commentDTO.commentId).set(commentDTO);
     return of(query);
   }
-  updateComment(commentDTO) {
-    
+  updateComment(postId: string, commentId: string, commentDTO: Comment) {
+    return from(this.db
+      .collection<Comment>('comments').doc(commentId)
+      .set(commentDTO)).subscribe();
   }
 
   deleteComment(postId: string, comment: Comment) {
-    const query = this.db.collection<Post>('posts').doc(postId)
-                    .collection<Comment>('comments').doc(comment.commentId).delete();
+    const query = this.db
+      .collection<Comment>('comments').doc(comment.commentId).delete();
     return of(query);
   }
 }

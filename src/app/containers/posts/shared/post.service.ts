@@ -5,9 +5,9 @@ import {
 } from '@angular/fire/firestore';
 import { Post } from "../../../shared/models/post";
 import { LoggerService } from "@app/core/services/logger/logger.service";
-import { from, of } from 'rxjs';
 import { AuthService } from '@app/core/services/auth/auth.service';
-import { mergeMap } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { mergeMap, take } from 'rxjs/operators';
 @Injectable({
   providedIn: "root"
 })
@@ -16,30 +16,29 @@ export class PostService {
 
   /* Create post */
   addPost(post: Post) {
-    return from(this.db.collection('posts').add(post)).pipe(
-      mergeMap(res => {
-        post.postId = res.id;
-        return res.set(post);
-      })
-    );
+    const id = this.db.createId();
+    post.postId = id;
+    const query = this.db.collection('posts').doc(post.postId).set(post);
+    return of(query);
   }
 
   /* Get post */
   getPost(id: string) {
-    return from(this.db.collection('posts').doc(id).snapshotChanges());
+    return this.db.collection('posts').doc(id).snapshotChanges();
   }
 
   /* Get post list */
   getPosts() {
-    return from(this.db.collection('posts').valueChanges(['added', 'removed']));
+    return this.db.collection<Post>('posts').snapshotChanges(['added', 'modified', 'removed']);
   }
 
   /* Update post */
   updatePost(id, post: Post) {
-    return from(this.db
+    const query = this.db
       .collection('posts')
       .doc(id)
-      .set(post)).subscribe();
+      .set(post);
+      return of(query);
   }
 
   updatePostViews(post: Post) {
@@ -66,14 +65,13 @@ export class PostService {
 
   /* Delete post */
   deletePost(id: string) {
-    return this.db
+    const query = this.db
       .collection('posts')
       .doc(id)
       .delete();
-  }
-
-  // Error management
-  private errorMgmt(error) {
-    this.logger.info(error);
+    return of(query).pipe(take(1), mergeMap(res => {
+      this.logger.info('deleting', res);
+      return res;
+    }), );
   }
 }

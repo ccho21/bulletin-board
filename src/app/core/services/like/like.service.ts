@@ -25,12 +25,13 @@ export class LikeService {
     const likeDTO = this.cleanUndefined(like);
     like.likeId = id;
     this.logger.info('### final like dto', likeDTO);
-    const query = this.getLikeCollectionByType(likeDTO, type).collection<Like>('likes').doc(likeDTO.likeId).set(likeDTO);
-    return of(query);
+    const query = this.db.collection<Like>('likes').doc(likeDTO.likeId).set(likeDTO);
+    return of(likeDTO);
   }
 
   isLiked(data, dataId: string, type: number) { // get data from current User Id and match with post id. 
     const query = this.getLikesByData(data, dataId, type).pipe(mergeMap(res => {
+      this.logger.info('is Liked ', res);
       if (res.length) {
         return of(true);
       }
@@ -43,17 +44,17 @@ export class LikeService {
 
   getLikesByData(data: Like, dataId: string, type) {
     const { uid } = this.authService.getCurrentUser();
-    const q = type === 1 ? 'posts' : 'comments';
+    const q = type === 1 ? 'postId' : 'commentId';
     // this.logger.info('### type is', type, '### id is', q, ': ', dataId);
-    const query = this.getLikeCollectionByType(data, type).collection('likes', ref =>
-      ref.where('user.uid', '==', uid)).valueChanges();
+    const query = this.db.collection('likes', ref =>
+      ref.where('user.uid', '==', uid).where(`${q}`, '==', dataId).where('type', '==', type)).valueChanges();
     return query;
   }
 
   deleteLike(data, dataId: string, type: number) {
     const query = this.getLikesByData(data, dataId, type).pipe(mergeMap(res => res), take(1), mergeMap((like: any) => {
-      this.logger.info('like is comming?' , like);
-      return of(this.getLikeCollectionByType(data, type).collection('likes').doc(like.likeId).delete());
+      // const likeId = like.payload.doc.data().likeId; 
+      return of(this.db.collection('likes').doc(like.likeId).delete());
     }));
     return query;
   }
@@ -69,14 +70,14 @@ export class LikeService {
     return dto;
   }
 
-  getLikeCollectionByType(data, type) {
-    if (type === 1) {
-      return this.db.collection<Post>('posts').doc(data.postId);
-    }
-    if (type === 2) {
-      return this.db.collection<Post>('posts').doc(data.postId).collection<Comment>('comments').doc(data.commentId);
-    }
-  }
+  // getLikeCollectionByType(data, type) {
+  //   if (type === 1) {
+  //     return this.db.collection<Post>('posts').doc(data.postId);
+  //   }
+  //   if (type === 2) {
+  //     return this.db.collection<Comment>('comments').doc(data.commentId);
+  //   }
+  // }
 
   getNumLikes(postId: string) {
     return this.db.collection<Post>('posts').doc(postId).collection<Like>('likes').valueChanges();
