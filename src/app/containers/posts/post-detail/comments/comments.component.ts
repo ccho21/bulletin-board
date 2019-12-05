@@ -150,6 +150,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   editComment(comment): void {
     this.openComment(comment);
+    
   }
 
   closeComment(comment): void {
