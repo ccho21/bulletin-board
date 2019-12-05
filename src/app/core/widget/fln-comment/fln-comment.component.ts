@@ -44,5 +44,6 @@ export class FlnCommentComponent implements OnInit {
     };
     this.logger.info('###comment DTO ready to go', commentDTO);
     this.commentEmit.emit(commentDTO);
+    this.commentForm.reset();
   }
 }

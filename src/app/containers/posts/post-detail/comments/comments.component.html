@@ -15,8 +15,9 @@
         <div class="media-body" *ngIf="!comment.editCommentValid">
           <h6 class="media-heading">{{ comment.author.displayName }}</h6>
           <div class="pull-right">
-            <h6 class="text-muted">{{ comment.createdAt | date }}</h6>
-
+            <h6 class="text-muted" *ngIf="comment.hasOwnProperty('updatedAt'); else createAt">{{ comment.updatedAt | date:'medium' }}</h6>
+            <ng-template #createAt><h6 class="text-muted">{{ comment.createdAt | date:'medium' }}</h6></ng-template>
+            
           </div>
           <p class="">
             {{ comment.comment }}
@@ -53,7 +54,8 @@
           <div class="media-body">
             <h6 class="media-heading">{{ c.author.displayName }}</h6>
             <div class="pull-right">
-              <h6 class="text-muted">{{ c.createdAt | date }}</h6>
+              <h6 class="text-muted" *ngIf="comment.hasOwnProperty('updatedAt'); else createAt">{{ comment.updatedAt | date:'medium' }}</h6>
+              <ng-template #createAt><h6 class="text-muted">{{ comment.createdAt | date:'medium' }}</h6></ng-template>
             </div>
             <p>
               {{ c.comment }}

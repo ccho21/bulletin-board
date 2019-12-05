@@ -101,10 +101,14 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   addComment(comment): void {
     const postId = this.post.postId;
-    comment.postId = postId;
-    this.closeComment(comment);
-    this.commentService.addComment(postId, comment).subscribe(res => {
-      this.logger.info("### a comment was succesfully added", comment);
+    const c = {
+      postId,
+      ...comment
+    };
+    const commentDTO = this.cleanUp(c);
+    this.commentService.addComment(postId, commentDTO).subscribe(res => {
+      this.logger.info("### a comment was succesfully added", res);
+      this.closeComment(comment);
     });
   }
 
@@ -118,10 +122,15 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.addComment(sub);
   }
 
-  updateComment(comment): void {
+  updateComment(commentDTO): void {
+    this.logger.info('before update comment', commentDTO);
+    const postId = this.post.postId;
+    const commentId = commentDTO.commentId;
+    commentDTO = this.cleanUp(commentDTO);
+    this.commentService.updateComment(postId, commentId, commentDTO).subscribe(res => {
+      this.logger.info('### updating comment is successful. ', res);
+    });
   }
-
-
 
   //  ***  SUBMIT ***
   onSubmit(): void {
@@ -137,9 +146,8 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   cleanUp(data): Comment {
     const copiedData = Object.assign({}, data);
-    if (copiedData.hasOwnProperty("author")) {
-      delete copiedData.author;
-    }
+    delete copiedData.editCommentValid;
+    delete copiedData.addCommentValid;
     return copiedData;
   }
 
@@ -150,6 +158,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   editComment(comment): void {
     comment.editCommentValid = true;    
+    this.commentForm.patchValue(comment.comment);
   }
 
   closeComment(comment): void {
@@ -158,7 +167,16 @@ export class CommentsComponent implements OnInit, OnDestroy {
     }
   }
   saveComment(comment) {
-
+    this.logger.info('## save comment ',this.commentForm.value);
+    const newComment = this.commentForm.value;
+    const commentDTO = {...comment};
+    if(newComment !== comment) {
+      // updateAt - createdAt = (when it is the last update occured). 
+      commentDTO.comment = newComment;
+      commentDTO.updatedAt = new Date().toISOString();
+      this.updateComment(commentDTO);
+    } 
+    comment.editCommentValid = false;
   }
 
   ngOnDestroy() {

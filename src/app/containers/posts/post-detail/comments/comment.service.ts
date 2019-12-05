@@ -37,10 +37,11 @@ export class CommentService {
     return of(query);
   }
   updateComment(postId: string, commentId: string, commentDTO: Comment) {
-    return from(this.db
+    const query = this.db
       .collection<Post>('posts').doc(postId)
       .collection<Comment>('comments').doc(commentId)
-      .set(commentDTO)).subscribe();
+      .update(commentDTO);
+      return of(query);
   }
 
   deleteComment(postId: string, comment: Comment) {
