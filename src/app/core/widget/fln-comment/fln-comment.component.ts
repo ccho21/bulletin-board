@@ -24,7 +24,9 @@ export class FlnCommentComponent implements OnInit {
 
   ngOnInit() {
     // check parent is comment/post
+    this.logger.info('edit is opened');
     this.commentForm = new FormControl('');
+    
   }
   onSubmit() {
     if (!this.commentForm.valid) {
