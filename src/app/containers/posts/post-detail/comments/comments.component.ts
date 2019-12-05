@@ -144,13 +144,6 @@ export class CommentsComponent implements OnInit, OnDestroy {
     comment.addCommentValid = !comment.addCommentValid;
   }
 
-  cleanUp(data): Comment {
-    const copiedData = Object.assign({}, data);
-    delete copiedData.editCommentValid;
-    delete copiedData.addCommentValid;
-    return copiedData;
-  }
-
   // COMMENTW WRITE
   openComment(comment): void {
     comment.addCommentValid = true;
@@ -178,6 +171,15 @@ export class CommentsComponent implements OnInit, OnDestroy {
     } 
     comment.editCommentValid = false;
   }
+
+// HELPER
+  cleanUp(data): Comment {
+    const copiedData = Object.assign({}, data);
+    delete copiedData.editCommentValid;
+    delete copiedData.addCommentValid;
+    return copiedData;
+  }
+
 
   ngOnDestroy() {
     this.commentSubscription.unsubscribe();
