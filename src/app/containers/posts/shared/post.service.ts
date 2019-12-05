@@ -8,6 +8,8 @@ import { LoggerService } from "@app/core/services/logger/logger.service";
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { from, of } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
+import { Comment } from '@app/shared/models/comment';
+import { Like } from '@app/shared/models/like';
 @Injectable({
   providedIn: "root"
 })
@@ -29,7 +31,7 @@ export class PostService {
 
   /* Get post list */
   getPosts() {
-    return this.db.collection<Post>('posts').snapshotChanges(['added', 'modified', 'removed']);
+    return this.db.collection('posts').stateChanges(['added']);
   }
 
   /* Update post */
@@ -37,7 +39,7 @@ export class PostService {
     const query = this.db
       .collection('posts')
       .doc(id)
-      .set(post);
+      .update(post);
       return of(query);
   }
 
@@ -52,17 +54,6 @@ export class PostService {
     this.updatePost(post.postId, post);
   }
 
-  updatePostLikes(post: Post, value: number) {
-    let count = 0;
-    if(post.hasOwnProperty('likes')) {
-      count = post.likes += value;
-    } else {
-      count = post.likes = 1;
-    }
-    post.likes = count;
-    return this.updatePost(post.postId, post);
-  }
-
   /* Delete post */
   deletePost(id: string) {
     const query = this.db
@@ -70,7 +61,6 @@ export class PostService {
       .doc(id)
       .delete();
     return of(query).pipe(take(1), mergeMap(res => {
-      this.logger.info('deleting', res);
       return res;
     }), );
   }

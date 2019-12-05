@@ -3,8 +3,10 @@ import { PostService } from '../shared/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
 import { LikeService } from '@app/core/services/like/like.service';
-import { mergeMap, concatAll, finalize } from 'rxjs/operators';
-import { of, Subscription, from } from 'rxjs';
+import { mergeMap, map, scan } from 'rxjs/operators';
+import { of, Subscription, from, forkJoin } from 'rxjs';
+import { CommentService } from '../post-detail/comments/comment.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -20,6 +22,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private postService: PostService,
     private likeService: LikeService,
+    private commentService: CommentService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -27,19 +31,37 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   initData() {
-    this.postSubscription = this.postService.getPosts().subscribe((results) => {
-      this.logger.info('### snapshot changes', results);
-      this.posts = results.map(post => ({...post.payload.doc.data()}));
-      // this.posts = results.map(post => ({...post}));
-      const data = this.posts.map(cur => ({...cur}));
-      if (data.length) {
-        this.posts = data.map((post: Post) => {
-          return post;
-        });
-        this.filteredPostList = this.posts.map(cur => ({ ...cur }));
-        this.logger.info('filtered postlist ', this.filteredPostList);
-      }
-    });
+    this.getPosts();
+  }
+  
+  getPosts() {
+    const posts: Post[] = [];
+    let post;
+    let length: number;
+    this.postService.getPosts().pipe(mergeMap(results => {
+      return results;
+    }),
+      map(res => {
+        post = res.payload.doc.data() as Post;
+        this.logger.info('#### post', post);
+        return this.likeService.getNumOfLikes(post.postId);
+      }),
+      map(res => {
+        post.likes = res;
+        return this.commentService.getNumOfComments(post.postId);
+      }),
+      mergeMap(res => {
+        post.comments = res;
+        return of(post);
+      }),
+      scan((acc, val) => {
+        acc.push(val);
+        return acc;
+      }, []))
+      .subscribe(results => {
+        this.logger.info('### FINAL ### ', results);
+        this.posts = results.map(post => post as Post);
+      });
   }
 
   deletePost(post) {
@@ -51,12 +73,13 @@ export class PostListComponent implements OnInit, OnDestroy {
     });
   }
   editPost(post) {
-    this.postService.deletePost(post.postId);
+    this.logger.info(post);
+    this.router.navigateByUrl(`/posts/${post.postId}/edit`);
   }
-  
+
   ngOnDestroy() {
     this.logger.info('### post list is destroyed#######');
-    if(this.postSubscription) {
+    if (this.postSubscription) {
       this.postSubscription.unsubscribe();
     }
   }

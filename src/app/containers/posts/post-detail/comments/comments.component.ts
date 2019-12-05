@@ -71,58 +71,54 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
     // generating keys for sub comment 
     const keys = Object.keys(subCommentObj);
+    this.logger.info('keys ', keys);
     keys.forEach(scId => {
       const id = subCommentObj[scId].parentCommentId;
-      if (commentObj[id].hasOwnProperty('comments')) {
-        commentObj[id].comments.push(subCommentObj[scId]);
-      }
-      else {
-        commentObj[id].comments = [subCommentObj[scId]];
+      this.logger.info(commentObj[id]);
+      if (commentObj[id]) {
+        if (commentObj[id].hasOwnProperty('comments')) {
+          commentObj[id].comments.push(subCommentObj[scId]);
+        }
+        else {
+          commentObj[id].comments = [subCommentObj[scId]];
+        }
       }
     });
 
     // return to array 
-    for(const key in commentObj) {
+    for (const key in commentObj) {
       comments.push(commentObj[key]);
     }
     return comments;
-
   }
+
   deleteComment(comment): void {
     const postId = this.post.postId;
     this.commentService.deleteComment(postId, comment).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
-      // comment.replies = comment.replies - 1;
-      // this.postService.updatePost(postId, comment);
     });
   }
 
-  addComment(comment) : void {
+  addComment(comment): void {
     const postId = this.post.postId;
     comment.postId = postId;
     this.closeComment(comment);
     this.commentService.addComment(postId, comment).subscribe(res => {
       this.logger.info("### a comment was succesfully added", comment);
-      // comment.replies = comment.replies + 1;
-      // this.postService.updatePost(postId, comment);
     });
   }
 
   // *** SUB COMMENTS ***
-  addSubcomment(sub: Comment, main: Comment) : void {
-    const postId = main.postId;
+  addSubcomment(sub: Comment, main: Comment): void {
     sub.parentCommentId = main.commentId;
-    sub.postId = postId;
+    sub.postId = main.postId;
     if (main.depth) {
       sub.depth = main.depth + 1;
     }
-    this.commentService.addComment(postId, sub);
+    this.addComment(sub);
   }
 
   updateComment(comment): void {
-    // let depth: number;
-    // this.closeComment(comment);
-    // this.commentService.addComment(comment);
   }
 
 

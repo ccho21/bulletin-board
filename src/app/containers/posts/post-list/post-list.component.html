@@ -21,7 +21,7 @@
           </tr>
         </thead>
         <tbody >
-          <tr class="ng-star-inserted" *ngFor="let post of filteredPostList; index as i">
+          <tr class="ng-star-inserted" *ngFor="let post of posts; index as i">
             <td class="text-center">{{i + 1}}</td>
             <td> {{ post.createdAt | dateFormat | date:'fullDate' }}</td>
             <td><a routerLink="{{post.postId}}" routerLinkActive="router-link-active">{{ post.title }}</a></td>
@@ -36,14 +36,14 @@
               </div>
             </td>
             <td class="text-center">
-              {{post.hasOwnProperty('comments')? post.comments.length : 0}}
+              {{post.comments | async }}
             </td>
             <td>{{post.views}}</td>
-            <td>{{post.likes}}</td>
+            <td>{{post.likes | async}}</td>
             <td>
               <div class="d-flex">
                 <app-fln-like [post]="post"></app-fln-like>
-                <button class="btn btn-warning" (click)="editPost($event)">edit</button>
+                <button class="btn btn-warning" (click)="editPost(post)">edit</button>
                 <button class="btn btn-danger" (click)="deletePost(post)">delete</button>
               </div>
             </td>

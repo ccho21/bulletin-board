@@ -38,11 +38,12 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   @Input() comment: Comment;
 
   ngOnInit() {
+    this.logger.info('fln like start');
     this.initData();
     const id = this.getId();
     const dto = this.getDTO(this.data);
     this.likeSubscription = this.likeService.isLiked(dto, id, this.type).subscribe(res => {
-      this.logger.info('like returned', res);
+      this.logger.info('is liked', res);
       this.isLiked = res;
     });
   }
@@ -95,14 +96,6 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     const id = this.getId();
     this.likeService.addLike(id, dto, this.type).subscribe(res => {
       this.logger.info('### like successfully added', res);
-      const post = { ...this.post };
-      if (this.mode === MODE.POST) {
-        if (post.likes < 0) {
-          post.likes = 0;
-        }
-        post.likes += 1;
-        return this.postService.updatePost(post.postId, post);
-      }
     });
   }
 
@@ -119,14 +112,6 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     const id = this.getId();
     this.likeService.deleteLike(dto, id, this.type).subscribe(res => {
       this.logger.info('### like successfully deleted', res);
-      const post = { ...this.post };
-      if (this.mode === MODE.POST) {
-        if (post.likes < 0) {
-          post.likes = 0;
-        }
-        post.likes -= 1;
-        return this.postService.updatePost(post.postId, post);
-      }
     });
   }
 
