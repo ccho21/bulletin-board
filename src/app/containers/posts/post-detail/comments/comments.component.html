@@ -2,44 +2,36 @@
   <div class="comments media-area w-100">
     <h3 class="text-center">Comments</h3>
     <div class="col-md-12">
-      <app-fln-comment
-        [comment]="comment"
-        (commentEmit)="addComment($event)"
-      ></app-fln-comment>
+      <app-fln-comment [comment]="comment" (commentEmit)="addComment($event)"></app-fln-comment>
     </div>
     <div *ngFor="let comment of filteredCommentList; index as i">
       <div class="media">
         <div class="pull-left" href="#">
           <div class="avatar">
-            <img
-              alt="Tim Picture"
-              class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-              src="{{ comment.author.photoURL }}"
-            />
+            <img alt="Tim Picture" class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+              src="{{ comment.author.photoURL }}" />
           </div>
         </div>
-        <div class="media-body">
+        <div class="media-body" *ngIf="!comment.editCommentValid">
           <h6 class="media-heading">{{ comment.author.displayName }}</h6>
           <div class="pull-right">
             <h6 class="text-muted">{{ comment.createdAt | date }}</h6>
-           
+
           </div>
           <p class="">
             {{ comment.comment }}
           </p>
           <div *ngIf="comment.addCommentValid">
-            <app-fln-comment
-              [comment]="comment"
-              (commentEmit)="addSubcomment($event, comment)"
-            ></app-fln-comment>
+            <app-fln-comment [comment]="comment" (commentEmit)="addSubcomment($event, comment)"></app-fln-comment>
           </div>
         </div>
+        <div class="media-body" *ngIf="comment.editCommentValid">
+          <textarea class="form-control textarea" rows="2" ngif="comment.addCommentValid" placeholder="Write anything..."
+          [formControl]="commentForm"></textarea>
+        </div>
         <div class="function-box d-flex">
-            <a
-            class="btn btn-info btn-link pull-right "
-            (click)="addReply(comment)"
-            ><i class="fa fa-reply"></i> Reply</a
-          >
+          <a class="btn btn-info btn-link pull-right " *ngIf="!comment.editCommentValid" (click)="addReply(comment)"><i class="fa fa-reply"></i> Reply</a>
+          <a class="btn btn-info btn-link pull-right " *ngIf="comment.editCommentValid" (click)="saveComment(comment)"> SAVE</a>
           <app-fln-like [comment]="comment"></app-fln-like>
           <button class="btn btn-warning" (click)="editComment(comment)">
             edit
@@ -47,20 +39,17 @@
           <button class="btn btn-danger" (click)="deleteComment(comment)">
             delete
           </button>
-         
+
         </div>
       </div>
 
       <div *ngIf="comment.hasOwnProperty('comments')">
         <div class="media ml-5" *ngFor="let c of comment.comments">
-          <a class="pull-left" href="#"
-            ><div class="avatar">
-              <img
-                alt="64x64"
-                class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-                src="{{ c.author.photoURL }}"
-              /></div
-          ></a>
+          <a class="pull-left" href="#">
+            <div class="avatar">
+              <img alt="64x64" class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+                src="{{ c.author.photoURL }}" /></div>
+          </a>
           <div class="media-body">
             <h6 class="media-heading">{{ c.author.displayName }}</h6>
             <div class="pull-right">
@@ -72,19 +61,16 @@
           </div>
           <div></div>
           <div class="function-box d-flex">
-              <a
-              class="btn btn-info btn-link pull-right "
-              (click)="addReply(comment)"
-              ><i class="fa fa-reply"></i> Reply</a
-            >
-              <app-fln-like [comment]="c"></app-fln-like>
-              <button class="btn btn-warning" (click)="editComment(c)">
-                edit
-              </button>
-              <button class="btn btn-danger" (click)="deleteComment(c)">
-                delete
-              </button>
-            </div>
+            <a class="btn btn-info btn-link pull-right " (click)="addReply(comment)"><i class="fa fa-reply"></i>
+              Reply</a>
+            <app-fln-like [comment]="c"></app-fln-like>
+            <button class="btn btn-warning" (click)="editComment(c)">
+              edit
+            </button>
+            <button class="btn btn-danger" (click)="deleteComment(c)">
+              delete
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -149,14 +149,16 @@ export class CommentsComponent implements OnInit, OnDestroy {
   }
 
   editComment(comment): void {
-    this.openComment(comment);
-    
+    comment.editCommentValid = true;    
   }
 
   closeComment(comment): void {
     if (comment.addCommentValid) {
       delete comment.addCommentValid;
     }
+  }
+  saveComment(comment) {
+
   }
 
   ngOnDestroy() {
