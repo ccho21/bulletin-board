@@ -8,7 +8,7 @@
     <div class="navbar-translate">
       <a class="navbar-brand" routerLink="home">Charles Cho</a>
       <button
-        class="navbar-toggler navbar-burger"
+        class="navbar-toggler navbar-burger toggle"
         type="button"
         data-toggle="collapse"
         data-target="#navbarToggler"
@@ -17,13 +17,13 @@
         aria-label="Toggle navigation"
         (click)="sidebarToggle()"
       >
-        <span class="navbar-toggler-bar"></span>
-        <span class="navbar-toggler-bar"></span>
-        <span class="navbar-toggler-bar"></span>
+        <span class="navbar-toggler-bar toggle"></span>
+        <span class="navbar-toggler-bar toggle"></span>
+        <span class="navbar-toggler-bar toggle"></span>
       </button>
     </div>
     <div class="navbar-collapse" id="navbarToggler">
-      <ul class="navbar-nav ml-auto align-items-center">
+      <ul class="navbar-nav ml-auto align-items-center" (clickoutside)="cancel($event)">
         <li class="nav-item" *ngIf="!isDocumentation()">
           <a
             class="nav-link"

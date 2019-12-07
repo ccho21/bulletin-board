@@ -58,6 +58,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ComponentsModule } from './components/components.module';
 import { PostModule } from './containers/posts/post.module';
 import { HomeModule } from './containers/home/home.module';
+import { DashboardComponent } from './containers/dashboard/dashboard.component';
+import { ClickOutsideDirective } from './core/directives/click-outside.directive';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -94,6 +96,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     NavbarComponent,
     FooterComponent,
     LoaderComponent,
+    DashboardComponent,
+    ClickOutsideDirective
   ],
   entryComponents: [AppComponent],
   imports: [

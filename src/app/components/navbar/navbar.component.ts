@@ -83,12 +83,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const navbar: HTMLElement = this.element.nativeElement;
     this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
   }
+
   signUpOpen() {
     this.modalService.signUpOpen();
   }
-  signInOpen() {
-    this.modalService.signInOpen();
-  }
+
   signOut() {
     from(this.authService.signOut()).subscribe(res => {
       this.isLoggedIn = false;
@@ -107,7 +106,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       toggleButton.classList.add('toggled');
     }, 500);
     html.classList.add('nav-open');
-
     this.sidebarVisible = true;
   }
 
@@ -128,7 +126,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   isHome() {
-    var titlee = this.location.prepareExternalUrl(this.location.path());
+    let titlee = this.location.prepareExternalUrl(this.location.path());
     if (titlee.charAt(0) === '#') {
       titlee = titlee.slice(1);
     }
@@ -140,7 +138,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   isDocumentation() {
-    var titlee = this.location.prepareExternalUrl(this.location.path());
+    let titlee = this.location.prepareExternalUrl(this.location.path());
     if (titlee.charAt(0) === '#') {
       titlee = titlee.slice(1);
     }
@@ -149,6 +147,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
     } else {
       return false;
     }
+  }
+  cancel(e) {
+    const outsideClicked = !e;
+    if(this.sidebarVisible) {
+      if(outsideClicked) {
+        this.sidebarToggle();
+      }
+    }
+   
   }
   ngOnDestroy() {
     this.logginSubsctiption.unsubscribe();
