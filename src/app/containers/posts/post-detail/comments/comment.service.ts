@@ -23,8 +23,8 @@ export class CommentService {
 
   getComments(postId) {
     return this.db
-      .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments').valueChanges(['added', 'removed']);
+      // .collection<Post>('posts').doc(postId)
+      .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).valueChanges(['added', 'removed']);
   }
 
   addComment(postId, commentDTO: Comment) {
@@ -32,34 +32,34 @@ export class CommentService {
     // Post detail
     commentDTO.commentId = id;
     const query = this.db
-      .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments').doc(commentDTO.commentId).set(commentDTO);
+      // .collection<Post>('posts').doc(postId)
+      .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).doc(commentDTO.commentId).set(commentDTO);
     return of(query);
   }
   updateComment(postId: string, commentId: string, commentDTO: Comment) {
     const query = this.db
-      .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments').doc(commentId)
+      // .collection<Post>('posts').doc(postId)
+      .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).doc(commentId)
       .update(commentDTO);
       return of(query);
   }
 
   deleteComment(postId: string, comment: Comment) {
     const query = this.db
-      .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments').doc(comment.commentId).delete();
+      // .collection<Post>('posts').doc(postId)
+      .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).doc(comment.commentId).delete();
     return of(query);
   }
 
   getNumOfComments(postId: string) {
     return this.db
-      .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments').valueChanges().pipe(mergeMap(res => {
+      // .collection<Post>('posts').doc(postId)
+      .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).valueChanges().pipe(mergeMap(res => {
         return of(res.length);
       }));;
   }
 
-  comments() {
-    return this.db.collection('comments').valueChanges();
+  getCommentsByUid(uid) {
+    return this.db.collection<Comment>('comments', ref=> ref.where('author.uid', '==', uid)).valueChanges();
   }
 }

@@ -27,7 +27,8 @@ export class LikeService {
     this.logger.info('### final like dto', likeDTO);
     this.logger.info('like', like);
     this.logger.info('type', type);
-    const query = this.getLikeCollectionByType(like, type).collection<Like>('likes').doc(id).set(likeDTO);
+    // const query = this.getLikeCollectionByType(like, type).collection<Like>('likes').doc(id).set(likeDTO);
+    const query = this.db.collection<Like>('likes').doc(id).set(likeDTO);
     return of(likeDTO);
   }
 
@@ -47,17 +48,24 @@ export class LikeService {
   getLikesByData(data: Like, dataId: string, type) {
     const { uid } = this.authService.getCurrentUser();
     const q = type === 1 ? 'postId' : 'commentId';
-    // this.logger.info('### type is', type, '### id is', q, ': ', dataId);
+    // original
+    /* this.logger.info('### type is', type, '### id is', q, ': ', dataId);
     const query = this.getLikeCollectionByType(data, type).collection('likes', ref =>
-      ref.where('user.uid', '==', uid)).valueChanges();
+      ref.where('user.uid', '==', uid)).valueChanges(); */
+    
+    // temp
+    const query = this.db.collection('likes', ref =>
+    ref.where(q, '==', dataId).where('user.uid', '==', uid).where('type', '==', type)).valueChanges();
     return query;
+    
   }
 
   deleteLike(data, dataId: string, type: number) {
     const query = this.getLikesByData(data, dataId, type).pipe(mergeMap(res => res), take(1), mergeMap((like: any) => {
       // const likeId = like.payload.doc.data().likeId; 
       this.logger.info(like);
-      return of(this.getLikeCollectionByType(data, type).collection('likes').doc(like.likeId).delete());
+      // return of(this.getLikeCollectionByType(data, type).collection('likes').doc(like.likeId).delete());
+      return of(this.db.collection('likes').doc(like.likeId).delete());
     }));
     return query;
   }
@@ -75,18 +83,28 @@ export class LikeService {
 
   getLikeCollectionByType(data, type) {
     if (type === 1) {
-      return this.db.collection<Post>('posts').doc(data.postId);
+      return this.db;//.collection<Post>('posts').doc(data.postId);
     }
     if (type === 2) {
       return this.db
-      .collection<Post>('posts').doc(data.postId)
+      //.collection<Post>('posts').doc(data.postId)
       .collection<Comment>('comments').doc(data.commentId);
     }
   }
 
   getNumOfLikes(postId: string) {
-    return this.db.collection<Post>('posts').doc(postId).collection<Like>('likes').valueChanges().pipe(mergeMap(res => {
+    return this.db
+    // .collection<Post>('posts').doc(postId)
+    .collection<Like>('likes', ref =>
+    ref.where('postId', '==', postId).where('type', '==', 1)).valueChanges()
+    .pipe(mergeMap(res => {
       return of(res.length);
     }));
+  }
+
+  getLikesByUid(uid) {
+    return this.db
+    .collection<Like>('likes', ref =>
+    ref.where('user.uid', '==', uid)).valueChanges();
   }
 }
