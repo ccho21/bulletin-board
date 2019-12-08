@@ -1,112 +1,105 @@
 <nav
-  class="navbar navbar-expand-lg fixed-top navbar-transparent"
+  class="navbar navbar-expand-lg fixed-top navbar-transparent justify-content-center"
   color-on-scroll="500"
   [ngClass]="{ 'navbar-transparent': !navBackgroundColor }"
   (scroll)="scrollHandler($event)"
 >
-  <div class="container">
-    <div class="navbar-translate">
-      <a class="navbar-brand" routerLink="home">Charles Cho</a>
-      <button
-        class="navbar-toggler navbar-burger toggle"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarToggler"
-        aria-controls="navbarTogglerDemo02"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-        (click)="sidebarToggle()"
-      >
-        <span class="navbar-toggler-bar toggle"></span>
-        <span class="navbar-toggler-bar toggle"></span>
-        <span class="navbar-toggler-bar toggle"></span>
-      </button>
-    </div>
-    <div class="navbar-collapse" id="navbarToggler">
-      <ul class="navbar-nav ml-auto align-items-center" (clickoutside)="cancel($event)">
-        <li class="nav-item" *ngIf="!isDocumentation()">
-          <a
-            class="nav-link"
-            [routerLink]="['/posts']" routerLinkActive="router-link-active"
-          >
-            <p class="">Forum</p>
+  <div class="col-md-10">
+    <div class="container">
+      <div class="navbar-translate">
+        <a class="navbar-brand" routerLink="home">Charles Cho</a>
+        <button
+          class="navbar-toggler navbar-burger toggle"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarToggler"
+          aria-controls="navbarTogglerDemo02"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          (click)="sidebarToggle()"
+        >
+          <span class="navbar-toggler-bar toggle"></span>
+          <span class="navbar-toggler-bar toggle"></span>
+          <span class="navbar-toggler-bar toggle"></span>
+        </button>
+      </div>
+      <div class="navbar-collapse" id="navbarToggler">
+        <ul
+          class="navbar-nav ml-auto align-items-end"
+          (clickoutside)="cancel($event)"
+        >
+          <li class="nav-item" *ngIf="!isDocumentation()">
+            <a
+              class="nav-link"
+              [routerLink]="['/posts']"
+              routerLinkActive="router-link-active"
+            >
+              <i class="nc-icon nc-bullet-list-67"></i>
+              <p class="d-lg-none">Forum</p>
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="!isDocumentation()">
+            <a
+              class="nav-link"
+            >
+              <i class="nc-icon nc-email-85"></i>
+              <p class="d-lg-none">Message</p>
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <div class="dropdown" ngbDropdown placement="bottom-right">
+              <a
+                class="nav-link dropdown-toggle"
+                id="dropdownBasic1"
+                ngbDropdownToggle
+              >
+                <i aria-hidden="true" class="nc-icon nc-single-02"></i>
+                <p class="d-lg-none">{{user.displayName}}</p>
+              </a>
+              <div
+                ngbDropdownMenu
+                aria-labelledby="dropdownBasic1"
+                class="dropdown-danger"
+                x-placement="bottom-left"
+              >
+             
+                <a class="dropdown-item" [routerLink]="['/user', user.uid]" >My Profile</a
+                ><a class="dropdown-item">Dashboard </a
+                ><a class="dropdown-item">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" (click)="signOut()">Sign Out</a>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a
+              *ngIf="!isLoggedIn"
+              (click)="signInOpen()"
+              class="nav-link"
+            >
+              Sign in
           </a>
-        </li>
-        <li class="nav-item" *ngIf="!isDocumentation()">
-          <a
-            class="nav-link"
-            rel="tooltip"
-            title="Like us on Facebook"
-            data-placement="bottom"
-            href="https://www.facebook.com/CreativeTim"
-            target="_blank"
-          >
-            <i class="fa fa-facebook-square"></i>
-            <p class="d-lg-none">Facebook</p>
+          </li>
+          <li class="nav-item">
+            <a
+              *ngIf="!isLoggedIn"
+              (click)="signUpOpen()"
+              class="nav-link"
+            >
+              Sign up
           </a>
-        </li>
-        <li class="nav-item" *ngIf="!isDocumentation()">
-          <a
-            class="nav-link"
-            rel="tooltip"
-            title="Follow us on Instagram"
-            data-placement="bottom"
-            href="https://www.instagram.com/CreativeTimOfficial"
-            target="_blank"
-          >
-            <i class="fa fa-instagram"></i>
-            <p class="d-lg-none">Instagram</p>
-          </a>
-        </li>
-        <li class="nav-item" *ngIf="!isDocumentation()">
-          <a
-            class="nav-link"
-            rel="tooltip"
-            title="Star on GitHub"
-            data-placement="bottom"
-            href="https://www.github.com/CreativeTimOfficial/paper-kit-2-angular"
-            target="_blank"
-          >
-            <i class="fa fa-github"></i>
-            <p class="d-lg-none">GitHub</p>
-          </a>
-        </li>
-        <li class="nav-item ml-3">
-          <button
-            *ngIf="!isLoggedIn"
-            (click)="signInOpen()"
-            class="btn btn-danger btn-round"
-          >
-            Sign in
-          </button>
-        </li>
-        <li class="nav-item ml-3">
-          <button
-            *ngIf="!isLoggedIn"
-            (click)="signUpOpen()"
-            class="btn btn-danger btn-round"
-          >
-            Sign up
-          </button>
-        </li>
-        <li class="nav-item ml-3">
-          <button
-            *ngIf="isLoggedIn"
-            (click)="signOut()"
-            class="btn btn-danger btn-round"
-          >
-            Sign out
-          </button>
-        </li>
-        <li class="nav-item" *ngIf="isDocumentation()">
-          <a
-            href="https://github.com/creativetimofficial/paper-kit-2-angular/issues?ref=pk2-free-local"
-            target="_blank"
-            class="nav-link"
-            >Have an issue</a
-          >
-        </li>
-      </ul>
+          </li>
+          <li class="nav-item" *ngIf="isDocumentation()">
+            <a
+              href="https://github.com/creativetimofficial/paper-kit-2-angular/issues?ref=pk2-free-local"
+              target="_blank"
+              class="nav-link"
+              >Have an issue</a
+            >
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>

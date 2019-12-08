@@ -1,0 +1,53 @@
+<div class="nav-cover"></div>
+<!-- Main content -->
+<div class="container">
+  <div class="row justify-content-center">
+    <main class="col-md-10" *ngIf="user">
+      <div class="inner-adjust">
+        <div class="border-bottom">
+          <h2 class="h2 mb-3">Hello {{ user.displayName }}</h2>
+        </div>
+        <!-- Show user data when logged in -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="media align-items-center mt-5">
+              <img
+                class="img-circle img-no-padding img-responsive mr-5 c-user-img"
+                src="{{
+                  user.photoURL ? user.photoURL : '/assets/dummy-user.png'
+                }}"
+                alt="{{ user.displayName }}"
+              />
+              <div class="media-body mb-3">
+                <p>
+                  Name:
+                  <strong>{{
+                    user.displayName ? user.displayName : "User"
+                  }}</strong>
+                </p>
+                <p>
+                  Email: <strong>{{ user.email }}</strong>
+                </p>
+                <p>
+                  Email Verified: <strong>{{ user.emailVerified }}</strong>
+                </p>
+                <hr />
+                <div class="d-flex">
+                  <p>{{ posts.length }} <strong> posts </strong></p>
+                  <p class="ml-4">{{ posts.length }} <strong> likes </strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- User activities  -->
+    <!-- <section class="col-md-10">
+      <div class="border-bottom">
+        <h2 class="h2 mb-3">{{ user.displayName }} 's activities</h2>
+      </div>
+    </section> -->
+  </div>
+</div>

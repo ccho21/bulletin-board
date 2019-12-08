@@ -18,6 +18,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 import { from, Subscription } from 'rxjs';
 import { User } from '@models/user';
 import { ModalService } from '@app/core/services/modal/modal.service';
+import { UserService } from '@app/core/services/user/user.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -38,8 +39,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private modalService: ModalService,
     private authService: AuthService,
-    private afAuth: AngularFireAuth,
-    private activeModal: NgbActiveModal
+    private userService: UserService,
   ) {
     this.sidebarVisible = false;
   }
@@ -54,24 +54,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.afAuth.authState
-      .pipe(this.authService.firebaseAuthChangeListener)
-      .subscribe((res: any) => {
-        if (res) {
-          const { displayName, uid, photoURL, email, emailVerified } = res;
-          this.user = {
-            displayName,
-            uid,
-            photoURL,
-            email,
-            emailVerified
-          };
-          if (this.user) {
-            this.logger.info('user successfuly signed in', this.user);
-            this.isLoggedIn = true;
-          }
+    this.authService.getSignedUser().subscribe((res: any) => {
+      if (res) {
+        const { displayName, uid, photoURL, email, emailVerified } = res;
+        this.user = {
+          displayName,
+          uid,
+          photoURL,
+          email,
+          emailVerified
+        };
+        if (this.user) {
+          this.logger.info('user successfuly signed in', this.user);
+          this.isLoggedIn = true;
         }
-      });
+      }
+    });
 
     this.logginSubsctiption = this.authService
       .getSignInSource()
@@ -83,8 +81,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const navbar: HTMLElement = this.element.nativeElement;
     this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
   }
+  signInOpen() {
+    this.logger.info('sign In open?');
+    this.modalService.signInOpen();
+  }
 
   signUpOpen() {
+    this.logger.info('sign up open?');
     this.modalService.signUpOpen();
   }
 
@@ -99,10 +102,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   sidebarOpen() {
     const toggleButton = this.toggleButton;
     const html = document.getElementsByTagName('html')[0];
-    // console.log(html);
-    // console.log(toggleButton, 'toggle');
 
-    setTimeout(function() {
+    setTimeout(function () {
       toggleButton.classList.add('toggled');
     }, 500);
     html.classList.add('nav-open');
@@ -111,7 +112,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   sidebarClose() {
     const html = document.getElementsByTagName('html')[0];
-    // console.log(html);
     this.toggleButton.classList.remove('toggled');
     this.sidebarVisible = false;
     html.classList.remove('nav-open');
@@ -150,12 +150,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
   cancel(e) {
     const outsideClicked = !e;
-    if(this.sidebarVisible) {
-      if(outsideClicked) {
+    if (this.sidebarVisible) {
+      if (outsideClicked) {
         this.sidebarToggle();
       }
     }
-   
+
   }
   ngOnDestroy() {
     this.logginSubsctiption.unsubscribe();

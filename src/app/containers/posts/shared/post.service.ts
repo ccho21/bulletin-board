@@ -34,6 +34,10 @@ export class PostService {
     return this.db.collection('posts').stateChanges(['added']);
   }
 
+  getPostsByUid(uid) {
+    return this.db.collection<Post>('posts', ref=> ref.where('author.uid', '==', `${uid}`)).valueChanges();
+  }
+
   /* Update post */
   updatePost(id, post: Post) {
     const query = this.db

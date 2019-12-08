@@ -52,6 +52,12 @@ export class AuthService {
       return response;
     }
   }
+  getSignedUser() : any{
+    return this.afAuth.authState
+      .pipe(this.firebaseAuthChangeListener);
+  }
+
+
   updateSignInSource(updated: boolean) {
     this.signInSource.next(updated);
   }
@@ -177,10 +183,10 @@ export class AuthService {
   }
 
   getCurrentUser() {
-      // Author
-      const { displayName, uid, photoURL, email, emailVerified } = this.afAuth.auth.currentUser;
-      const user: User = { displayName, uid, photoURL, email, emailVerified };
-      return user;
+    // Author
+    const { displayName, uid, photoURL, email, emailVerified } = this.afAuth.auth.currentUser;
+    const user: User = { displayName, uid, photoURL, email, emailVerified };
+    return user;
   }
 
   // Sign out

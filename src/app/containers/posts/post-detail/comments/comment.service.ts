@@ -58,4 +58,8 @@ export class CommentService {
         return of(res.length);
       }));;
   }
+
+  comments() {
+    return this.db.collection('comments').valueChanges();
+  }
 }

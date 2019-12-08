@@ -31,6 +31,9 @@ body::-webkit-scrollbar-thumb {
 
 /* set button(top and bottom of the scrollbar) */
 body::-webkit-scrollbar-button {display:none}
+a {
+    cursor: pointer;
+}
 
 .nav-cover {
     height: 7rem;
