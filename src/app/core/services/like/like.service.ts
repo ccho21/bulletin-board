@@ -24,9 +24,6 @@ export class LikeService {
     const id = this.db.createId();
     const likeDTO = this.cleanUndefined(like);
     likeDTO.likeId = id;
-    this.logger.info('### final like dto', likeDTO);
-    this.logger.info('like', like);
-    this.logger.info('type', type);
     // const query = this.getLikeCollectionByType(like, type).collection<Like>('likes').doc(id).set(likeDTO);
     const query = this.db.collection<Like>('likes').doc(id).set(likeDTO);
     return of(likeDTO);

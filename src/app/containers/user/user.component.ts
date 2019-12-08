@@ -21,6 +21,8 @@ import { Comment } from '@app/shared/models/comment';
 export class UserComponent implements OnInit {
   user: User;
   posts: Post[] = [];
+  likedPosts: Post[] = [];
+  likedPostsByComment: Post[] = [];
   comments: Comment[] = [];
   likes: Like[] = [];
   private userId: string;
@@ -37,11 +39,14 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.initData();
+  }
+
+  initData() {
     this.route.paramMap.pipe(
       switchMap((params) => {
         return this.authService.getSignedUser();
       }),
- 
       mergeMap((res: User) => {
         this.user = res;
         this.uid = this.user.uid;
@@ -51,17 +56,25 @@ export class UserComponent implements OnInit {
           this.commentService.getCommentsByUid(this.uid),
           this.likeService.getLikesByUid(this.uid),
         ]
-        this.logger.info(requests);
         this.logger.info(this.likeService.getLikesByUid(this.uid));
         if(requests.length) {
           return combineLatest(requests);
         }
       }),
+      switchMap(results => {
+        this.logger.info(results);
+        this.posts = results[0] as Post[];
+        this.comments = results[1] as Comment[];
+        this.likes = results[2] as Like[];
+        return combineLatest(this.postService.getPostsByLikeId(this.likes));
+      }),
+      switchMap(results => {
+        this.likedPosts = results;
+        return combineLatest(this.postService.getPostsByCommentId(this.comments));
+      })
     ).subscribe((results) => {
-      this.logger.info(results);
-      this.posts = results[0] as Post[];
-      this.comments = results[1] as Comment[];
-      this.likes = results[2] as Like[];
+        this.logger.info(results);
+        this.likedPostsByComment = results;
     }, (err) => {
       this.logger.info(err);
     });

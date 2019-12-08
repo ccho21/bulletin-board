@@ -1,8 +1,8 @@
 <div class="nav-cover"></div>
 <!-- Main content -->
-<div class="container">
+<div class="container" *ngIf="user">
   <div class="row justify-content-center">
-    <main class="col-md-10" *ngIf="user">
+    <main class="col-md-12">
       <div class="inner-adjust">
         <div class="border-bottom">
           <h2 class="h2 mb-3">Hello {{ user.displayName }}</h2>
@@ -33,9 +33,13 @@
                 </p>
                 <hr />
                 <div class="d-flex">
-                  <p> {{ posts.length }} <strong> posts </strong></p>
-                  <p class="ml-4">  {{ comments.length }} <strong> comments </strong></p>
-                  <p class="ml-4">{{ likes.length }} <strong> likes </strong></p>
+                  <p>{{ posts.length }} <strong> posts </strong></p>
+                  <p class="ml-4">
+                    {{ comments.length }} <strong> comments </strong>
+                  </p>
+                  <p class="ml-4">
+                    {{ likes.length }} <strong> likes </strong>
+                  </p>
                 </div>
               </div>
             </div>
@@ -45,10 +49,66 @@
     </main>
 
     <!-- User activities  -->
-    <!-- <section class="col-md-10">
+    <section class="col-md-12">
       <div class="border-bottom">
-        <h2 class="h2 mb-3">{{ user.displayName }} 's activities</h2>
+        <h4 class="mb-3">{{ user.displayName }} 's activities</h4>
       </div>
-    </section> -->
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-4">Posts the user liked</p>
+          <div *ngIf="likedPosts.length !== 0; else lpValid">
+            <div *ngFor="let likedPost of likedPosts">
+              <div class="media">
+                <img
+                  class="img-thumbnail img-responsive c-img-thumnail mr-3"
+                  src="{{ likedPost.photoURL }}"
+                  alt="likedPost.title"
+                />
+                <div class="media-body">
+                  <div class="d-flex justify-content-between">
+                    <h5 class="mt-0">{{ likedPost.title }}</h5>
+                    <span>{{ likedPost.createdAt | date }}</span>
+                  </div>
+                  <p>{{ likedPost.content }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #lpValid>
+            <div>
+              No posts
+            </div>
+          </ng-template>
+        </div>
+        <div class="col-md-6">
+          <p class="mb-4">
+            Posts the user commented
+          </p>
+          <div *ngIf="likedPostsByComment.length !== 0; else lpcValid">
+              <div *ngFor="let likedPost of likedPostsByComment">
+                <div class="media">
+                  <img
+                    class="img-thumbnail img-responsive c-img-thumnail mr-3"
+                    src="{{ likedPost.photoURL }}"
+                    alt="likedPost.title"
+                  />
+                  <div class="media-body">
+                    <div class="d-flex justify-content-between">
+                      <h5 class="mt-0">{{ likedPost.title }}</h5>
+                      <span>{{ likedPost.createdAt | date }}</span>
+                    </div>
+                    <p>{{ likedPost.content }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #lpcValid>
+              <div>
+                No posts
+              </div>
+            </ng-template>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
