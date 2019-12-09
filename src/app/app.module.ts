@@ -62,6 +62,10 @@ import { DashboardComponent } from './containers/dashboard/dashboard.component';
 import { ClickOutsideDirective } from './core/directives/click-outside.directive';
 import { UserComponent } from './containers/user/user.component';
 
+
+// PIPE
+import { PipesModule } from './core/pipes/pipes.module';
+
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [
@@ -99,7 +103,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     LoaderComponent,
     DashboardComponent,
     ClickOutsideDirective,
-    UserComponent
+    UserComponent,
   ],
   entryComponents: [AppComponent],
   imports: [
@@ -123,6 +127,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     MatSliderModule,
     MatDialogModule,
     ComponentsModule,
+    PipesModule
   ],
   providers: [
     FirebaseService,

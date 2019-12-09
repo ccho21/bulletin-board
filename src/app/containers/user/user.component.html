@@ -67,7 +67,7 @@
                 <div class="media-body">
                   <div class="d-flex justify-content-between">
                     <h5 class="mt-0">{{ likedPost.title }}</h5>
-                    <span>{{ likedPost.createdAt | date }}</span>
+                    <span>{{ likedPost.createdAt | postTime }}</span>
                   </div>
                   <p>{{ likedPost.content }}</p>
                 </div>
@@ -95,7 +95,7 @@
                   <div class="media-body">
                     <div class="d-flex justify-content-between">
                       <h5 class="mt-0">{{ p.title }}</h5>
-                      <span>{{ p.createdAt | date }}</span>
+                      <span>{{ p.createdAt | postTime  }}</span>
                     </div>
                     <p>{{ p.content }}</p>
                   </div>

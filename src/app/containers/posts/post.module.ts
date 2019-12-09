@@ -26,12 +26,12 @@ import { PostEditComponent } from './post-edit/post-edit.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostService } from './shared/post.service';
 import { PostRoutingModule } from './post-routing.module';
-import { DateFormatPipe } from '@app/core/pipes/date-format.pipe';
 import { CommentsComponent } from '@app/containers/posts/post-detail/comments/comments.component';
 import { LikeService } from '@app/core/services/like/like.service';
 import { ViewService } from '@app/core/services/view/view.service';
 import { FlnCommentComponent } from '@app/core/widget/fln-comment/fln-comment.component';
 import { FlnLikeComponent } from '@app/core/widget/fln-like/fln-like.component';
+import { PipesModule } from '@app/core/pipes/pipes.module';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -39,9 +39,8 @@ import { FlnLikeComponent } from '@app/core/widget/fln-like/fln-like.component';
     PostEditComponent,
     PostListComponent,
     CommentsComponent,
-    DateFormatPipe,
     FlnCommentComponent,
-    FlnLikeComponent
+    FlnLikeComponent,
   ],
   entryComponents: [
     PostListComponent,
@@ -60,6 +59,7 @@ import { FlnLikeComponent } from '@app/core/widget/fln-like/fln-like.component';
     MatInputModule,
     MatSliderModule,
     MatDialogModule,
+    PipesModule
   ],
   providers: [NgbActiveModal, PostService, LikeService, ViewService],
   bootstrap: [PostListComponent],
