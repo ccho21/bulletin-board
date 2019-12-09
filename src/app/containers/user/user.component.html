@@ -62,7 +62,7 @@
                 <img
                   class="img-thumbnail img-responsive c-img-thumnail mr-3"
                   src="{{ likedPost.photoURL }}"
-                  alt="likedPost.title"
+                  alt="{{likedPost.title}}"
                 />
                 <div class="media-body">
                   <div class="d-flex justify-content-between">
@@ -85,19 +85,19 @@
             Posts the user commented
           </p>
           <div *ngIf="likedPostsByComment.length !== 0; else lpcValid">
-              <div *ngFor="let likedPost of likedPostsByComment">
+              <div *ngFor="let p of likedPostsByComment">
                 <div class="media">
                   <img
                     class="img-thumbnail img-responsive c-img-thumnail mr-3"
-                    src="{{ likedPost.photoURL }}"
-                    alt="likedPost.title"
+                    src="{{ p.photoURL }}"
+                    alt="{{p.title}}"
                   />
                   <div class="media-body">
                     <div class="d-flex justify-content-between">
-                      <h5 class="mt-0">{{ likedPost.title }}</h5>
-                      <span>{{ likedPost.createdAt | date }}</span>
+                      <h5 class="mt-0">{{ p.title }}</h5>
+                      <span>{{ p.createdAt | date }}</span>
                     </div>
-                    <p>{{ likedPost.content }}</p>
+                    <p>{{ p.content }}</p>
                   </div>
                 </div>
               </div>
