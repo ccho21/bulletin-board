@@ -27,7 +27,7 @@ export class UserComponent implements OnInit {
   likes: Like[] = [];
   private userId: string;
   private uid: string;
-  
+
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -55,26 +55,24 @@ export class UserComponent implements OnInit {
           this.postService.getPostsByUid(this.uid),
           this.commentService.getCommentsByUid(this.uid),
           this.likeService.getLikesByUid(this.uid),
-        ]
-        this.logger.info(this.likeService.getLikesByUid(this.uid));
-        if(requests.length) {
-          return combineLatest(requests);
-        }
+        ];
+        return combineLatest(requests);
       }),
       switchMap(results => {
-        this.logger.info(results);
+        this.logger.info('### Altogether ' , results);
         this.posts = results[0] as Post[];
         this.comments = results[1] as Comment[];
         this.likes = results[2] as Like[];
         return combineLatest(this.postService.getPostsByLikeId(this.likes));
       }),
       switchMap(results => {
+        this.logger.info('### post Like ID ',results);
         this.likedPosts = results;
         return combineLatest(this.postService.getPostsByCommentId(this.comments));
       })
     ).subscribe((results) => {
-        this.logger.info(results);
-        this.likedPostsByComment = results;
+      this.logger.info('### post by comment ',results);
+      this.likedPostsByComment = results;
     }, (err) => {
       this.logger.info(err);
     });

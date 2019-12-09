@@ -11,13 +11,11 @@
         <div class="row">
           <div class="col-md-12">
             <div class="media align-items-center mt-5">
-              <img
-                class="img-circle img-no-padding img-responsive mr-5 c-user-img"
-                src="{{
-                  user.photoURL ? user.photoURL : '/assets/dummy-user.png'
-                }}"
-                alt="{{ user.displayName }}"
-              />
+                <img
+                  class="img-circle img-no-padding img-responsive mr-5 c-user-img"
+                  src="{{user.photoURL}}"
+                  alt="{{ user.displayName }}"
+                />
               <div class="media-body mb-3">
                 <p>
                   Name:
@@ -59,11 +57,13 @@
           <div *ngIf="likedPosts.length !== 0; else lpValid">
             <div *ngFor="let likedPost of likedPosts">
               <div class="media">
-                <img
-                  class="img-thumbnail img-responsive c-img-thumnail mr-3"
-                  src="{{ likedPost.photoURL }}"
-                  alt="{{likedPost.title}}"
-                />
+                <a  [routerLink]="['/posts', likedPost.postId]" routerLinkActive="router-link-active">
+                  <img
+                    class="img-thumbnail img-responsive c-img-thumnail mr-3"
+                    src="{{likedPost.photoURL}}"
+                    alt="{{likedPost.title}}"
+                  />
+                </a>
                 <div class="media-body">
                   <div class="d-flex justify-content-between">
                     <h5 class="mt-0">{{ likedPost.title }}</h5>
@@ -87,11 +87,13 @@
           <div *ngIf="likedPostsByComment.length !== 0; else lpcValid">
               <div *ngFor="let p of likedPostsByComment">
                 <div class="media">
-                  <img
-                    class="img-thumbnail img-responsive c-img-thumnail mr-3"
-                    src="{{ p.photoURL }}"
-                    alt="{{p.title}}"
-                  />
+                  <a [routerLink]="['/posts', likedPostsByComment.postId]" routerLinkActive="router-link-active" >
+                    <img
+                      class="img-thumbnail img-responsive c-img-thumnail mr-3"
+                      src="{{ p.photoURL }}"
+                      alt="{{p.title}}"
+                    />
+                  </a>
                   <div class="media-body">
                     <div class="d-flex justify-content-between">
                       <h5 class="mt-0">{{ p.title }}</h5>

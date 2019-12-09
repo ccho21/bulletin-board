@@ -94,7 +94,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   deleteComment(comment): void {
     const postId = this.post.postId;
-    this.commentService.deleteComment(postId, comment).subscribe(res => {
+    this.commentService.deleteComment(postId, comment, this.post).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
     });
   }
@@ -106,7 +106,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
       ...comment
     };
     const commentDTO = this.cleanUp(c);
-    this.commentService.addComment(postId, commentDTO).subscribe(res => {
+    this.commentService.addComment(postId, commentDTO, this.post).subscribe(res => {
       this.logger.info("### a comment was succesfully added", res);
       this.closeComment(comment);
     });

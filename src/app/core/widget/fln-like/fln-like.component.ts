@@ -93,8 +93,10 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   }
   addLike(data) {
     let dto: Like = this.getDTO(data);
+    let dataDTO: Post;
+    dataDTO = {...data};
     const id = this.getId();
-    this.likeService.addLike(id, dto, this.type).subscribe(res => {
+    this.likeService.addLike(id, dto, this.type, dataDTO).subscribe(res => {
       this.logger.info('### like successfully added', res);
     });
   }
@@ -110,7 +112,9 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   removeLike(data) {
     let dto: Like = this.getDTO(data);
     const id = this.getId();
-    this.likeService.deleteLike(dto, id, this.type).subscribe(res => {
+    let dataDTO: Post;
+    dataDTO = {...data};
+    this.likeService.deleteLike(dto, id, this.type, dataDTO).subscribe(res => {
       this.logger.info('### like successfully deleted', res);
     });
   }

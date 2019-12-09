@@ -33,8 +33,14 @@ export class PostListComponent implements OnInit, OnDestroy {
   initData() {
     this.getPosts();
   }
-  
   getPosts() {
+    this.postService.getPosts().subscribe(results => {
+      this.logger.info('### FINAL ### ', results);
+      this.posts = results.map(cur => cur.payload.doc.data() as Post);
+    });
+  }
+
+  /* getPosts() {
     const posts: Post[] = [];
     let post;
     let length: number;
@@ -62,7 +68,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.logger.info('### FINAL ### ', results);
         this.posts = results.map(post => post as Post);
       });
-  }
+  } */
 
   deletePost(post) {
     const postId = post.postId;

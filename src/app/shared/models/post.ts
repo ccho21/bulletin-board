@@ -11,7 +11,8 @@ export interface Post {
   categoryId    : string;
   tagIds        : string;
   replies?      : number;
-  likes?        : number;
+  comments      : Array<string>;
+  likes?       : Array<string>;
   views?        : number;
 }
 

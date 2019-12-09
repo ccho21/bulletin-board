@@ -21,6 +21,7 @@ export class PostNewComponent implements OnInit, OnDestroy {
   uploadSubscription: Subscription;
   isRegisterValid: boolean;
   postDTO: Post;
+  basePhoto: string = `https://firebasestorage.googleapis.com/v0/b/bulletin-board-d1815.appspot.com/o/uploads%2F1575514437441_temp-main4.jpg?alt=media&token=044f04f0-89cd-4027-865e-eb6680ad008b`; 
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -78,7 +79,7 @@ export class PostNewComponent implements OnInit, OnDestroy {
         this.isRegisterValid = false;
       });
     } else {
-      const postFormGroup = {...this.postFormGroup.value};
+      postDTO.photoURL = this.basePhoto;
       this.postService.addPost(postDTO).subscribe(res => {
         this.logger.info('### successfully posted data', res);
       })

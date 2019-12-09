@@ -26,6 +26,7 @@ export class PostService {
 
   /* Get post */
   getPost(id: string) {
+    this.logger.info('from here?');
     return this.db.collection<Post>('posts').doc(id).snapshotChanges();
   }
 

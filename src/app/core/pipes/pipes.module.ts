@@ -5,10 +5,6 @@ import { PostTimePipe } from './post-time.pipe';
   declarations: [
     PostTimePipe
   ],
-  entryComponents: [
-  ],
-  imports: [
-  ],
   exports: [
     PostTimePipe
   ],

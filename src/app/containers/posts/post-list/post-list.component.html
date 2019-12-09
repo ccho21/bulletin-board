@@ -36,10 +36,10 @@
               </div>
             </td>
             <td class="text-center">
-              {{post.comments | async }}
+              {{post.comments.length }}
             </td>
-            <td>{{post.views}}</td>
-            <td>{{post.likes | async}}</td>
+            <td class="text-center">{{post.views}}</td>
+            <td class="text-center">{{post.likes.length}}</td>
             <td>
               <div class="d-flex">
                 <app-fln-like [post]="post"></app-fln-like>

@@ -6,10 +6,11 @@ import {
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from, of } from "rxjs";
 import { AuthService } from "@app/core/services/auth/auth.service";
-import { mergeMap } from "rxjs/operators";
+import { mergeMap, switchMap } from "rxjs/operators";
 import { Comment } from "../../../../shared/models/comment";
 import { User } from "@app/shared/models/user";
 import { Post } from '@app/shared/models/post';
+import { PostService } from '../../shared/post.service';
 
 @Injectable({
   providedIn: "root"
@@ -18,7 +19,8 @@ export class CommentService {
   constructor(
     private db: AngularFirestore,
     private logger: LoggerService,
-    private authService: AuthService
+    private authService: AuthService,
+    private postService: PostService,
   ) { }
 
   getComments(postId) {
@@ -27,28 +29,37 @@ export class CommentService {
       .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).valueChanges(['added', 'removed']);
   }
 
-  addComment(postId, commentDTO: Comment) {
+  addComment(postId, commentDTO: Comment, post: Post) {
     const id = this.db.createId();
     // Post detail
     commentDTO.commentId = id;
     const query = this.db
-      // .collection<Post>('posts').doc(postId)
       .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).doc(commentDTO.commentId).set(commentDTO);
-    return of(query);
+    return of(query).pipe(switchMap(res => {
+      const postDTO = {...post};
+      const commentId = commentDTO.commentId;
+      postDTO.comments.push(commentId);
+      return this.postService.updatePost(postId, post);
+    }));
   }
   updateComment(postId: string, commentId: string, commentDTO: Comment) {
     const query = this.db
-      // .collection<Post>('posts').doc(postId)
       .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).doc(commentId)
       .update(commentDTO);
       return of(query);
   }
 
-  deleteComment(postId: string, comment: Comment) {
+  deleteComment(postId: string, comment: Comment, post: Post) {
     const query = this.db
       // .collection<Post>('posts').doc(postId)
       .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).doc(comment.commentId).delete();
-    return of(query);
+    return of(query).pipe(switchMap(res => {
+      const postDTO = {...post};
+      const cIndex = postDTO.comments.findIndex(cur => cur === comment.commentId);
+      postDTO.comments.splice(cIndex, 1);
+      this.logger.info('post DTO before update of deletion of comment', postDTO);
+      return this.postService.updatePost(postId, post);
+    }));;
   }
 
   getNumOfComments(postId: string) {

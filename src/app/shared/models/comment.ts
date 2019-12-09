@@ -10,4 +10,5 @@ export interface Comment {
     postId?             : string;
     parentCommentId?    : string;
     depth               : number;
+    likes               : Array<string>;
 }
