@@ -25,8 +25,7 @@ export class CommentService {
 
   getComments(postId) {
     return this.db
-      // .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).valueChanges(['added', 'removed']);
+      .collection<Comment>('comments', ref => ref.where('postId', '==', postId)).get();
   }
 
   addComment(postId, commentDTO: Comment, post: Post) {

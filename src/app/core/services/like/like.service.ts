@@ -40,7 +40,7 @@ export class LikeService {
         if (type === 1) {
           const postDTO: Post = dataDTO;
           const likeId = likeDTO.likeId;
-          // postDTO.likes.push(likeId);
+          postDTO.likes.push(likeId);
           this.logger.info('### post DTO ', dataDTO);
           this.postService.updatePost(postDTO.postId, postDTO);
           return of(res);
@@ -48,7 +48,7 @@ export class LikeService {
         else {
           const commentDTO: Comment = { ...dataDTO };
           const likeId = likeDTO.likeId;
-          // commentDTO.likes.push(likeId);
+          commentDTO.likes.push(likeId);
           this.logger.info('### Comment DTO' , commentDTO);
           this.commentService.updateComment(commentDTO.postId, commentDTO.commentId, commentDTO);
           return of(res);

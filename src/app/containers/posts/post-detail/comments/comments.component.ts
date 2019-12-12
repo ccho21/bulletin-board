@@ -38,8 +38,18 @@ export class CommentsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.commentForm = new FormControl("");
     this.logger.info("### ngOnInit in comments");
-    this.initComments(this.post);
+    // this.initComments(this.post);
+    this.initData(this.post)
   }
+
+  initData(post) {
+    this.commentSubscription = this.commentService.getComments(post.postId).subscribe(res => {
+      this.logger.info('### get comments', res.docs);
+      this.commentList = this.generateComentList(res.docs);
+    });
+  }
+
+
 
   initComments(post: Post) {
     this.logger.info('post', post);
@@ -57,38 +67,34 @@ export class CommentsComponent implements OnInit, OnDestroy {
   }
 
   generateComentList(data): Array<Comment> {
-    const commentObj = {};
-    const subCommentObj = {};
+    const commentMap = new Map();
+    const subCommentMap = new Map();
     const comments: Array<Comment> = [];
+  
     data.forEach((c) => {
-      if (c.depth === 1) {
-        commentObj[c.commentId] = c;
+      console.log('### c' , c.data());
+      const d = c.data();
+      if (d.depth === 1) {
+        commentMap.set(d.commentId, d);
       }
-      if (c.depth === 2) {
-        subCommentObj[c.commentId] = c;
+      if (d.depth === 2) {
+        subCommentMap.set(d.commentId, d);
       }
     });
+    this.logger.info(commentMap);
 
     // generating keys for sub comment 
-    const keys = Object.keys(subCommentObj);
-    this.logger.info('keys ', keys);
-    keys.forEach(scId => {
-      const id = subCommentObj[scId].parentCommentId;
-      this.logger.info(commentObj[id]);
-      if (commentObj[id]) {
-        if (commentObj[id].hasOwnProperty('comments')) {
-          commentObj[id].comments.push(subCommentObj[scId]);
-        }
-        else {
-          commentObj[id].comments = [subCommentObj[scId]];
-        }
+
+    subCommentMap.forEach(sc => {
+      this.logger.info(sc);
+      const id = subCommentMap.get(sc.parentCommentId);
+      this.logger.info(id);
+      if (commentMap.get(id)) {
+        commentMap.get(id).comments.push(subCommentMap.get(id));
       }
     });
 
-    // return to array 
-    for (const key in commentObj) {
-      comments.push(commentObj[key]);
-    }
+    this.logger.info('### comment Map',commentMap);
     return comments;
   }
 
@@ -96,6 +102,8 @@ export class CommentsComponent implements OnInit, OnDestroy {
     const postId = this.post.postId;
     this.commentService.deleteComment(postId, comment, this.post).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
+      // update post
+      this.initData(this.post);
     });
   }
 
@@ -109,6 +117,8 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.commentService.addComment(postId, commentDTO, this.post).subscribe(res => {
       this.logger.info("### a comment was succesfully added", res);
       this.closeComment(comment);
+       // update post
+      this.initData(this.post);
     });
   }
 
