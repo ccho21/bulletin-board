@@ -39,7 +39,6 @@ export class FlnCommentComponent implements OnInit {
     const commentDTO: Comment = {
       author,
       comment,
-      depth: 1,
       likes: [],
       createdAt: new Date().toISOString(),
     };

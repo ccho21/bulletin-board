@@ -23,7 +23,7 @@
             {{ comment.comment }}
           </p>
           <div *ngIf="comment.addCommentValid">
-            <app-fln-comment [comment]="comment" (commentEmit)="addSubcomment($event, comment)"></app-fln-comment>
+            <app-fln-comment [comment]="comment" (commentEmit)="addSubcomment(comment, $event)"></app-fln-comment>
           </div>
         </div>
         <div class="media-body" *ngIf="comment.editCommentValid">
@@ -44,30 +44,30 @@
         </div>
       </div>
 
-      <div *ngIf="comment.hasOwnProperty('comments')">
-        <div class="media ml-5" *ngFor="let c of comment.comments">
+      <div *ngIf="comment.hasOwnProperty('subComments')">
+        <div class="media ml-5" *ngFor="let sComment of comment.subComments">
           <a class="pull-left" href="#">
             <div class="avatar">
-              <img alt="64x64" class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-                src="{{ c.author.photoURL }}" /></div>
+              <img alt="64x64" class="media-object c-img-thumnail img-circle img-no-padding img-responsive" *ngIf="sComment"
+                src="{{ sComment.author.photoURL }}" /></div>
           </a>
           <div class="media-body">
-            <h6 class="media-heading">{{ c.author.displayName }}</h6>
+            <h6 class="media-heading">{{ sComment.author.displayName }}</h6>
             <div class="pull-right">
-              <h6 class="text-muted" *ngIf="comment.hasOwnProperty('updatedAt'); else createAt">{{ comment.updatedAt | postTime }}</h6>
-              <ng-template #createAt><h6 class="text-muted">{{ comment.createdAt | postTime }}</h6></ng-template>
+              <h6 class="text-muted" *ngIf="comment.hasOwnProperty('updatedAt'); else createAt">{{ sComment.updatedAt | postTime }}</h6>
+              <ng-template #createAt><h6 class="text-muted">{{ sComment.createdAt | postTime }}</h6></ng-template>
             </div>
             <p>
-              {{ c.comment }}
+              {{ sComment.comment }}
             </p>
           </div>
           <div></div>
           <div class="function-box d-flex">
-            <app-fln-like [comment]="c"></app-fln-like>
-            <button class="btn btn-warning" (click)="editComment(c)">
+            <app-fln-like [subComment]="sComment"></app-fln-like>
+            <button class="btn btn-warning" (click)="editComment(comment, sComment)">
               edit
             </button>
-            <button class="btn btn-danger" (click)="deleteComment(c)">
+            <button class="btn btn-danger" (click)="deleteComment(comment, sComment)">
               delete
             </button>
           </div>
