@@ -31,6 +31,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     private viewService: ViewService
   ) { }
   isLiked;
+  likeId: string;
   data: Post | Comment | SubComment;
   type: number;
   user: User;
@@ -44,7 +45,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     const id = this.getId();
     const dto = this.getDTO(this.data);
     this.logger.info('still fine', id, dto);
-    this.likeSubscription = this.likeService.isLiked(dto, id, this.type).subscribe(res => {
+    this.likeSubscription = this.likeService.isLiked(id, this.type).subscribe(res => {
       this.logger.info('is liked', res);
       this.isLiked = res;
     });
@@ -110,10 +111,9 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   }
   addLike(data) {
     let dto: Like = this.getDTO(data);
-    let dataDTO: any;
-    dataDTO = {...data};
-    const id = this.getId();
-    this.likeService.addLike(id, dto, this.type, dataDTO).subscribe(res => {
+    const dataDTO = {...data};
+    const dataId = this.getId();
+    this.likeService.addLike(dataId, dto, this.type, dataDTO).subscribe(res => {
       this.logger.info('### like successfully added', res);
     });
   }
@@ -131,12 +131,16 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   }
   removeLike(data) {
     let dto: Like = this.getDTO(data);
-    const id = this.getId();
+    const dataId = this.getId();
     let dataDTO: Post;
     dataDTO = {...data};
-    this.likeService.deleteLike(dto, id, this.type, dataDTO).subscribe(res => {
+    /* this.likeService.removeLike(dto, id, this.type, dataDTO).subscribe(res => {
       this.logger.info('### like successfully deleted', res);
-    });
+    }); */
+    this.logger.info('######### this.like id ',this.likeId);
+    this.likeService.removeLike(dataId, this.type ,this.likeId).subscribe(res => {
+      this.logger.info('### like success');
+    })
   }
 
   cleanUp(data) {

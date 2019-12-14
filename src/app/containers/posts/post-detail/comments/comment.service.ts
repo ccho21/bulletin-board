@@ -56,7 +56,6 @@ export class CommentService {
       const postDTO = {...post};
       const cIndex = postDTO.comments.findIndex(cur => cur === comment.commentId);
       postDTO.comments.splice(cIndex, 1);
-      this.logger.info('post DTO before update of deletion of comment', postDTO);
       return this.postService.updatePost(postId, post);
     }));;
   }

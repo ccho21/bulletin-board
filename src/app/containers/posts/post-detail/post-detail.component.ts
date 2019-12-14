@@ -48,6 +48,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         }
         this.hasPost = true;
         this.viewService.updateViews(this.post);
+
+        // this.likeService.removeLikes(this.post.postId, 1);
       });
   }
   updatePost(post) {

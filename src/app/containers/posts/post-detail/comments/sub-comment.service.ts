@@ -64,7 +64,7 @@ export class SubCommentService {
       return this.commentService.updateComment(postId, mainComment.commentId, mainComment);
     }));;
   }
-  
+
   updateSubComment(commentId: string, subCommentDTO: SubComment) {
     const query = this.db
       .collection<SubComment>('sub-comments', ref => ref.where('commentId', '==', commentId)).doc(subCommentDTO.subCommentId)

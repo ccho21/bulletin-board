@@ -1,5 +1,6 @@
 import { User } from '@app/shared/models/user';
 import { Comment } from '@app/shared/models/comment';
+import { Like } from './like';
 export interface Post {
   postId?       : string;
   title         : string;
@@ -12,7 +13,7 @@ export interface Post {
   tagIds        : string;
   replies?      : number;
   comments      : Array<string>;
-  likes?       : Array<string>;
+  likes?       : Array<Like>;
   views?        : number;
 }
 

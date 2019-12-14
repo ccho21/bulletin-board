@@ -49,13 +49,10 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.commentSubscription = this.commentService.getComments(post.postId).pipe(concatMap(res => {
       return from(res.docs);
     }), concatMap(res => {
-      this.logger.info('111', res.data());
       const data = res.data();
       return forkJoin([of(data),
       this.subCommentService.getSubComments(data.commentId)]);
     }), concatMap(results => {
-      this.logger.info('222', results);
-      this.logger.info('222', results[1].docs);
       const data = results[0];
       data.subComments = results[1].docs.map(cur => ({...cur.data()}));
       return of(data);

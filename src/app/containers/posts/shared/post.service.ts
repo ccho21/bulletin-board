@@ -1,20 +1,22 @@
 import { Injectable } from "@angular/core";
 import {
   AngularFirestore,
-  AngularFirestoreDocument
 } from '@angular/fire/firestore';
 import { Post } from "../../../shared/models/post";
 import { LoggerService } from "@app/core/services/logger/logger.service";
-import { AuthService } from '@app/core/services/auth/auth.service';
-import { from, of, Observable } from 'rxjs';
+import {  of, Observable } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { Comment } from '@app/shared/models/comment';
 import { Like } from '@app/shared/models/like';
+import {LikeService} from '@app/core/services/like/like.service';
 @Injectable({
   providedIn: "root"
 })
 export class PostService {
-  constructor(private db: AngularFirestore, private logger: LoggerService) {}
+  constructor(
+    private db: AngularFirestore, 
+    private logger: LoggerService,
+    ) {}
 
   /* Create post */
   addPost(post: Post) {
@@ -32,7 +34,7 @@ export class PostService {
 
   /* Get post list */
   getPosts() {
-    return this.db.collection<Post>('posts').stateChanges(['added']);
+    return this.db.collection<Post>('posts').get();
   }
 
   getPostsByUid(uid) {
@@ -56,7 +58,7 @@ export class PostService {
       .delete();
     return of(query).pipe(take(1), mergeMap(res => {
       return res;
-    }), );
+    }));
   }
 
   /* ACTIVITIES */ 
