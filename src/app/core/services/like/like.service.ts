@@ -174,7 +174,6 @@ export class LikeService {
         ),
     );
   }
-
 }
 /*  getLikesByData(dataId: string, type) {
     const { uid } = this.authService.getCurrentUser();

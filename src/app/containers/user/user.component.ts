@@ -53,7 +53,7 @@ export class UserComponent implements OnInit {
         this.logger.info(this.user);
         const requests = [
           this.postService.getPostsByUid(this.uid),
-          this.commentService.getCommentsByUid(this.uid),
+          // this.commentService.getCommentsByUid(this.uid),
           this.likeService.getLikesByUid(this.uid),
         ];
         return combineLatest(requests);
@@ -61,7 +61,7 @@ export class UserComponent implements OnInit {
       switchMap(results => {
         this.logger.info('### Altogether ' , results);
         this.posts = results[0] as Post[];
-        this.comments = results[1] as Comment[];
+        // this.comments = results[1] as Comment[];
         this.likes = results[2] as Like[];
         return combineLatest(this.postService.getPostsByLikeId(this.likes));
       }),

@@ -6,10 +6,11 @@ import {
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from, of } from "rxjs";
 import { AuthService } from "@app/core/services/auth/auth.service";
-import { mergeMap } from "rxjs/operators";
+import { mergeMap, concatMap } from "rxjs/operators";
 import { Comment } from "../../../../shared/models/comment";
 import { User } from "@app/shared/models/user";
 import { Post } from '@app/shared/models/post';
+
 
 @Injectable({
   providedIn: "root"
@@ -45,10 +46,24 @@ export class CommentService {
   }
 
   deleteComment(postId: string, comment: Comment) {
+    this.logger.info('### yo');
     const query = this.db
       .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments').doc(comment.commentId).delete();
-    return of(query);
+      .collection<Comment>('comments').doc(comment.commentId).get()
+      .pipe(concatMap(res => {
+        const commentIds = res.data();
+        this.logger.info('### comment ids', res.data());
+        
+        return of(null);
+      })).subscribe();
+      // .delete();
+    // return of(query);
+  }
+
+  getCommentsByUid(uid) {
+    return this.db
+    // .collection<Post>('posts').doc(postId)
+    .collection<Comment>('comments', ref=> ref.where('author.uid', '==', uid)).valueChanges();
   }
 
   getNumOfComments(postId: string) {

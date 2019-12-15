@@ -15,6 +15,7 @@ import { Subscription, of, from, forkJoin } from 'rxjs';
 import { SubCommentService } from './sub-comment.service';
 import { toArray, concatMap } from 'rxjs/operators';
 import { SubComment } from '@app/shared/models/sub-comment';
+
 @Component({
   selector: "app-comments",
   templateUrl: "./comments.component.html",
@@ -86,11 +87,12 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   deleteComment(comment): void {
     const postId = this.post.postId;
-    this.commentService.deleteComment(postId, comment).subscribe(res => {
-      this.logger.info('comment is successfully deleted', res);
-      // update post
-      this.initData(this.post);
-    });
+    this.commentService.deleteComment(postId, comment)
+    // .subscribe(res => {
+    //   this.logger.info('comment is successfully deleted', res);
+    //   // update post
+    //   this.initData(this.post);
+    // });
   }
 
   // *** SUB COMMENTS ***
@@ -163,4 +165,40 @@ export class CommentsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.commentSubscription.unsubscribe();
   }
+
+
+   /**
+* Delete all documents in specified collections.
+*
+* @param {string} collections Collection names
+* @return {Promise<number>} Total number of documents deleted (from all collections)
+*/
+async deleteCollection(collection: AngularFirestoreCollection<any>): Promise<number> {
+  this.logger.info('############ delete collection ###########');
+  let totalDeleteCount = 0;
+  const batchSize = 500;
+  return new Promise<number>((resolve, reject) =>
+    from(collection.ref.get())
+      .pipe(
+        concatMap((q) => from(q.docs)),
+        bufferCount(batchSize),
+        concatMap((docs: Array<QueryDocumentSnapshot<any>>) => new Observable((o: Observer<number>) => {
+          const batch = this.db.firestore.batch();
+          docs.forEach((doc) => batch.delete(doc.ref));
+          batch.commit()
+            .then(() => {
+              o.next(docs.length);
+              o.complete();
+            })
+            .catch((e) => o.error(e));
+        })),
+      )
+      .subscribe(
+        (batchDeleteCount: number) => totalDeleteCount += batchDeleteCount,
+        (e) => reject(e),
+        () => resolve(totalDeleteCount),
+      ),
+  );
+}
+}
 }
