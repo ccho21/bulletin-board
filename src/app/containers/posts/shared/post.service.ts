@@ -4,11 +4,12 @@ import {
 } from '@angular/fire/firestore';
 import { Post } from "../../../shared/models/post";
 import { LoggerService } from "@app/core/services/logger/logger.service";
-import {  of, Observable } from 'rxjs';
-import { mergeMap, take } from 'rxjs/operators';
+import {  of, Observable, forkJoin, from  } from 'rxjs';
+import { concatMap, take } from 'rxjs/operators';
 import { Comment } from '@app/shared/models/comment';
 import { Like } from '@app/shared/models/like';
 import {LikeService} from '@app/core/services/like/like.service';
+import { HelperService } from '@app/core/services/helper/helper.service';
 @Injectable({
   providedIn: "root"
 })
@@ -16,6 +17,7 @@ export class PostService {
   constructor(
     private db: AngularFirestore, 
     private logger: LoggerService,
+    private helperService: HelperService
     ) {}
 
   /* Create post */
@@ -55,10 +57,29 @@ export class PostService {
       .collection<Post>('posts')
       .doc(id)
       .delete();
-    return of(query).pipe(take(1), mergeMap(res => {
+    return of(query).pipe(take(1), concatMap(res => {
       return res;
     }));
   }
+  
+  /* deletePost(postId: string) {
+    this.logger.info('### yo');
+    const ref = this.db
+      .collection<Post>('posts').doc(postId);
+    ref.collection<Comment>('comments').get().subscribe(res => {
+      this.logger.info('### res docs', res.docs[0].data());
+      
+      const commentIds = res.docs.map(comment => comment.data().commentId);
+      this.logger.info(commentIds);
+
+      ref.collection<Comment>('comments', r => r.where('commentId', 'in', commentIds)).get().subscribe(res => {
+        this.logger.info('#################### IMPORTANT', res.docs[0].data());
+      })
+    })
+      
+    
+  }
+ */
 
   /* ACTIVITIES */ 
   updatePostViews(post: Post) {

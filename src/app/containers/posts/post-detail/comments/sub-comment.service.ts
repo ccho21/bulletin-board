@@ -6,14 +6,15 @@ import {
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from, of } from "rxjs";
 import { AuthService } from "@app/core/services/auth/auth.service";
-import { mergeMap, switchMap } from "rxjs/operators";
+import { concatMap } from "rxjs/operators";
 import { Comment } from "../../../../shared/models/comment";
 import { User } from "@app/shared/models/user";
 import { Post } from '@app/shared/models/post';
 import { PostService } from '../../shared/post.service';
 import { CommentService } from './comment.service';
+import { HelperService } from '@app/core/services/helper/helper.service';
 import { SubComment } from '@app/shared/models/sub-comment';
-
+import { Like } from '@app/shared/models/like';
 @Injectable({
   providedIn: 'root'
 })
@@ -24,7 +25,8 @@ export class SubCommentService {
     private logger: LoggerService,
     private authService: AuthService,
     private postService: PostService,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private helperService : HelperService
   ) { }
 
   getSubComments(comment) {
@@ -47,12 +49,27 @@ export class SubCommentService {
     return from(query);
   }
 
-  deleteSubComment(mainComment: Comment, subCommentDTO: SubComment) {
+/*   deleteSubComment(mainComment: Comment, subCommentDTO: SubComment) {
     const query = this.db
       .collection<Post>('posts').doc(mainComment.postId)
       .collection<Comment>('comments').doc(mainComment.commentId)
       .collection<SubComment>('sub-comments').doc(subCommentDTO.subCommentId).delete();
     return from(query);
+  } */
+
+  deleteSubComment(mainComment: Comment, subCommentDTO: SubComment) {
+    this.logger.info('### yo');
+    const ref = this.db
+    .collection<Post>('posts').doc(mainComment.postId)
+    .collection<Comment>('comments').doc(mainComment.commentId)
+    .collection<SubComment>('sub-comments').doc(subCommentDTO.subCommentId);
+    const query =  from(this.helperService.deleteCollection(ref.collection<Like>('likes'))).pipe(
+      concatMap(res => {
+        this.logger.info('everything is deleted', res);
+        return ref.delete();
+      })
+    );
+    return query;
   }
 
   updateSubComment(commentId: string, subCommentDTO: SubComment) {

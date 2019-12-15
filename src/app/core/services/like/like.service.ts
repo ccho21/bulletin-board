@@ -16,6 +16,7 @@ import { Comment } from '@app/shared/models/comment';
 import { CommentService } from '@app/containers/posts/post-detail/comments/comment.service';
 import { SubComment } from '@app/shared/models/sub-comment';
 import { SubCommentService } from '@app/containers/posts/post-detail/comments/sub-comment.service';
+import { HelperService } from '../helper/helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class LikeService {
     private db: AngularFirestore,
     private logger: LoggerService,
     private authService: AuthService,
+    private helperService: HelperService
   ) { }
   isLiked(data: Post | Comment | SubComment, t: number) { // get data from current User Id and match with post id. 
     const dataId = this.getId(data, t);
@@ -100,7 +102,7 @@ export class LikeService {
  */
   removeLikes(dataId: string, type: number) {
     const likeCollection = this.db.collection<Post>('posts').doc(dataId).collection<Like>('likes');
-    const query = this.deleteCollection(likeCollection);
+    const query = this.helperService.deleteCollection(likeCollection);
     // return query;
   }
 
@@ -139,40 +141,6 @@ export class LikeService {
       }
     })
     return dto;
-  }
-
-  /**
-* Delete all documents in specified collections.
-*
-* @param {string} collections Collection names
-* @return {Promise<number>} Total number of documents deleted (from all collections)
-*/
-  async deleteCollection(collection: AngularFirestoreCollection<any>): Promise<number> {
-    this.logger.info('############ delete collection ###########');
-    let totalDeleteCount = 0;
-    const batchSize = 500;
-    return new Promise<number>((resolve, reject) =>
-      from(collection.ref.get())
-        .pipe(
-          concatMap((q) => from(q.docs)),
-          bufferCount(batchSize),
-          concatMap((docs: Array<QueryDocumentSnapshot<any>>) => new Observable((o: Observer<number>) => {
-            const batch = this.db.firestore.batch();
-            docs.forEach((doc) => batch.delete(doc.ref));
-            batch.commit()
-              .then(() => {
-                o.next(docs.length);
-                o.complete();
-              })
-              .catch((e) => o.error(e));
-          })),
-        )
-        .subscribe(
-          (batchDeleteCount: number) => totalDeleteCount += batchDeleteCount,
-          (e) => reject(e),
-          () => resolve(totalDeleteCount),
-        ),
-    );
   }
 }
 /*  getLikesByData(dataId: string, type) {
