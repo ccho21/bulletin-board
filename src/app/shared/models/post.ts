@@ -13,7 +13,7 @@ export interface Post {
   tagIds        : string;
   replies?      : number;
   comments      : Array<string>;
-  likes?       : Array<Like>;
+  likes?        : number;
   views?        : number;
 }
 

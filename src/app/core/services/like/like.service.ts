@@ -25,59 +25,88 @@ export class LikeService {
     private db: AngularFirestore,
     private logger: LoggerService,
     private authService: AuthService,
-    private postService: PostService,
-    private commentService: CommentService,
-    private subCommentService: SubCommentService
   ) { }
-  isLiked(dataId: string, t: number) { // get data from current User Id and match with post id. 
-    const query = this.getLikesByData(dataId, t).valueChanges().pipe(mergeMap(res => {
-      this.logger.info('is Liked data in like service ', res);
-      if (res.length) {
-        return of(true);
-      }
-      else {
-        return of(false)
-      }
-    }));
+  isLiked(data: Post | Comment | SubComment, t: number) { // get data from current User Id and match with post id. 
+    const dataId = this.getId(data, t);
+    const path = this.getPath(data, t);
+    const query = this.db
+    .collection<Post | Comment | SubComment>(path).doc(dataId)
+    .collection<Like>('likes').get()
+    .pipe(take(1));
     return query;
   }
 
   addLike(dataId: string, like: Like, t: number, dataDTO: Post | Comment | SubComment) {
-    const type: string = this.getType(t);
     const likeId = this.db.createId();
     const likeDTO = this.cleanUndefined(like);
+    const path = this.getPath(like, t);
     likeDTO.likeId = likeId;
-    const query = this.db.collection< Post | Comment | SubComment >(type).doc(dataId).collection<Like>('likes').doc(likeId).set(likeDTO);
+
+    const query = this.db
+      .collection<Post | Comment | SubComment>(path).doc(dataId)
+      .collection<Like>('likes').doc(likeId).set(likeDTO);
     return of(query);
   }
+
+  removeLike(likeId, data, t: number) {
+    this.logger.info('likeId to DELETE ###', likeId);
+    const path = this.getPath(data, t);
+    const dataId = this.getId(data, t);
+    
+    const query = this.db
+      .collection<Post | Comment | SubComment>(path).doc(dataId)
+      .collection<Like>('likes').doc(likeId).delete();
+    return from(query);
+  }
+
   getType(type: number): string {
     return type === 1 ? 'posts' : type === 2 ? 'comments' : 'sub-comments';
   }
 
+  getPath(data, t: number): string {
+    const { postId, commentId, subCommentId } = data;
+    if (t === 1) {
+      return `/posts/`
+    }
+    else if (t === 2) {
+      return `posts/${postId}/comments/`
+    }
+    else {
+      return `posts/${postId}/comments/${commentId}/sub-comments/`
+    }
+  }
+
+  getId(data, type: number) {
+    if (type === 1) {
+      return data.postId;
+    }
+    else if (type === 2) {
+      return data.commentId;
+    }
+    else {
+      return data.subCommentId;
+    }
+  }
+
+ 
+
+  /* removeLike(dataId: string, t: number) {
+    const query = this.getLikesByData(dataId, t).get().pipe(concatMap(res => {
+      const likeId = res.docs[0].data().likeId; 
+      return this.getLikesByData(dataId, t).doc(likeId).delete();
+    }));
+    return from(query);
+  }
+ */
   removeLikes(dataId: string, type: number) {
     const likeCollection = this.db.collection<Post>('posts').doc(dataId).collection<Like>('likes');
     const query = this.deleteCollection(likeCollection);
     // return query;
   }
 
-  removeLike(dataId: string, t: number, likeId) {
-    const query = this.getLikesByData(dataId, t).valueChanges().pipe(concatMap(res => {
-      this.logger.info('### DELETE', res);
-      const likeId = res[0].likeId; 
-      this.logger.info(likeId);
-      return this.db.collection<Like>('likes').doc(likeId).delete().then(res => {
-        this.logger.info('good');
-      });
-    }))
-    return query;
-  }
-
-  
-  getLikesByDataId(dataId: string, type) {
-    const q = type === 1 ? 'postId' : type === 2 ? 'commentId' : 'subCommentId';
-    this.logger.info('### Q: ', q);
-    const query = this.db.collectionGroup<Like>('likes', ref =>
-      ref.where(q, '==', dataId).where('type', '==', type));
+  getLikesByType(dataId: string, t: number) {
+    const type = this.getType(t);
+    const query = this.db.collection<Post | Comment | SubComment>(type).doc(dataId).collection<Like>('likes');
     return query;
   }
 
@@ -85,10 +114,21 @@ export class LikeService {
     const type = this.getType(t);
     const { uid } = this.authService.getCurrentUser();
     this.logger.info('#### dataID', dataId);
-    const query = this.db.collection< Post | Comment | SubComment >(type).doc(dataId)
-    .collection('likes', ref => ref.where('user.uid', '==', uid));
+    const query = this.db.collection<Post | Comment | SubComment>(type).doc(dataId)
+      .collection('likes', ref => ref.where('user.uid', '==', uid));
     return query;
   }
+
+  getLikes(postId: string, t: number) {
+    return this.getLikesByType(postId, t).get();
+  }
+
+  getLikesByUid(uid) {
+    return this.db
+      .collection<Like>('likes', ref =>
+        ref.where('user.uid', '==', uid)).valueChanges();
+  }
+
 
   // HELPER
   cleanUndefined(dto) {
@@ -99,12 +139,6 @@ export class LikeService {
       }
     })
     return dto;
-  }
-
-  getLikesByUid(uid) {
-    return this.db
-      .collection<Like>('likes', ref =>
-        ref.where('user.uid', '==', uid)).valueChanges();
   }
 
   /**
@@ -150,71 +184,71 @@ export class LikeService {
     return query;
   } */
 
-   /* addLike(dataId: string, like: Like, type: number, dataDTO) {
-    this.logger.info('how many times called?');
-    const id = this.db.createId();
-    const likeDTO = this.cleanUndefined(like);
-    likeDTO.likeId = id;
+/* addLike(dataId: string, like: Like, type: number, dataDTO) {
+ this.logger.info('how many times called?');
+ const id = this.db.createId();
+ const likeDTO = this.cleanUndefined(like);
+ likeDTO.likeId = id;
 
-    const query = this.db.collection<Post>('posts').doc(dataId).collection<Like>('likes').doc(id).set(likeDTO);
-    return of(query).pipe(
-      switchMap(res => {
-        if (type === 1) {
-          const postDTO: Post = dataDTO;
-          postDTO.likes.push(likeDTO);
-          this.logger.info('### post DTO ', dataDTO);
-          this.postService.updatePost(postDTO.postId, postDTO);
-          return of(res);
-        }
-        else if (type === 2) {
-          const commentDTO: Comment = { ...dataDTO };
-          commentDTO.likes.push(likeDTO);
-          this.logger.info('### Comment DTO', commentDTO);
-          this.commentService.updateComment(commentDTO.postId, commentDTO.commentId, commentDTO);
-          return of(res);
-        }
-        else {
-          const subCommentDTO: SubComment = { ...dataDTO };
-          subCommentDTO.likes.push(likeDTO);
-          this.logger.info('### subCommentDTO ', subCommentDTO);
-          this.subCommentService.updateSubComment(subCommentDTO.commentId, subCommentDTO);
-          return of(res);
-        }
-      })
-    )
-  } */
+ const query = this.db.collection<Post>('posts').doc(dataId).collection<Like>('likes').doc(id).set(likeDTO);
+ return of(query).pipe(
+   switchMap(res => {
+     if (type === 1) {
+       const postDTO: Post = dataDTO;
+       postDTO.likes.push(likeDTO);
+       this.logger.info('### post DTO ', dataDTO);
+       this.postService.updatePost(postDTO.postId, postDTO);
+       return of(res);
+     }
+     else if (type === 2) {
+       const commentDTO: Comment = { ...dataDTO };
+       commentDTO.likes.push(likeDTO);
+       this.logger.info('### Comment DTO', commentDTO);
+       this.commentService.updateComment(commentDTO.postId, commentDTO.commentId, commentDTO);
+       return of(res);
+     }
+     else {
+       const subCommentDTO: SubComment = { ...dataDTO };
+       subCommentDTO.likes.push(likeDTO);
+       this.logger.info('### subCommentDTO ', subCommentDTO);
+       this.subCommentService.updateSubComment(subCommentDTO.commentId, subCommentDTO);
+       return of(res);
+     }
+   })
+ )
+} */
 
-  /* removeLike(dataId: string, type: number, dataDTO) {
-    const query = this.getLikesByData(dataId, type).get().pipe(mergeMap(res => res.docs), take(1),
-      mergeMap((like: any) => {
-        return of(this.db.collection('likes').doc(like.data().likeId).delete()).pipe(
-          switchMap(res => {
-            if (type === 1) {
-              const postDTO: Post = { ...dataDTO };
-              const lIndex = postDTO.likes.findIndex(cur => cur === like.likeId);
-              postDTO.likes.splice(lIndex, 1);
-              this.logger.info('### post DTO to delet', postDTO);
-              this.postService.updatePost(postDTO.postId, postDTO);
-              return of(res);
-            }
-            else if (type === 2) {
-              const commentDTO: Comment = { ...dataDTO };
-              const lIndex = commentDTO.likes.findIndex(cur => cur === like.likeId);
-              commentDTO.likes.splice(lIndex, 1);
-              this.logger.info('### Comment DTO to delet', commentDTO);
-              this.commentService.updateComment(commentDTO.postId, commentDTO.commentId, commentDTO);
-              return of(res);
-            }
-            else {
-              const subCommentDTO: SubComment = { ...dataDTO };
-              const lIndex = subCommentDTO.likes.findIndex(cur => cur === like.likeId);
-              subCommentDTO.likes.splice(lIndex, 1);
-              this.logger.info('### subCommentDTO  to delete', subCommentDTO);
-              this.subCommentService.updateSubComment(subCommentDTO.commentId, subCommentDTO);
-              return of(res);
-            }
-          })
-        )
-      }));
-    return query;
-  } */
+/* removeLike(dataId: string, type: number, dataDTO) {
+  const query = this.getLikesByData(dataId, type).get().pipe(mergeMap(res => res.docs), take(1),
+    mergeMap((like: any) => {
+      return of(this.db.collection('likes').doc(like.data().likeId).delete()).pipe(
+        switchMap(res => {
+          if (type === 1) {
+            const postDTO: Post = { ...dataDTO };
+            const lIndex = postDTO.likes.findIndex(cur => cur === like.likeId);
+            postDTO.likes.splice(lIndex, 1);
+            this.logger.info('### post DTO to delet', postDTO);
+            this.postService.updatePost(postDTO.postId, postDTO);
+            return of(res);
+          }
+          else if (type === 2) {
+            const commentDTO: Comment = { ...dataDTO };
+            const lIndex = commentDTO.likes.findIndex(cur => cur === like.likeId);
+            commentDTO.likes.splice(lIndex, 1);
+            this.logger.info('### Comment DTO to delet', commentDTO);
+            this.commentService.updateComment(commentDTO.postId, commentDTO.commentId, commentDTO);
+            return of(res);
+          }
+          else {
+            const subCommentDTO: SubComment = { ...dataDTO };
+            const lIndex = subCommentDTO.likes.findIndex(cur => cur === like.likeId);
+            subCommentDTO.likes.splice(lIndex, 1);
+            this.logger.info('### subCommentDTO  to delete', subCommentDTO);
+            this.subCommentService.updateSubComment(subCommentDTO.commentId, subCommentDTO);
+            return of(res);
+          }
+        })
+      )
+    }));
+  return query;
+} */

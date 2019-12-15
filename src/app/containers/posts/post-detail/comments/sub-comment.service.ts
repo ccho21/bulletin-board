@@ -26,10 +26,12 @@ export class SubCommentService {
     private postService: PostService,
     private commentService: CommentService
   ) { }
-  
-  getSubComments(commentId) {
+
+  getSubComments(comment) {
     return this.db
-      .collection<SubComment>('sub-comments', ref => ref.where('commentId', '==', commentId)).get();
+      .collection<Post>('posts').doc(comment.postId)
+      .collection<Comment>('comments').doc(comment.commentId)
+      .collection<SubComment>('sub-comments').get();
   }
 
   addSubComment(mainComment: Comment, subCommentDTO: SubComment) {
@@ -37,39 +39,59 @@ export class SubCommentService {
     subCommentDTO.subCommentId = id;
     subCommentDTO.commentId = mainComment.commentId;
     subCommentDTO.postId = mainComment.postId;
-    this.logger.info('111', mainComment, '222',subCommentDTO);
+    this.logger.info('111', mainComment, '222', subCommentDTO);
     const query = this.db
+      .collection<Post>('posts').doc(mainComment.postId)
+      .collection<Comment>('comments').doc(mainComment.commentId)
       .collection<SubComment>('sub-comments').doc(subCommentDTO.subCommentId).set(subCommentDTO);
-
-
-    return of(query).pipe(switchMap(res => {
-      const subCommentId = subCommentDTO.subCommentId;
-      mainComment.subComments.push(subCommentId);
-      /* UPDATE POST TO ADD COMMENT ID */
-      const postId = mainComment.postId
-      return this.commentService.updateComment(postId, mainComment.commentId, mainComment);
-    }));
+    return from(query);
   }
 
   deleteSubComment(mainComment: Comment, subCommentDTO: SubComment) {
     const query = this.db
-      .collection<SubComment>('sub-comments', ref => ref.where('commentId', '==', mainComment.commentId)).doc(subCommentDTO.subCommentId).delete();
-    
-      return of(query).pipe(switchMap(res => {
-       /* UPDATE COMMENT TO SPLICE COMMENT ID */
-      const mainCommentDTO = { ...mainComment };
-      const scIndex = mainCommentDTO.subComments.findIndex(cur => cur === subCommentDTO.subCommentId);
-      const postId = mainComment.postId;
-      mainCommentDTO.subComments.splice(scIndex, 1);
-      return this.commentService.updateComment(postId, mainComment.commentId, mainComment);
-    }));;
+      .collection<Post>('posts').doc(mainComment.postId)
+      .collection<Comment>('comments').doc(mainComment.commentId)
+      .collection<SubComment>('sub-comments').doc(subCommentDTO.subCommentId).delete();
+    return from(query);
   }
 
   updateSubComment(commentId: string, subCommentDTO: SubComment) {
     const query = this.db
       .collection<SubComment>('sub-comments', ref => ref.where('commentId', '==', commentId)).doc(subCommentDTO.subCommentId)
       .update(subCommentDTO);
-      return of(query);
+    return of(query);
   }
 
 }
+
+/* addSubComment(mainComment: Comment, subCommentDTO: SubComment) {
+  const id = this.db.createId();
+  subCommentDTO.subCommentId = id;
+  subCommentDTO.commentId = mainComment.commentId;
+  subCommentDTO.postId = mainComment.postId;
+  this.logger.info('111', mainComment, '222', subCommentDTO);
+  const query = this.db
+    .collection<Comment>('comments').doc(mainComment.commentId)
+    .collection<SubComment>('sub-comments').doc(subCommentDTO.subCommentId).set(subCommentDTO);
+  return of(query).pipe(switchMap(res => {
+    const subCommentId = subCommentDTO.subCommentId;
+    mainComment.subComments.push(subCommentId);
+    const postId = mainComment.postId
+    return this.commentService.updateComment(postId, mainComment.commentId, mainComment);
+  }));
+}
+
+deleteSubComment(mainComment: Comment, subCommentDTO: SubComment) {
+  const query = this.db
+    .collection<Comment>('comments').doc(mainComment.commentId)
+    .collection<SubComment>('sub-comments').doc(subCommentDTO.subCommentId).delete();
+
+  return of(query).pipe(switchMap(res => {
+    const mainCommentDTO = { ...mainComment };
+    const scIndex = mainCommentDTO.subComments.findIndex(cur => cur === subCommentDTO.subCommentId);
+    const postId = mainComment.postId;
+    mainCommentDTO.subComments.splice(scIndex, 1);
+    return this.commentService.updateComment(postId, mainComment.commentId, mainComment);
+  }));;
+}
+ */

@@ -3,8 +3,8 @@ import { PostService } from '../shared/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
 import { LikeService } from '@app/core/services/like/like.service';
-import { concatMap } from 'rxjs/operators';
-import { of, Subscription, from, forkJoin } from 'rxjs';
+import { concatMap, toArray } from 'rxjs/operators';
+import { of, Subscription, from, forkJoin  } from 'rxjs';
 import { CommentService } from '../post-detail/comments/comment.service';
 import { Router } from '@angular/router';
 @Component({
@@ -28,16 +28,35 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initData();
-    
   }
 
   initData() {
     this.getPosts();
   }
   getPosts() {
-    this.postService.getPosts().subscribe(results => {
-      this.logger.info('### FINAL ### ', results);
-      this.posts = results.docs.map(cur => cur.data() as Post);
+    this.postService.getPosts().pipe(
+      concatMap(results => {
+        return from(results.docs);
+      }),
+      concatMap(res => {
+        this.logger.info('individual', res);
+        const post = res.data();
+        return forkJoin([
+          of(post),
+          this.likeService.getLikes(post.postId, 1),
+          this.commentService.getNumOfComments(post.postId)
+        ]);
+      }),
+      concatMap(results => {
+        const post = results[0];
+        post.likes = results[1].docs.map(cur => cur.data());
+        post.comments = results[2].docs.map(cur => cur.data());
+        return of(post);
+      }),
+      toArray(),
+    ).subscribe(results => {
+      this.logger.info('### final Post LIST ###', results);
+      this.posts = results as Post[];
     });
   }
 
@@ -59,16 +78,3 @@ export class PostListComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-// tap(res => this.logger.info('### tap', res)),
-// mergeMap((post: Post) => {
-//   this.logger.info('### each post', post);
-//   const postId = post.postId;
-//   p = post;
-//   return this.likeService.getNumLikes(postId);
-// }),
-// mergeMap(res => {
-//   this.logger.info('#2', res);
-//   return of(p);
-// }),
-// take(length),

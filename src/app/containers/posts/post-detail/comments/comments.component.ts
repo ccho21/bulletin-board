@@ -4,18 +4,16 @@ import {
   Input,
   OnDestroy
 } from "@angular/core";
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { AuthService } from "@app/core/services/auth/auth.service";
-import { UploadService } from "@app/core/services/upload/upload.service";
 import { CommentService } from "./comment.service";
-import { User } from "@app/shared/models/user";
 import { Post } from "../../../../shared/models/post";
 import { Comment } from "@app/shared/models/comment";
 import { PostService } from '../../shared/post.service';
 import { Subscription, of, from, forkJoin } from 'rxjs';
 import { SubCommentService } from './sub-comment.service';
-import { mergeMap, map, toArray, concatMap } from 'rxjs/operators';
+import { toArray, concatMap } from 'rxjs/operators';
 import { SubComment } from '@app/shared/models/sub-comment';
 @Component({
   selector: "app-comments",
@@ -33,9 +31,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
   // @Output() commentEmit: EventEmitter<Comment> = new EventEmitter();
   constructor(
     private logger: LoggerService,
-    private authService: AuthService,
     private commentService: CommentService,
-    private postService: PostService,
     private subCommentService: SubCommentService
   ) { }
 
@@ -51,7 +47,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
     }), concatMap(res => {
       const data = res.data();
       return forkJoin([of(data),
-      this.subCommentService.getSubComments(data.commentId)]);
+      this.subCommentService.getSubComments(data)]);
     }), concatMap(results => {
       const data = results[0];
       data.subComments = results[1].docs.map(cur => ({...cur.data()}));
@@ -62,12 +58,6 @@ export class CommentsComponent implements OnInit, OnDestroy {
       this.logger.info('### final ', res);
       this.commentList = res.map(cur => ({...cur} as Comment));
     });
-
-
-    // .subscribe(res => {
-    //   this.logger.info('### get comments', res.docs);
-    //   this.commentList = res.docs.map(cur => cur.data() as Comment);
-    // });
   }
 
   addComment(comment): void {
@@ -77,7 +67,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
       ...comment
     };
     const commentDTO = this.cleanUp(c);
-    this.commentService.addComment(postId, commentDTO, this.post).subscribe(res => {
+    this.commentService.addComment(postId, commentDTO).subscribe(res => {
       this.logger.info("### a comment was succesfully added", res);
       this.closeComment(comment);
       // update post
@@ -96,7 +86,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   deleteComment(comment): void {
     const postId = this.post.postId;
-    this.commentService.deleteComment(postId, comment, this.post).subscribe(res => {
+    this.commentService.deleteComment(postId, comment).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
       // update post
       this.initData(this.post);
