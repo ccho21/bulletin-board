@@ -10,7 +10,6 @@ import { concatMap } from "rxjs/operators";
 import { Comment } from "../../../../shared/models/comment";
 import { User } from "@app/shared/models/user";
 import { Post } from '@app/shared/models/post';
-import { PostService } from '../../shared/post.service';
 import { CommentService } from './comment.service';
 import { HelperService } from '@app/core/services/helper/helper.service';
 import { SubComment } from '@app/shared/models/sub-comment';
@@ -24,7 +23,6 @@ export class SubCommentService {
     private db: AngularFirestore,
     private logger: LoggerService,
     private authService: AuthService,
-    private postService: PostService,
     private commentService: CommentService,
     private helperService : HelperService
   ) { }
@@ -79,7 +77,12 @@ export class SubCommentService {
     return of(query);
   }
 
+  deleteSubCommentAll(commentId) {
+    return this.db.collection<Comment>('comments').doc(commentId).collection<SubComment>('sub-comments');
+  }
 }
+
+
 
 /* addSubComment(mainComment: Comment, subCommentDTO: SubComment) {
   const id = this.db.createId();

@@ -4,21 +4,24 @@ import {
 } from '@angular/fire/firestore';
 import { Post } from "../../../shared/models/post";
 import { LoggerService } from "@app/core/services/logger/logger.service";
-import {  of, Observable, forkJoin, from  } from 'rxjs';
+import { of, Observable, forkJoin, from } from 'rxjs';
 import { concatMap, take } from 'rxjs/operators';
 import { Comment } from '@app/shared/models/comment';
 import { Like } from '@app/shared/models/like';
-import {LikeService} from '@app/core/services/like/like.service';
+import { CommentService } from '@app/containers/posts/post-detail/comments/comment.service';
+import { SubCommentService } from '@app/containers/posts/post-detail/comments/sub-comment.service';
 import { HelperService } from '@app/core/services/helper/helper.service';
 @Injectable({
   providedIn: "root"
 })
 export class PostService {
   constructor(
-    private db: AngularFirestore, 
+    private db: AngularFirestore,
     private logger: LoggerService,
-    private helperService: HelperService
-    ) {}
+    private helperService: HelperService,
+    private commentService: CommentService,
+    private subCommentService: SubCommentService
+  ) { }
 
   /* Create post */
   addPost(post: Post) {
@@ -39,7 +42,7 @@ export class PostService {
   }
 
   getPostsByUid(uid) {
-    return this.db.collection<Post>('posts', ref=> ref.where('author.uid', '==', `${uid}`)).valueChanges();
+    return this.db.collection<Post>('posts', ref => ref.where('author.uid', '==', `${uid}`)).valueChanges();
   }
 
   /* Update post */
@@ -48,43 +51,42 @@ export class PostService {
       .collection<Post>('posts')
       .doc(id)
       .update(post);
-      return of(query);
+    return of(query);
   }
 
   /* Delete post */
-  deletePost(id: string) {
-    const query = this.db
-      .collection<Post>('posts')
-      .doc(id)
-      .delete();
-    return of(query).pipe(take(1), concatMap(res => {
-      return res;
-    }));
-  }
-  
-  /* deletePost(postId: string) {
+  /*  deletePost(id: string) {
+     const query = this.db
+       .collection<Post>('posts')
+       .doc(id)
+       .delete();
+     return of(query).pipe(take(1), concatMap(res => {
+       return res;
+     }));
+   } */
+
+  deletePost(postId: string) {
     this.logger.info('### yo');
     const ref = this.db
       .collection<Post>('posts').doc(postId);
     ref.collection<Comment>('comments').get().subscribe(res => {
-      this.logger.info('### res docs', res.docs[0].data());
-      
-      const commentIds = res.docs.map(comment => comment.data().commentId);
-      this.logger.info(commentIds);
+      this.logger.info('### res docs', res.docs);
 
-      ref.collection<Comment>('comments', r => r.where('commentId', 'in', commentIds)).get().subscribe(res => {
-        this.logger.info('#################### IMPORTANT', res.docs[0].data());
-      })
+      const requests = res.docs.map(comment => {
+        this.logger.info('### ', comment.data());
+        const commentId = comment.data().commentId;
+        const request = this.subCommentService.deleteSubCommentAll(commentId);
+        return this.helperService.deleteCollection(request);
+      });
+      return forkJoin(requests);
     })
-      
-    
   }
- */
 
-  /* ACTIVITIES */ 
+
+  /* ACTIVITIES */
   updatePostViews(post: Post) {
     let count = 0;
-    if(post.hasOwnProperty('views')) {
+    if (post.hasOwnProperty('views')) {
       count = post.views += 1;
     } else {
       count = post.views = 1;
@@ -106,7 +108,7 @@ export class PostService {
   }
 
   getPostsByCommentId(comments: Comment[]) {
-    const requests: Array<Observable<Post>> = []; 
+    const requests: Array<Observable<Post>> = [];
     const recentComments = comments.map((cur) => {
       return cur.postId;
     });
