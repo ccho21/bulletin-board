@@ -87,7 +87,8 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   deleteComment(comment): void {
     const postId = this.post.postId;
-    this.commentService.deleteComment(postId, comment).subscribe(res => {
+    const commentId = this.comment.commentId;
+    this.commentService.deleteComment(postId, commentId).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
       // update post
       this.initData(this.post);

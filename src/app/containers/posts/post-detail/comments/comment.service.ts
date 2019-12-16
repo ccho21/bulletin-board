@@ -47,11 +47,11 @@ export class CommentService {
     return of(query);
   }
 
-  deleteComment(postId: string, comment: Comment) {
+  deleteComment(postId: string, commentId: string) {
     this.logger.info('### yo');
     const ref = this.db
       .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments').doc(comment.commentId);
+      .collection<Comment>('comments').doc(commentId);
       
     const query = forkJoin([
       from(this.helperService.deleteCollection(ref.collection<SubComment>('sub-comments'))),
@@ -76,8 +76,9 @@ export class CommentService {
       .collection<Post>('posts').doc(postId)
       .collection<Comment>('comments').get();
   }
-
-  comments() {
-    return this.db.collection('comments').get();
+  getCommentRef(postId) {
+    return this.db
+    .collection<Post>('posts').doc(postId)
+    .collection<Comment>('comments');
   }
 }

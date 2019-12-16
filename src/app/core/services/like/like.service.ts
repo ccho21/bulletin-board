@@ -1,21 +1,15 @@
 import { Injectable } from '@angular/core';
 import {
   AngularFirestore,
-  AngularFirestoreDocument,
-  AngularFirestoreCollection,
-  QueryDocumentSnapshot
 } from '@angular/fire/firestore';
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { of, forkJoin, from, Observable, Observer } from 'rxjs';
-import { mergeMap, take, switchMap, concatMap, bufferCount } from 'rxjs/operators';
+import {  take} from 'rxjs/operators';
 import { Like } from '@app/shared/models/like';
 import { Post } from '@app/shared/models/post';
 import { AuthService } from '../auth/auth.service';
-import { PostService } from '@app/containers/posts/shared/post.service';
 import { Comment } from '@app/shared/models/comment';
-import { CommentService } from '@app/containers/posts/post-detail/comments/comment.service';
 import { SubComment } from '@app/shared/models/sub-comment';
-import { SubCommentService } from '@app/containers/posts/post-detail/comments/sub-comment.service';
 import { HelperService } from '../helper/helper.service';
 
 @Injectable({
@@ -60,6 +54,43 @@ export class LikeService {
       .collection<Like>('likes').doc(likeId).delete();
     return from(query);
   }
+  
+  removeLikes(dataId: string, type: number) {
+    const likeCollection = this.db.collection<Post>('posts').doc(dataId).collection<Like>('likes');
+    const query = this.helperService.deleteCollection(likeCollection);
+    // return query;
+  }
+
+  getLikesByType(dataId: string, t: number) {
+    const type = this.getType(t);
+    const query = this.db.collection<Post | Comment | SubComment>(type).doc(dataId).collection<Like>('likes');
+    return query;
+  }
+
+  getLikesByData(dataId: string, t: number) {
+    const type = this.getType(t);
+    const { uid } = this.authService.getCurrentUser();
+    this.logger.info('#### dataID', dataId);
+    const query = this.db.collection<Post | Comment | SubComment>(type).doc(dataId)
+      .collection('likes', ref => ref.where('user.uid', '==', uid));
+    return query;
+  }
+
+  getLikes(postId: string, t: number) {
+    return this.getLikesByType(postId, t).get();
+  }
+
+  getLikesRef(data, t: number) {
+    const path = this.getPath(data, t);
+    const id = this.getId(data, t);
+    return this.db.collection(path).doc(id).collection<Like>('likes');
+  }
+
+  getLikesByUid(uid) {
+    return this.db
+      .collection<Like>('likes', ref =>
+        ref.where('user.uid', '==', uid)).valueChanges();
+  }
 
   getType(type: number): string {
     return type === 1 ? 'posts' : type === 2 ? 'comments' : 'sub-comments';
@@ -89,48 +120,6 @@ export class LikeService {
       return data.subCommentId;
     }
   }
-
- 
-
-  /* removeLike(dataId: string, t: number) {
-    const query = this.getLikesByData(dataId, t).get().pipe(concatMap(res => {
-      const likeId = res.docs[0].data().likeId; 
-      return this.getLikesByData(dataId, t).doc(likeId).delete();
-    }));
-    return from(query);
-  }
- */
-  removeLikes(dataId: string, type: number) {
-    const likeCollection = this.db.collection<Post>('posts').doc(dataId).collection<Like>('likes');
-    const query = this.helperService.deleteCollection(likeCollection);
-    // return query;
-  }
-
-  getLikesByType(dataId: string, t: number) {
-    const type = this.getType(t);
-    const query = this.db.collection<Post | Comment | SubComment>(type).doc(dataId).collection<Like>('likes');
-    return query;
-  }
-
-  getLikesByData(dataId: string, t: number) {
-    const type = this.getType(t);
-    const { uid } = this.authService.getCurrentUser();
-    this.logger.info('#### dataID', dataId);
-    const query = this.db.collection<Post | Comment | SubComment>(type).doc(dataId)
-      .collection('likes', ref => ref.where('user.uid', '==', uid));
-    return query;
-  }
-
-  getLikes(postId: string, t: number) {
-    return this.getLikesByType(postId, t).get();
-  }
-
-  getLikesByUid(uid) {
-    return this.db
-      .collection<Like>('likes', ref =>
-        ref.where('user.uid', '==', uid)).valueChanges();
-  }
-
 
   // HELPER
   cleanUndefined(dto) {
