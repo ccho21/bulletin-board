@@ -16,22 +16,24 @@ import {
   MatDialogModule,
   MatProgressSpinnerModule
 } from "@angular/material";
-import { AboutComponent } from "../about/about.component";
-import { ContactUsComponent } from "../contact-us/contact-us.component";
-import { ProjectsComponent } from "../projects/projects.component";
-import { HomeComponent } from "./home.component";
-import { ResumeComponent } from '../resume/resume.component';
-// Posts
+import { AboutComponent } from "../containers/about/about.component";
+import { ContactUsComponent } from "../containers/contact-us/contact-us.component";
+import { ProjectsComponent } from "../containers/projects/projects.component";
+import { MainComponent } from "./main.component";
+import { ResumeComponent } from '../containers/resume/resume.component';
 
+// Main
+import { MainRoutingModule } from './main-routing.module';
+
+ 
 @NgModule({
   declarations: [
-    HomeComponent,
+    MainComponent,
     AboutComponent,
     ContactUsComponent,
     ProjectsComponent,
-    ResumeComponent
+    ResumeComponent,
   ],
-
   imports: [
     CommonModule,
     BrowserModule,
@@ -44,11 +46,12 @@ import { ResumeComponent } from '../resume/resume.component';
     MatButtonModule,
     MatInputModule,
     MatSliderModule,
-    MatDialogModule
+    MatDialogModule,
+    MainRoutingModule
   ],
-  entryComponents: [HomeComponent],
+  entryComponents: [MainComponent],
   providers: [NgbActiveModal],
-  bootstrap: [HomeComponent],
+  bootstrap: [MainComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class HomeModule {}
+export class MainModule {}

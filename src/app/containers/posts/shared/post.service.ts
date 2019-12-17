@@ -6,8 +6,8 @@ import { of, Observable, forkJoin, from } from "rxjs";
 import { concatMap, take } from "rxjs/operators";
 import { Comment } from "@app/shared/models/comment";
 import { Like } from "@app/shared/models/like";
-import { CommentService } from "@app/containers/posts/post-detail/comments/comment.service";
-import { SubCommentService } from "@app/containers/posts/post-detail/comments/sub-comment.service";
+import { CommentService } from "@app/core/services/comment/comment.service";
+import { SubCommentService } from "@app/core/services/sub-comment/sub-comment.service";
 import { HelperService } from "@app/core/services/helper/helper.service";
 @Injectable({
   providedIn: "root"
@@ -48,7 +48,7 @@ export class PostService {
   getPostsByUid(uid) {
     return this.db
       .collection<Post>("posts", ref => ref.where("author.uid", "==", `${uid}`))
-      .valueChanges();
+      .get();
   }
 
   /* Update post */
@@ -96,9 +96,13 @@ export class PostService {
           }
         }),
         concatMap(results => {
+          return this.commentService.removeCommentAll(postId);
+        }),
+        concatMap(results => {
           this.logger.info("### remove sub comment All results", results);
           if (results) {
-            return this.commentService.deleteComment(postId, commentId);
+            const r = ref.doc(postId).collection<Comment>('comments');
+            return this.helperService.deleteCollection(r);
           } else {
             return of(null);
           }

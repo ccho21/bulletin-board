@@ -4,7 +4,7 @@ import { Post } from '@app/shared/models/post';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { User } from '@app/shared/models/user';
-import { CommentService } from '@app/containers/posts/post-detail/comments/comment.service';
+import { CommentService } from '@app/core/services/comment/comment.service';
 import { Comment } from '@app/shared/models/comment';
 
 @Component({

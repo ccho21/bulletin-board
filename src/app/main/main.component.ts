@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from '../../core/services/firebase/firebase.service';
+import { FirebaseService } from '../core/services/firebase/firebase.service';
 import { Router, Params } from '@angular/router';
 import { LoggerService } from '@app/core/services/logger/logger.service'
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class MainComponent implements OnInit {
 
   ageValue: number = 0;
   searchValue: string = "";

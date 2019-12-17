@@ -8,7 +8,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { PostService } from '../posts/shared/post.service';
 import { Post } from '@app/shared/models/post';
-import { CommentService } from '../posts/post-detail/comments/comment.service';
+import { CommentService } from '../../core/services/comment/comment.service';
 import { LikeService } from '@app/core/services/like/like.service';
 import { delay } from 'q';
 import { Like } from '@app/shared/models/like';
@@ -60,7 +60,7 @@ export class UserComponent implements OnInit {
       }),
       switchMap(results => {
         this.logger.info('### Altogether ' , results);
-        this.posts = results[0] as Post[];
+        // this.posts = results[0] as Post[];
         // this.comments = results[1] as Comment[];
         this.likes = results[2] as Like[];
         return combineLatest(this.postService.getPostsByLikeId(this.likes));

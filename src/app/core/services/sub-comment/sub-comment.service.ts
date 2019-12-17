@@ -8,10 +8,9 @@ import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from, of, forkJoin, Observable } from "rxjs";
 import { AuthService } from "@app/core/services/auth/auth.service";
 import { concatMap } from "rxjs/operators";
-import { Comment } from "../../../../shared/models/comment";
+import { Comment } from "../../../shared/models/comment";
 import { User } from "@app/shared/models/user";
 import { Post } from "@app/shared/models/post";
-import { CommentService } from "./comment.service";
 import { LikeService } from "@app/core/services/like/like.service";
 import { HelperService } from "@app/core/services/helper/helper.service";
 import { SubComment } from "@app/shared/models/sub-comment";
@@ -24,7 +23,6 @@ export class SubCommentService {
     private db: AngularFirestore,
     private logger: LoggerService,
     private authService: AuthService,
-    private commentService: CommentService,
     private helperService: HelperService,
     private likeService: LikeService
   ) {}

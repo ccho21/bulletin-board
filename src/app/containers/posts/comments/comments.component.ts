@@ -7,12 +7,12 @@ import {
 import { FormControl } from "@angular/forms";
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { AuthService } from "@app/core/services/auth/auth.service";
-import { CommentService } from "./comment.service";
-import { Post } from "../../../../shared/models/post";
+import { CommentService } from "../../../core/services/comment/comment.service";
+import { Post } from "../../../shared/models/post";
 import { Comment } from "@app/shared/models/comment";
-import { PostService } from '../../shared/post.service';
+import { PostService } from '../shared/post.service';
 import { Subscription, of, from, forkJoin } from 'rxjs';
-import { SubCommentService } from './sub-comment.service';
+import { SubCommentService } from '../../../core/services/sub-comment/sub-comment.service';
 import { toArray, concatMap } from 'rxjs/operators';
 import { SubComment } from '@app/shared/models/sub-comment';
 
@@ -87,7 +87,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   deleteComment(comment): void {
     const postId = this.post.postId;
-    const commentId = this.comment.commentId;
+    const commentId = comment.commentId;
     this.commentService.deleteComment(postId, commentId).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
       // update post

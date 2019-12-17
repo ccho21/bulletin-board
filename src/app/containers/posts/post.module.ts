@@ -26,7 +26,7 @@ import { PostEditComponent } from './post-edit/post-edit.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostService } from './shared/post.service';
 import { PostRoutingModule } from './post-routing.module';
-import { CommentsComponent } from '@app/containers/posts/post-detail/comments/comments.component';
+import { CommentsComponent } from '@app/containers/posts/comments/comments.component';
 import { LikeService } from '@app/core/services/like/like.service';
 import { ViewService } from '@app/core/services/view/view.service';
 import { FlnCommentComponent } from '@app/core/widget/fln-comment/fln-comment.component';
