@@ -16,15 +16,14 @@ import {
   MatDialogModule,
   MatProgressSpinnerModule
 } from "@angular/material";
-import { AboutComponent } from "../containers/about/about.component";
-import { ContactUsComponent } from "../containers/contact-us/contact-us.component";
-import { ProjectsComponent } from "../containers/projects/projects.component";
+import { AboutComponent } from "../components/about/about.component";
+import { ContactUsComponent } from "../components/contact-us/contact-us.component";
+import { ProjectsComponent } from "../components/projects/projects.component";
 import { MainComponent } from "./main.component";
-import { ResumeComponent } from '../containers/resume/resume.component';
+import { ResumeComponent } from '../components/resume/resume.component';
 
 // Main
 import { MainRoutingModule } from './main-routing.module';
-
  
 @NgModule({
   declarations: [

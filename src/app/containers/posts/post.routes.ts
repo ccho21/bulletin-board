@@ -7,9 +7,9 @@ import { PostListComponent } from './post-list/post-list.component';
 // Import all the components for which navigation service has to be activated
 
 export const postRouterConfig: Routes = [
-    /* { path: 'post-list',  redirectTo:'/posts'},
+    { path: 'post-list',  redirectTo:'/posts'},
     { path: 'posts',  component: PostListComponent },
     { path: 'posts/create', component: PostNewComponent },
     { path: 'posts/:id', component: PostDetailComponent },
-    { path: 'posts/:id/edit', component: PostEditComponent }, */
+    { path: 'posts/:id/edit', component: PostEditComponent },
 ];

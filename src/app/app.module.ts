@@ -58,7 +58,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ComponentsModule } from './components/components.module';
 import { PostModule } from './containers/posts/post.module';
 import { MainModule } from './main/main.module';
-import { DashboardComponent } from './containers/dashboard/dashboard.component';
 import { ClickOutsideDirective } from './core/directives/click-outside.directive';
 import { UserComponent } from './containers/user/user.component';
 
@@ -101,7 +100,6 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     NavbarComponent,
     FooterComponent,
     LoaderComponent,
-    DashboardComponent,
     ClickOutsideDirective,
     UserComponent,
   ],
