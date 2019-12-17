@@ -1,23 +1,35 @@
 <div class="section section-dark text-center">
   <div class="container">
-    <h2 class="title">Let's talk about my project</h2>
+    <h2 class="title">Let's talk</h2>
+  </div>
+</div>
+<section>
+  <div class="container">
     <div class="row">
-      <div class="col-md-4">
-        <div class="post-box">
-
+      <a href="#" class="btn btn-link btn-info" [routerLink]="['/posts/create']"
+        routerLinkActive="router-link-active">create</a>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
+        <div class="post">
+          <div class="post-box">
+            <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <small *ngIf="posts">
+      <h3>POST LIST</h3>
+      <pre>
+          {{ posts | json }}
+      </pre>
+    </small>
   </div>
-</div>
+</section>
 
 
-<div class="container">
-    <div class="row">
-      <a href="#" class="btn btn-link btn-info" [routerLink]="['/posts/create']" routerLinkActive="router-link-active" >create</a>
-    </div>
-    <div class="row">
-      <table  class="table">
+ <!-- <table class="table">
         <thead>
           <tr>
             <th class="text-center">#</th>
@@ -31,7 +43,7 @@
             <th class="text-center"></th>
           </tr>
         </thead>
-        <tbody >
+        <tbody>
           <tr class="ng-star-inserted" *ngFor="let post of posts; index as i">
             <td class="text-center">{{i + 1}}</td>
             <td> {{ post.createdAt | postTime }}</td>
@@ -39,11 +51,8 @@
             <td class="">{{ post.content}}</td>
             <td class="">
               <div class="author-profile">
-                <img 
-                class="img-circle img-no-padding img-responsive" 
-                [src]="post.author.photoURL"
-                [alt]="post.author.name" 
-                >
+                <img class="img-circle img-no-padding img-responsive" [src]="post.author.photoURL"
+                  [alt]="post.author.name">
               </div>
             </td>
             <td class="text-center">
@@ -60,15 +69,4 @@
             </td>
           </tr>
         </tbody>
-      </table>
-    </div>
-    <!-- sample data -->
-    <!-- <small *ngIf="posts">
-      <h3>POST LIST</h3>
-      <pre>
-          {{ posts | json }}
-      </pre>
-  </small> -->
-  <!-- sample -->
-</div>
-
+      </table> -->

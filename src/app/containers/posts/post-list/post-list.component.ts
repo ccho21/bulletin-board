@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import { PostService } from '../shared/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
@@ -18,6 +18,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   isPostLiked;
   postSubscription: Subscription;
   filteredPostList;
+  
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -71,7 +72,10 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.logger.info(post);
     this.router.navigateByUrl(`/posts/${post.postId}/edit`);
   }
-
+  
+  getBackgroundImageUrl(post) {
+    return `url(${post.photoURL})`
+  }
   ngOnDestroy() {
     this.logger.info('### post list is destroyed#######');
     if (this.postSubscription) {
