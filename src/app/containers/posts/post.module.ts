@@ -61,6 +61,9 @@ import { PipesModule } from '@app/core/pipes/pipes.module';
     MatDialogModule,
     PipesModule
   ],
+  exports: [
+    PostListComponent
+  ],
   providers: [NgbActiveModal, PostService, LikeService, ViewService],
   bootstrap: [PostListComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

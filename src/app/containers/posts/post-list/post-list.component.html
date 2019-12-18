@@ -15,16 +15,20 @@
           <div class="post-box">
             <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
             </div>
+            <div class="post-content">
+              <div class="mr-4"> likes </div>
+              <div> comments </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <small *ngIf="posts">
+    <!-- <small *ngIf="posts">
       <h3>POST LIST</h3>
       <pre>
           {{ posts | json }}
       </pre>
-    </small>
+    </small> -->
   </div>
 </section>
 

@@ -22,6 +22,8 @@ import { ProjectsComponent } from "../components/projects/projects.component";
 import { MainComponent } from "./main.component";
 import { ResumeComponent } from '../components/resume/resume.component';
 
+import { PostModule} from '../containers/posts/post.module';
+
 // Main
 import { MainRoutingModule } from './main-routing.module';
  
@@ -46,7 +48,8 @@ import { MainRoutingModule } from './main-routing.module';
     MatInputModule,
     MatSliderModule,
     MatDialogModule,
-    MainRoutingModule
+    MainRoutingModule,
+    PostModule
   ],
   entryComponents: [MainComponent],
   providers: [NgbActiveModal],
