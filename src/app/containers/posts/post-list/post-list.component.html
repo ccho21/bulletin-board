@@ -11,16 +11,18 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
-        <div class="post">
-          <div class="post-box">
-            <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
-            </div>
-            <div class="post-content">
-              <div class="mr-4"> likes </div>
-              <div> comments </div>
+        <a routerLink="{{post.postId}}" routerLinkActive="router-link-active">
+          <div class="post">
+            <div class="post-box">
+              <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
+              </div>
+              <div class="post-content">
+                <div class="mr-4"> <i class="fa fa-heart" [ngClass]="{ heart: isLiked }"></i> 15 </div>
+                <div> <i class="nc-icon nc-chat-33"></i> 10 </div>
+              </div>
             </div>
           </div>
-        </div>
+        </a>
       </div>
     </div>
     <!-- <small *ngIf="posts">

@@ -105,10 +105,10 @@ export class CommentService {
     return query;
   }
 
-  getNumOfComments(postId: string) {
+  getNumOfComments(postId: string, commentId) {
+    const {uid} = this.authService.getCurrentUser();
     const path = this.getPath(postId);
-    return this.db
-    .collection<Post | Comment>(path).get();
+    return this.db.collectionGroup('comments', ref => ref.where('postId', '==', postId).orderBy('createdAt')).get();
   }
   
   /* getCommentsByUid(uid) {

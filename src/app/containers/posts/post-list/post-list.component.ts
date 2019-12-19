@@ -50,6 +50,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       }),
       concatMap(results => {
         const post = results[0];
+        this.logger.info('$$$$$ comments num', results[2].docs.map(cur => cur.data()));
         // post.likes = results[1].docs.map(cur => cur.data());
         // post.comments = results[2].docs.map(cur => cur.data());
         return of(post);

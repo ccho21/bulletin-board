@@ -48,7 +48,7 @@ export class SubCommentService {
       .doc(mainComment.postId)
       .collection<Comment>("comments")
       .doc(mainComment.commentId)
-      .collection<SubComment>("sub-comments")
+      .collection<Comment>("comments")
       .doc(subCommentDTO.subCommentId)
       .set(subCommentDTO);
     return from(query);
@@ -69,7 +69,7 @@ export class SubCommentService {
       .doc(mainComment.postId)
       .collection<Comment>("comments")
       .doc(mainComment.commentId)
-      .collection<SubComment>("sub-comments")
+      .collection<Comment>("comments")
       .doc(subCommentDTO.subCommentId);
     const query = from(
       this.helperService.deleteCollection(ref.collection<Like>("likes"))
@@ -84,7 +84,7 @@ export class SubCommentService {
 
   updateSubComment(commentId: string, subCommentDTO: SubComment) {
     const query = this.db
-      .collection<SubComment>("sub-comments", ref =>
+      .collection<Comment>("comment", ref =>
         ref.where("commentId", "==", commentId)
       )
       .doc(subCommentDTO.subCommentId)
@@ -98,7 +98,7 @@ export class SubCommentService {
       .doc(postId)
       .collection<Comment>("comments")
       .doc(commentId)
-      .collection<SubComment>("sub-comments");
+      .collection<Comment>("comments");
     const query = ref.get().pipe(
       concatMap(results => {
         this.logger.info("### reuslts in removeSubCommentAll", results);
