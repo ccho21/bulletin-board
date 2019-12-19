@@ -19,6 +19,7 @@ import { Like } from "@app/shared/models/like";
   providedIn: "root"
 })
 export class SubCommentService {
+  type: 3;
   constructor(
     private db: AngularFirestore,
     private logger: LoggerService,
@@ -28,13 +29,16 @@ export class SubCommentService {
   ) {}
 
   getSubComments(comment) {
-    return this.db
-      .collection<Post>("posts")
-      .doc(comment.postId)
-      .collection<Comment>("comments")
-      .doc(comment.commentId)
-      .collection<SubComment>("sub-comments")
-      .get();
+    const path = this.getPath(comment);
+    return this.db.collection<Comment>(path).get();
+  }
+
+  getPath(comment) {
+    const postId = comment.postId;
+    const commentId = comment.commentId;
+    const subCommentId = comment.subCommentId;
+
+    return `/posts/${postId}/comments/${commentId}/comments/`;
   }
 
   addSubComment(mainComment: Comment, subCommentDTO: SubComment) {
@@ -43,12 +47,9 @@ export class SubCommentService {
     subCommentDTO.commentId = mainComment.commentId;
     subCommentDTO.postId = mainComment.postId;
     this.logger.info("111", mainComment, "222", subCommentDTO);
+    const path = this.getPath(subCommentDTO);
     const query = this.db
-      .collection<Post>("posts")
-      .doc(mainComment.postId)
-      .collection<Comment>("comments")
-      .doc(mainComment.commentId)
-      .collection<Comment>("comments")
+      .collection<Comment>(path)
       .doc(subCommentDTO.subCommentId)
       .set(subCommentDTO);
     return from(query);
@@ -64,12 +65,9 @@ export class SubCommentService {
 
   deleteSubComment(mainComment: Comment, subCommentDTO: SubComment) {
     this.logger.info("### yo");
+    const path = this.getPath(subCommentDTO);
     const ref = this.db
-      .collection<Post>("posts")
-      .doc(mainComment.postId)
-      .collection<Comment>("comments")
-      .doc(mainComment.commentId)
-      .collection<Comment>("comments")
+      .collection<Comment>(path)
       .doc(subCommentDTO.subCommentId);
     const query = from(
       this.helperService.deleteCollection(ref.collection<Like>("likes"))
@@ -83,22 +81,17 @@ export class SubCommentService {
   }
 
   updateSubComment(commentId: string, subCommentDTO: SubComment) {
+    const path = this.getPath(subCommentDTO);
     const query = this.db
-      .collection<Comment>("comment", ref =>
-        ref.where("commentId", "==", commentId)
-      )
+      .collection<Comment>(path)
       .doc(subCommentDTO.subCommentId)
       .update(subCommentDTO);
     return of(query);
   }
 
   removeSubCommentAll(postId: string, commentId: string) {
-    const ref = this.db
-      .collection<Post>("posts")
-      .doc(postId)
-      .collection<Comment>("comments")
-      .doc(commentId)
-      .collection<Comment>("comments");
+    const path = this.getPath({ postId, commentId });
+    const ref = this.db.collection<Comment>(path);
     const query = ref.get().pipe(
       concatMap(results => {
         this.logger.info("### reuslts in removeSubCommentAll", results);
@@ -115,10 +108,9 @@ export class SubCommentService {
       }),
       concatMap(results => {
         this.logger.info("### removeSubCommentAll", results);
-        if(results) {
+        if (results) {
           return from(this.helperService.deleteCollection(ref));
-        }
-        else {
+        } else {
           return of(null);
         }
       })
