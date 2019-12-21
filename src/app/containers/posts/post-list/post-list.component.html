@@ -17,12 +17,15 @@
               <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
               </div>
               <div class="post-content">
-                <div class="mr-4"> <i class="fa fa-heart" [ngClass]="{ heart: isLiked }"></i> 15 </div>
-                <div> <i class="nc-icon nc-chat-33"></i> 10 </div>
+                <div class="mr-4"> <i class="fa fa-heart" [ngClass]="{ heart: isLiked }"></i> {{post.likes.length}} </div>
+                <div> <i class="nc-icon nc-chat-33"></i> {{post.comments.length}} </div>
+               
               </div>
             </div>
           </div>
         </a>
+        <button class="btn btn-warning" (click)="editPost(post)">edit</button>
+        <button class="btn btn-danger" (click)="deletePost(post)">delete</button>
       </div>
     </div>
     <!-- <small *ngIf="posts">

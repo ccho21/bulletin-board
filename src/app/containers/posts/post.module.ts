@@ -26,12 +26,15 @@ import { PostEditComponent } from './post-edit/post-edit.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostService } from './shared/post.service';
 import { PostRoutingModule } from './post-routing.module';
-import { CommentsComponent } from '@app/containers/posts/comments/comments.component';
 import { LikeService } from '@app/core/services/like/like.service';
 import { ViewService } from '@app/core/services/view/view.service';
 import { FlnCommentComponent } from '@app/core/widget/fln-comment/fln-comment.component';
 import { FlnLikeComponent } from '@app/core/widget/fln-like/fln-like.component';
 import { PipesModule } from '@app/core/pipes/pipes.module';
+
+import { CommentsComponent } from '@app/containers/comments/comments.component';
+import { CommentDetailComponent } from '@app/containers/comments/comment-detail/comment-detail.component';
+
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -41,6 +44,7 @@ import { PipesModule } from '@app/core/pipes/pipes.module';
     CommentsComponent,
     FlnCommentComponent,
     FlnLikeComponent,
+    CommentDetailComponent
   ],
   entryComponents: [
     PostListComponent,

@@ -17,8 +17,8 @@ import { NouisliderModule } from 'ng2-nouislider';
 import { PopupService } from '@app/core/services/popup/popup.service';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
-import { ForgotPasswordComponent } from '../containers/forgot-password/forgot-password.component';
-import { VerifyEmailComponent } from '../containers/verify-email/verify-email.component';
+import { ForgotPasswordComponent } from '../containers/auth/forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from '../containers/auth/verify-email/verify-email.component';
 
 
 @NgModule({

@@ -28,92 +28,53 @@ export class CommentService {
     private likeService: LikeService
   ) { }
 
-  getComments(postId) {
-    const path = this.getPath(postId);
+  getComments(postId: string) {
     return this.db
-      .collection<Post | Comment>(path).get();
+      .collectionGroup<Comment>('comments', ref => ref.where('postId', '==', postId).orderBy('createdAt')).get();
   }
 
-  getPath(postId: string) {
-    let path
-    if(postId) {
-      path = `posts/${postId}/comments/`
+  getCommentsByUid() {
+    const { uid } = this.authService.getCurrentUser();
+    return this.db
+      .collectionGroup<Comment>('comments', ref => ref.where('author.uid', '==', uid).orderBy('createdAt')).get();
+  }
+
+  getPath(postId: string, mainCommentId?: string) {
+    if (!mainCommentId) {
+      return `posts/${postId}/comments/`;
     }
-    return path;
+    else {
+      return `posts/${postId}/comments/${mainCommentId}`;
+    }
   }
 
   addComment(postId, commentDTO: Comment) {
     const id = this.db.createId();
-    // Post detail
-    commentDTO.commentId = id;
     const path = this.getPath(postId);
+    commentDTO.commentId = id;
+
     const query = this.db
-    .collection<Post | Comment>(path).doc(commentDTO.commentId).set(commentDTO);
+      .collection<Comment>(path).doc(commentDTO.commentId).set(commentDTO);
     return of(query);
   }
 
-  updateComment(postId: string, commentId: string, commentDTO: Comment) {
-    const path = this.getPath(postId);
+  updateComment(postId: string, mainCommentId: string, commentDTO: Comment) {
+    const path = this.getPath(postId, mainCommentId);
     const query = this.db
-    .collection<Post | Comment>(path).doc(commentId).update(commentDTO);
+      .collection<Comment>(path).doc(commentDTO.commentId).update(commentDTO);
     return of(query);
   }
 
   deleteComment(postId: string, commentId: string) {
-    const path = this.getPath(postId);
-    const ref = this.db
-    .collection<Post | Comment>(path).doc(commentId);
-    const query = this.subCommentService.removeSubCommentAll(postId, commentId).pipe(concatMap(res => {
-      return forkJoin([
-        from(ref.delete()),
-        from(this.helperService.deleteCollection(ref.collection<Like>('likes')))
-      ]);
-    }))
+    const commentQuery = this.db
+      .collectionGroup<Comment>('comments', ref => ref.where('postId', '==', postId).orderBy('createdAt'))
+    const likeQuery = this.db
+      .collectionGroup('likes', ref => ref.where('postId', '==', postId).orderBy('type'));
+
+    const query = forkJoin(
+      from(this.helperService.deleteCollection(commentQuery)),
+      from(this.helperService.deleteCollection(likeQuery)),
+    )
     return query;
   }
-
-  removeCommentAll(postId: string) {
-    const path = this.getPath(postId);
-    const ref = this.db.collection<Post | Comment>(path);
-    const query = ref.get().pipe(
-      concatMap(results => {
-        this.logger.info("### reuslts in removeCommentAll", results);
-        let requests: Array<Observable<number>>;
-        if (results.docs.length) {
-          requests = results.docs.map(c => {
-            const comment = { ...c.data() };
-            const request = this.likeService.getLikesRef(comment, 2);
-            return from(this.helperService.deleteCollection(request));
-          });
-          return forkJoin(requests);
-        }
-        return of(null);
-      }),
-      concatMap(results => {
-        this.logger.info("### removeSubCommentAll", results);
-        if(results) {
-          return forkJoin(
-            from(this.helperService.deleteCollection(ref)),
-            from(this.helperService.deleteCollection(ref.doc(postId).collection<Like>('likes'))),
-            );
-        }
-        else {
-          return of(null);
-        }
-      })
-    );
-    return query;
-  }
-
-  getNumOfComments(postId: string) {
-    const {uid} = this.authService.getCurrentUser();
-    const path = this.getPath(postId);
-    return this.db.collectionGroup('comments', ref => ref.where('postId', '==', postId).orderBy('createdAt')).get();
-  }
-  
-  /* getCommentsByUid(uid) {
-    return this.db
-      // .collection<Post>('posts').doc(postId)
-      .collection<Comment>('comments', ref => ref.where('author.uid', '==', uid)).valueChanges();
-  } */
 }

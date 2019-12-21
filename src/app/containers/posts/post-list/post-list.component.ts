@@ -35,24 +35,22 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.getPosts();
   }
   getPosts() {
-    this.postService.getPosts().pipe(
+    this.postSubscription = this.postService.getPosts().pipe(
       concatMap(results => {
         return from(results.docs);
       }),
       concatMap(res => {
-        this.logger.info('individual', res);
         const post = res.data();
         return forkJoin([
           of(post),
           this.likeService.getLikes(post.postId, 1),
-          this.commentService.getNumOfComments(post.postId)
+          this.commentService.getComments(post.postId)
         ]);
       }),
       concatMap(results => {
-        const post = results[0];
-        this.logger.info('$$$$$ comments num', results[2].docs.map(cur => cur.data()));
-        // post.likes = results[1].docs.map(cur => cur.data());
-        // post.comments = results[2].docs.map(cur => cur.data());
+          const post = results[0];
+        post.likes = results[1].docs.map(cur => cur.data());
+        post.comments = results[2].docs.map(cur => cur.data());
         return of(post);
       }),
       toArray(),

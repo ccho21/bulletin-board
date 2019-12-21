@@ -64,6 +64,7 @@ import { UserComponent } from './containers/user/user.component';
 
 // PIPE
 import { PipesModule } from './core/pipes/pipes.module';
+import { UserActivitiesComponent } from './core/services/user-activities//user-activities/user-activities.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -102,6 +103,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     LoaderComponent,
     ClickOutsideDirective,
     UserComponent,
+    UserActivitiesComponent,
   ],
   entryComponents: [AppComponent],
   imports: [

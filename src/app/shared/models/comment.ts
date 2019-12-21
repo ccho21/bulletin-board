@@ -7,7 +7,7 @@ export interface Comment {
     createdAt           : string;
     updatedAt?          : string;
     author              : User;
+    depth?               : number;
     postId?             : string;
     likes               : Array<string>;
-    subComments?        : Array<string>;
 }

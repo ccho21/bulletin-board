@@ -25,14 +25,14 @@ export class HelperService {
 * @param {string} collections Collection names
 * @return {Promise<number>} Total number of documents deleted (from all collections)
 */
-  deleteCollection(collection: AngularFirestoreCollection<any>): Promise<number> {
+  deleteCollection(collection): Promise<number> {
     this.logger.info('############ delete collection ###########');
     let totalDeleteCount = 0;
     const batchSize = 500;
     return new Promise<number>((resolve, reject) =>
-      from(collection.ref.get())
+      from(collection.get())
         .pipe(
-          concatMap((q) => from(q.docs)),
+          concatMap((q: any) => from(q.docs)),
           bufferCount(batchSize),
           concatMap((docs: Array<QueryDocumentSnapshot<any>>) => new Observable((o: Observer<number>) => {
             const batch = this.db.firestore.batch();

@@ -4,8 +4,8 @@ import { Routes } from "@angular/router";
 import { MainComponent } from "./main/main.component";
 // Import all the components for which navigation service has to be activated
 
-import { VerifyEmailComponent } from "./containers/verify-email/verify-email.component";
-import { ForgotPasswordComponent } from "./containers/forgot-password/forgot-password.component";
+import { VerifyEmailComponent } from "./containers/auth/verify-email/verify-email.component";
+import { ForgotPasswordComponent } from "./containers/auth/forgot-password/forgot-password.component";
 import { AuthGuard } from "./shared/guard/auth.guard";
 import { SecureInnerPagesGuard } from "./shared/guard/secure-inner-pages.guard";
 import { UserComponent } from './containers/user/user.component';

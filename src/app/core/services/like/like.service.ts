@@ -77,8 +77,14 @@ export class LikeService {
   }
 
   getLikes(postId: string, t: number) {
-    return this.getLikesByType(postId, t).get();
+    return this.db.collectionGroup('likes', ref => ref.where('postId', '==', postId).orderBy('type')).get();
   }
+
+  getLikesByUid() {
+    const {uid} = this.authService.getCurrentUser();
+    return this.db.collectionGroup('likes', ref => ref.where('user.uid', '==', uid).orderBy('type')).get();
+  }
+
 
   getLikesRef(data, t: number) {
     const path = this.getPath(data, t);
@@ -86,11 +92,6 @@ export class LikeService {
     return this.db.collection(path).doc(id).collection<Like>('likes');
   }
 
-  getLikesByUid(uid) {
-    return this.db
-      .collection<Like>('likes', ref =>
-        ref.where('user.uid', '==', uid)).valueChanges();
-  }
 
   getType(type: number): string {
     return type === 1 ? 'posts' : type === 2 ? 'comments' : 'sub-comments';

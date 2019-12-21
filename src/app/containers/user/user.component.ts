@@ -30,7 +30,6 @@ export class UserComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private userService: UserService,
     private authService: AuthService,
     private logger: LoggerService,
     private postService: PostService,
@@ -52,27 +51,21 @@ export class UserComponent implements OnInit {
         this.uid = this.user.uid;
         this.logger.info(this.user);
         const requests = [
-          this.postService.getPostsByUid(this.uid),
-          // this.commentService.getCommentsByUid(this.uid),
-          this.likeService.getLikesByUid(this.uid),
+          this.postService.getPostsByUid(),
+          this.commentService.getCommentsByUid(),
+          this.likeService.getLikesByUid(),
         ];
-        return combineLatest(requests);
-      }),
-      switchMap(results => {
-        this.logger.info('### Altogether ' , results);
-        // this.posts = results[0] as Post[];
-        // this.comments = results[1] as Comment[];
-        this.likes = results[2] as Like[];
-        return combineLatest(this.postService.getPostsByLikeId(this.likes));
-      }),
-      switchMap(results => {
-        this.logger.info('### post Like ID ',results);
-        this.likedPosts = results;
-        return combineLatest(this.postService.getPostsByCommentId(this.comments));
+        return forkJoin(requests);
       })
     ).subscribe((results) => {
-      this.logger.info('### post by comment ',results);
-      this.likedPostsByComment = results;
+
+      this.posts = results[0].docs.map(post => post.data() as Post);
+      this.comments = results[1].docs.map(comment => comment.data() as Comment);
+      this.likes = results[2].docs.map(like => like.data() as Like);
+      this.logger.info('### Post ',results[0].docs);
+      this.logger.info('### Comment ',results[1].docs);
+      this.logger.info('### Likes ',results[2].docs);
+      // this.likedPostsByComment = results;
     }, (err) => {
       this.logger.info(err);
     });

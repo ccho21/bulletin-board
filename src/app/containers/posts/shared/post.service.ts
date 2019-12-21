@@ -9,6 +9,7 @@ import { Like } from "@app/shared/models/like";
 import { CommentService } from "@app/core/services/comment/comment.service";
 import { SubCommentService } from "@app/core/services/sub-comment/sub-comment.service";
 import { HelperService } from "@app/core/services/helper/helper.service";
+import { AuthService } from "@app/core/services/auth/auth.service";
 @Injectable({
   providedIn: "root"
 })
@@ -18,18 +19,19 @@ export class PostService {
     private logger: LoggerService,
     private helperService: HelperService,
     private commentService: CommentService,
-    private subCommentService: SubCommentService
-  ) {}
+    private subCommentService: SubCommentService,
+    private authService: AuthService
+  ) { }
 
-  /* Create post */
-  addPost(post: Post) {
-    const id = this.db.createId();
-    post.postId = id;
-    const query = this.db
-      .collection<Post>("posts")
-      .doc(post.postId)
-      .set(post);
-    return of(query);
+  /* Get post list */
+  getPosts() {
+    return this.db.collection<Post>("posts").get();
+  }
+
+  getPostsByUid() {
+    const { uid } = this.authService.getCurrentUser();
+    return this.db
+      .collection<Post>("posts", ref => ref.where("author.uid", "==", `${uid}`).orderBy('createdAt')).get();
   }
 
   /* Get post */
@@ -40,15 +42,13 @@ export class PostService {
       .snapshotChanges();
   }
 
-  /* Get post list */
-  getPosts() {
-    return this.db.collection<Post>("posts").get();
-  }
-
-  getPostsByUid(uid) {
-    return this.db
-      .collection<Post>("posts", ref => ref.where("author.uid", "==", `${uid}`))
-      .get();
+  /* Create post */
+  addPost(post: Post) {
+    const id = this.db.createId();
+    post.postId = id;
+    const query = this.db
+      .collection<Post>("posts").doc(post.postId).set(post);
+    return of(query);
   }
 
   /* Update post */
@@ -58,81 +58,6 @@ export class PostService {
       .doc(id)
       .update(post);
     return of(query);
-  }
-
-  /* Delete post */
-  /*  deletePost(id: string) {
-     const query = this.db
-       .collection<Post>('posts')
-       .doc(id)
-       .delete();
-     return of(query).pipe(take(1), concatMap(res => {
-       return res;
-     }));
-   } */
-
-  deletePost(postId: string) {
-    let commentId: string;
-    const ref = this.db.collection<Post>('posts');
-    ref.doc(postId)
-      .collection<Comment>("comments")
-      .get()
-      .pipe(
-        concatMap(results => {
-          this.logger.info("### res docs", results.docs);
-          if (results.docs.length) {
-            const requests = results.docs.map(comment => {
-              this.logger.info("### ", comment.data());
-              commentId = comment.data().commentId;
-              const request = this.subCommentService.removeSubCommentAll(
-                postId,
-                commentId
-              );
-              return request;
-            });
-            return forkJoin(requests);
-          } else {
-            return of(null);
-          }
-        }),
-        concatMap(results => {
-          return this.commentService.removeCommentAll(postId);
-        }),
-        concatMap(results => {
-          this.logger.info("### remove sub comment All results", results);
-          if (results) {
-            const r = ref.doc(postId).collection<Comment>('comments');
-            return this.helperService.deleteCollection(r);
-          } else {
-            return of(null);
-          }
-        }),
-        concatMap(_ =>
-          forkJoin([
-            from(
-              this.helperService.deleteCollection(ref)
-            ),
-            from(
-              this.helperService.deleteCollection(ref.doc(postId).collection<Like>("likes"))
-            )
-          ])
-        )
-      )
-      .subscribe(res => {
-        this.logger.info("### final", res);
-      });
-  }
-
-  /* ACTIVITIES */
-  updatePostViews(post: Post) {
-    let count = 0;
-    if (post.hasOwnProperty("views")) {
-      count = post.views += 1;
-    } else {
-      count = post.views = 1;
-    }
-    post.views = count;
-    this.updatePost(post.postId, post);
   }
 
   getPostsByLikeId(likes: Like[]) {
@@ -150,6 +75,33 @@ export class PostService {
       );
     });
     return requests;
+  }
+
+  /* Delete post */
+  deletePost(id: string) {
+    const postRef = this.db
+      .collectionGroup<Post>('posts', ref => ref.where('postId', '==', id).orderBy('createdAt'));
+    const commentRef = this.db.collectionGroup<Comment>('comments', ref => ref.where('postId', '==', id).orderBy('createdAt'))
+    const likeRef = this.db.collectionGroup('likes', ref => ref.where('postId', '==', id).orderBy('type'));
+    
+    const query = forkJoin(
+      from(this.helperService.deleteCollection(postRef)),
+      from(this.helperService.deleteCollection(commentRef)),
+      from(this.helperService.deleteCollection(likeRef)),
+    );
+    return query;
+  }
+
+  /* ACTIVITIES */
+  updatePostViews(post: Post) {
+    let count = 0;
+    if (post.hasOwnProperty("views")) {
+      count = post.views += 1;
+    } else {
+      count = post.views = 1;
+    }
+    post.views = count;
+    this.updatePost(post.postId, post);
   }
 
   getPostsByCommentId(comments: Comment[]) {
