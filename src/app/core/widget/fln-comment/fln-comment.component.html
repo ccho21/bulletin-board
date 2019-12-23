@@ -1,31 +1,12 @@
-<div class="container">
-  <div class="">
-    <div class="my-3"><h5 class="">Add comment</h5></div>
-    <div class="">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group">
-            <!-- <label>Comment</label> -->
-            <textarea
-              class="form-control textarea"
-              rows="2"
-              placeholder="Write anything..."
-              [formControl]="commentForm"
-            ></textarea>
-          </div>
-        </div>
-        <div class="col-md-12 text-right">
-          <div class="update ml-auto mr-auto mb-3">
-            <button
-              class="btn btn-primary btn-round"
-              type="submit"
-              (click)="onSubmit()"
-            >
-              POST
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+
+<div class="p-comments-write">
+  <textarea
+    class="form-control textarea h-100"
+    rows="1"
+    placeholder="Add a comment..."
+    [formControl]="commentForm"
+  ></textarea>
+  <button class="btn btn-link btn-info m-0" type="submit" (click)="onSubmit()">
+    POST
+  </button>
 </div>

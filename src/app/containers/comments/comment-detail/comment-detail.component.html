@@ -1,49 +1,42 @@
-<div>
-  <div class="media">
+<div class="py-2 pl-3">
+  <div class="media cd-comment">
     <div class="pull-left" href="#">
-      <div class="avatar">
+      <div class="">
         <img
           alt="Tim Picture"
-          class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+          class="media-object c-img-thumnail img-circle img-no-padding img-responsive mb-0 mr-3"
           src="{{ comment.author.photoURL }}"
         />
       </div>
     </div>
     <div class="media-body">
-      <h6 class="media-heading">{{ comment.author.displayName }}</h6>
-      <div class="pull-right">
-        <h6
+      <div class="cd-comment-content">
+        <div>
+          <h6 class="media-heading mr-3">{{ comment.author.displayName }}</h6>
+        </div>
+        <p class="flex-grow-1">
+          {{ comment.comment }}
+        </p>
+        <app-fln-like [comment]="comment"></app-fln-like>
+      </div>
+      <div class="">
+        <span
           class="text-muted"
           *ngIf="comment.hasOwnProperty('updatedAt'); else createAt"
         >
           {{ comment.updatedAt | postTime }}
-        </h6>
+        </span>
         <ng-template #createAt
-          ><h6 class="text-muted">
+          ><span class="text-muted">
             {{ comment.createdAt | postTime }}
-          </h6></ng-template
+          </span></ng-template
         >
       </div>
-      <p class="">
-        {{ comment.comment }}
-      </p>
-      <div *ngIf="comment.addCommentValid">
-        <app-fln-comment
-          [comment]="comment"
-          (commentEmit)="addSubcomment(comment, $event)"
-        ></app-fln-comment>
-      </div>
     </div>
-    <div class="media-body">
-      <textarea
-        class="form-control textarea"
-        rows="2"
-        ngif="comment.addCommentValid"
-        placeholder="Write anything..."
-        [formControl]="commentForm"
-      ></textarea>
-    </div>
-    <div class="function-box d-flex">
+  </div>
+
+
+   <!--   <div class="function-box d-flex">
       <a
         class="btn btn-info btn-link pull-right "
         (click)="addReply(comment)"
@@ -62,8 +55,8 @@
       <button class="btn btn-danger" (click)="deleteComment(comment)">
         delete
       </button>
-    </div>
-  </div>
+    </div> -->
+
 
   <!-- <div *ngIf="comment.hasOwnProperty('subComments')">
     <div class="media ml-5" *ngFor="let sComment of comment.subComments">

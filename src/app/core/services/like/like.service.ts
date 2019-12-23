@@ -22,27 +22,44 @@ export class LikeService {
     private authService: AuthService,
     private helperService: HelperService
   ) { }
-  isLiked(data: Post | Comment | SubComment, t: number) { // get data from current User Id and match with post id. 
+ /*  isLiked(data: Post | Comment | SubComment, t: number) { // get data from current User Id and match with post id. 
     const dataId = this.getId(data, t);
     const path = this.getPath(data, t);
     const query = this.db
-    .collection<Post | Comment | SubComment>(path).doc(dataId)
+    .collection(path).doc(dataId)
     .collection<Like>('likes').get()
     .pipe(take(1));
     return query;
+  } */
+ 
+
+  getLikes(postId: string, t: number) {
+    return this.db.collectionGroup('likes', ref => ref.where('postId', '==', postId).orderBy('type')).get();
+  }
+
+  getLikesByUid() {
+    const {uid} = this.authService.getCurrentUser();
+    return this.db.collectionGroup('likes', ref => ref.where('user.uid', '==', uid).orderBy('type')).get();
   }
 
   addLike(dataId: string, like: Like, t: number, dataDTO: Post | Comment | SubComment) {
+    const likeId = this.db.createId();
+    const likeDTO = this.cleanUndefined(like);
+    const { uid } = this.authService.getCurrentUser();
+    const query = this.db.doc(`user-activities/${uid}/likes/${likeId}`).set(likeDTO);
+    return of(query);
+  }
+
+ /*  addLike(dataId: string, like: Like, t: number, dataDTO: Post | Comment | SubComment) {
     const likeId = this.db.createId();
     const likeDTO = this.cleanUndefined(like);
     const path = this.getPath(like, t);
     likeDTO.likeId = likeId;
 
     const query = this.db
-      .collection<Post | Comment | SubComment>(path).doc(dataId)
       .collection<Like>('likes').doc(likeId).set(likeDTO);
     return of(query);
-  }
+  } */
 
   removeLike(likeId, data, t: number) {
     this.logger.info('likeId to DELETE ###', likeId);
@@ -50,7 +67,6 @@ export class LikeService {
     const dataId = this.getId(data, t);
     
     const query = this.db
-      .collection<Post | Comment | SubComment>(path).doc(dataId)
       .collection<Like>('likes').doc(likeId).delete();
     return from(query);
   }
@@ -63,7 +79,7 @@ export class LikeService {
 
   getLikesByType(dataId: string, t: number) {
     const type = this.getType(t);
-    const query = this.db.collection<Post | Comment | SubComment>(type).doc(dataId).collection<Like>('likes');
+    const query = this.db.collection(type).doc(dataId).collection<Like>('likes');
     return query;
   }
 
@@ -76,16 +92,7 @@ export class LikeService {
     return query;
   }
 
-  getLikes(postId: string, t: number) {
-    return this.db.collectionGroup('likes', ref => ref.where('postId', '==', postId).orderBy('type')).get();
-  }
-
-  getLikesByUid() {
-    const {uid} = this.authService.getCurrentUser();
-    return this.db.collectionGroup('likes', ref => ref.where('user.uid', '==', uid).orderBy('type')).get();
-  }
-
-
+  
   getLikesRef(data, t: number) {
     const path = this.getPath(data, t);
     const id = this.getId(data, t);

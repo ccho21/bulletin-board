@@ -7,6 +7,7 @@ import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from, of, Observable } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { Like } from '@app/shared/models/like';
+import { View } from '@app/shared/models/view';
 import { Post } from '@app/shared/models/post';
 import { AuthService } from '../auth/auth.service';
 import { PostService } from '@app/containers/posts/shared/post.service';
@@ -23,6 +24,8 @@ export class ViewService {
     private authService: AuthService,
     private postService: PostService
   ) { }
+
+  
   addView(post:Post, uid) {
     const viewId = this.db.createId();
     const postId = post.postId;
@@ -33,10 +36,10 @@ export class ViewService {
       uid,
       postViews,
     }
-    const query = this.db.collection<Like>('views').doc(viewId).set(view)
+    const query = this.db.doc(`user-activities/${uid}/views/${viewId}`).set(view);
     of(query).subscribe(res => {
       this.logger.info('seccessfully view is added to its table');
-      this.postService.updatePostViews(post);
+      // this.postService.updatePostViews(post);
     });
   }
   updateViews(post: Post) {

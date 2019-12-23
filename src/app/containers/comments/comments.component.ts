@@ -6,9 +6,12 @@ import {
 } from "@angular/core";
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { CommentService } from '@app/core/services/comment/comment.service';
+import { AuthService } from '@app/core/services/auth/auth.service';
 import { Post } from "@app/shared/models/post";
 import { Comment } from "@app/shared/models/comment";
+import { User } from "@app/shared/models/user";
 import { Subscription } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: "app-comments",
@@ -18,17 +21,22 @@ import { Subscription } from 'rxjs';
 export class CommentsComponent implements OnInit, OnDestroy {
   
   comment: Comment;
+  user: User;
   commentList: Comment[] = [];
   filteredCommentList = [];
   addCommentValid: boolean;
   commentSubscription: Subscription;
+
+  commentForm;
   @Input() post: Post;
   constructor(
     private logger: LoggerService,
     private commentService: CommentService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
+    this.commentForm = new FormControl('');
     this.getComments(this.post);
   }
 
@@ -40,19 +48,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  addComment(comment): void {
-    const postId = this.post.postId;
-    const depth = COMMENT.COMMENT;
-    const commentDTO = this.cleanUp({
-      postId,
-      ...comment,
-      depth
-    });
-    this.commentService.addComment(postId, commentDTO).subscribe(res => {
-      this.logger.info("### a comment was succesfully added", res);
-      // update post
-    });
-  }
+  
 
    // HELPER
    cleanUp(data): Comment {
@@ -61,6 +57,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
     delete copiedData.addCommentValid;
     return copiedData;
   }
+  
   // *** SUB COMMENTS ***
 
   /* addSubcomment(main: Comment, sub: SubComment): void {
@@ -77,9 +74,20 @@ export class CommentsComponent implements OnInit, OnDestroy {
     });
   } */
 
+  addComment(comment): void {
+    const postId = this.post.postId;
+    const depth = COMMENT.COMMENT;
+    const commentDTO = this.cleanUp({
+      postId,
+      ...comment,
+      depth
+    });
+    this.commentService.addComment(postId, commentDTO).subscribe(res => {
+      this.logger.info("### a comment was succesfully added", res);
+      // update post
+    });
+  }
 
-  //  ***  SUBMIT ***
-  
   ngOnDestroy() {
     if(this.commentSubscription) {
       this.commentSubscription.unsubscribe();

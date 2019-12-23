@@ -8,4 +8,5 @@ export interface User {
     displayName   : string;
     photoURL      : string;
     emailVerified : boolean;
+    activities?    : UserActivities;
 }

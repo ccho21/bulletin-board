@@ -64,7 +64,7 @@ import { UserComponent } from './containers/user/user.component';
 
 // PIPE
 import { PipesModule } from './core/pipes/pipes.module';
-import { UserActivitiesComponent } from './core/services/user-activities//user-activities/user-activities.component';
+import { UserActivitiesService } from './core/services/user-activities/user-activities.service';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -103,7 +103,6 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     LoaderComponent,
     ClickOutsideDirective,
     UserComponent,
-    UserActivitiesComponent,
   ],
   entryComponents: [AppComponent],
   imports: [
@@ -135,6 +134,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AuthService,
     ModalService,
     NgbActiveModal,
+    UserActivitiesService,
     { provide: LoggerService, useClass: ConsoleLoggerService },
     LoaderService,
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }

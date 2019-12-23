@@ -30,7 +30,7 @@ export class CommentService {
 
   getComments(postId: string) {
     return this.db
-      .collectionGroup<Comment>('comments', ref => ref.where('postId', '==', postId).orderBy('createdAt')).get();
+      .collectionGroup<Comment>('comments', ref => ref.where('postId', '==', postId).orderBy('createdAt', 'desc')).get();
   }
 
   getCommentsByUid() {

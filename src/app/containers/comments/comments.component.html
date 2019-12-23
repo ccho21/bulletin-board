@@ -1,21 +1,25 @@
-<div class="row">
-  <div class="comments media-area w-100">
-    <h3 class="text-center">Comments</h3>
-    <div class="col-md-12">
-      <app-fln-comment [comment]="comment" (commentEmit)="addComment($event)"></app-fln-comment>
-    </div>
-    <ul class="list-group list-unstyled" *ngFor="let comment of commentList; index as i">
-      <li>
-        <app-comment-detail [comment]="comment" [post]="post"></app-comment-detail> 
-      </li>
-    </ul>
-  </div>
+<!-- <h3 class="text-center mb-5">Comments</h3> -->
+
+<div class="p-comments">
+  <ul
+    class="list-group list-unstyled"
+    *ngFor="let comment of commentList; index as i"
+  >
+    <li>
+      <app-comment-detail
+        [comment]="comment"
+        [post]="post"
+      ></app-comment-detail>
+    </li>
+  </ul>
 </div>
 
+
+<!-- 
 <small *ngIf="commentList">
   <h3>COMMENT LIST</h3>
   <pre>
       {{ commentList | json }}
   </pre>
 </small>
-
+ -->

@@ -102,6 +102,10 @@ export class AuthService {
       .then(result => {
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
+        this.logger.info(
+          '### result from createUserWithEmailAndPassword',
+          result
+        );
         const userData: User = {
           uid: result.user.uid,
           email: result.user.email,
@@ -109,10 +113,7 @@ export class AuthService {
           displayName: user.displayName,
           photoURL: user.photoURL
         };
-        this.logger.info(
-          '### result from createUserWithEmailAndPassword',
-          result
-        );
+        
         this.logger.info('### userdata DTO', userData);
         this.afAuth.auth.currentUser.updateProfile({
           displayName: user.displayName,
@@ -164,6 +165,7 @@ export class AuthService {
     return this.afAuth.auth
       .signInWithPopup(provider)
       .then(result => {
+        this.logger.info('### result in auth', result);
         this.ngZone.run(() => {
           const userData: User = {
             uid: result.user.uid,

@@ -9,5 +9,4 @@ export interface Comment {
     author              : User;
     depth?               : number;
     postId?             : string;
-    likes               : Array<string>;
 }

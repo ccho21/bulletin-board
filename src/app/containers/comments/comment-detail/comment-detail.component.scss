@@ -1,5 +1,5 @@
 .c-img-thumnail {
-    height: 3rem;
+    height: 2rem;
     margin-right: 1rem;
 }
 .c-body-content {
@@ -7,8 +7,19 @@
     min-height: 3.5rem;
 }
 
-
 .btn-info:active {
     color: #51bcda !important;
     background-color: white !important;    
+}
+
+.cd-comment {
+    align-items: center;
+    font-size: .8rem;
+    h6 {
+        margin: 0;
+    }
+    &-content {
+        display: flex;
+        align-items: center;
+    }
 }

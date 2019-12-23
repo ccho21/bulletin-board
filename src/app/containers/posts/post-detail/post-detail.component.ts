@@ -10,26 +10,28 @@ import { UserService } from '@app/core/services/user/user.service';
 import { LikeService } from '@app/core/services/like/like.service';
 import { Like } from '@app/shared/models/like';
 import { ViewService } from '@app/core/services/view/view.service';
+import { UserActivitiesService } from '@app/core/services/user-activities/user-activities.service';
 @Component({
-  selector: 'app-post-detail',
-  templateUrl: './post-detail.component.html',
-  styleUrls: ['./post-detail.component.scss']
+  selector                          : 'app-post-detail',
+  templateUrl                       : './post-detail.component.html',
+  styleUrls                         : ['./post-detail.component.scss']
 })
 export class PostDetailComponent implements OnInit, OnDestroy {
-  post: Post;
-  user: User;
-  isPostLiked: boolean;
-  postSubscription: Subscription
-  hasPost: boolean;
-  hasImage: boolean;
+  post                              : Post;
+  user                              : User;
+  isPostLiked                       : boolean;
+  postSubscription                  : Subscription
+  hasPost                           : boolean;
+  hasImage                          : boolean;
   constructor(
-    private route: ActivatedRoute,
-    private postService: PostService,
-    private logger: LoggerService,
-    private authService: AuthService,
-    private userService: UserService,
-    private likeService: LikeService,
-    private viewService: ViewService
+    private route                   : ActivatedRoute,
+    private postService             : PostService,
+    private logger                  : LoggerService,
+    private authService             : AuthService,
+    private userService             : UserService,
+    private likeService             : LikeService,
+    private viewService             : ViewService,
+    private userActivitiesService   : UserActivitiesService
   ) { }
 
   ngOnInit() {
@@ -39,24 +41,32 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   getPost(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.postSubscription = this.postService.getPost(id)
+    const id                        = this.route.snapshot.paramMap.get('id');
+    this.postSubscription           = this.postService.getPost(id)
       .subscribe((data: any) => {
-        this.post = data.payload.data() as Post;
-        if(this.post.photoURL) {
-          this.hasImage = true;
+        this.post                   = data.payload.data() as Post;
+        if (this.post.photoURL) {
+          this.hasImage             = true;
         }
-        this.hasPost = true;
-        this.viewService.updateViews(this.post);
-
+        this.hasPost                = true;
+        // this.userActivitiesService.addView(this.post);
         // this.likeService.removeLikes(this.post.postId, 1);
+        this.user = this.authService.getCurrentUser();
+        // this.getActivities();
+        // this.viewService.updateViews(this.post);
       });
+  }
+  getActivities() {
+    const user = this.user;
+    this.userActivitiesService.getActivities(user).subscribe(res => {
+      this.logger.info('### get activities', res.docs[0].data());
+    });
   }
   updatePost(post) {
     this.postService.updatePost(post.postId, post);
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.logger.info('### post detail destroyed ####');
     this.postSubscription.unsubscribe();
   }

@@ -6,7 +6,6 @@ import {
 } from "@angular/fire/firestore";
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { from, of, forkJoin, Observable } from "rxjs";
-import { AuthService } from "@app/core/services/auth/auth.service";
 import { concatMap } from "rxjs/operators";
 import { Comment } from "../../../shared/models/comment";
 import { User } from "@app/shared/models/user";
@@ -23,7 +22,6 @@ export class SubCommentService {
   constructor(
     private db: AngularFirestore,
     private logger: LoggerService,
-    private authService: AuthService,
     private helperService: HelperService,
     private likeService: LikeService
   ) {}
