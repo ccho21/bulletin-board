@@ -48,8 +48,6 @@ export class CommentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  
-
    // HELPER
    cleanUp(data): Comment {
     const copiedData = Object.assign({}, data);
@@ -58,22 +56,6 @@ export class CommentsComponent implements OnInit, OnDestroy {
     return copiedData;
   }
   
-  // *** SUB COMMENTS ***
-
-  /* addSubcomment(main: Comment, sub: SubComment): void {
-    this.logger.info('### main', main, sub);
-    this.subCommentService.addSubComment(main, sub).subscribe(res => {
-      this.logger.info('sub comment is successfullt added', res);
-    });
-  }
-
-  deleteSubComment(main: Comment, sub: SubComment): void {
-    this.subCommentService.deleteSubComment(main, sub).subscribe(res => {
-      this.logger.info('comment is successfully deleted', res);
-      // update post
-    });
-  } */
-
   addComment(comment): void {
     const postId = this.post.postId;
     const depth = COMMENT.COMMENT;

@@ -7,7 +7,6 @@ import {
 import { FormControl } from "@angular/forms";
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { CommentService } from "@app/core/services/comment/comment.service";
-import { SubCommentService } from "@app/core/services/sub-comment/sub-comment.service";
 import { Comment } from "@app/shared/models/comment";
 import { Post } from "@app/shared/models/post";
 
@@ -29,7 +28,6 @@ export class CommentDetailComponent implements OnInit {
   constructor(
     private logger: LoggerService,
     private commentService: CommentService,
-    private subCommentService: SubCommentService
   ) { }
 
   ngOnInit() {
@@ -102,20 +100,6 @@ export class CommentDetailComponent implements OnInit {
     this.logger.info("comment", comment);
     comment.addCommentValid = !comment.addCommentValid;
   }
-
-  /*   addSubcomment(main: Comment, sub: SubComment): void {
-      this.logger.info('### main', main, sub);
-      this.subCommentService.addSubComment(main, sub).subscribe(res => {
-        this.logger.info('sub comment is successfullt added', res);
-      });
-    }
-  
-    deleteSubComment(main: Comment, sub: SubComment): void {
-      this.subCommentService.deleteSubComment(main, sub).subscribe(res => {
-        this.logger.info('comment is successfully deleted', res);
-        // update post
-      });
-    } */
 }
 
 enum COMMENT {

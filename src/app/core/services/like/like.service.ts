@@ -22,7 +22,8 @@ export class LikeService {
     private authService: AuthService,
     private helperService: HelperService
   ) { }
- /*  isLiked(data: Post | Comment | SubComment, t: number) { // get data from current User Id and match with post id. 
+ 
+  /*  isLiked(data: Post | Comment | SubComment, t: number) { // get data from current User Id and match with post id. 
     const dataId = this.getId(data, t);
     const path = this.getPath(data, t);
     const query = this.db
@@ -42,7 +43,7 @@ export class LikeService {
     return this.db.collectionGroup('likes', ref => ref.where('user.uid', '==', uid).orderBy('type')).get();
   }
 
-  addLike(dataId: string, like: Like, t: number, dataDTO: Post | Comment | SubComment) {
+  addLike(dataId: string, like: Like, t: number, dataDTO: Post | Comment) {
     const likeId = this.db.createId();
     const likeDTO = this.cleanUndefined(like);
     const { uid } = this.authService.getCurrentUser();
