@@ -10,6 +10,7 @@ import { Like } from '@app/shared/models/like';
 import { UserActivitiesService } from '@app/core/services/user-activities/user-activities.service';
 import { Comment } from '@app/shared/models/comment';
 import { SubComment } from '@app/shared/models/sub-comment';
+import { PostStateService } from '@app/containers/posts/post-state.service';
 @Component({
   selector                          : 'app-fln-like',
   templateUrl                       : './fln-like.component.html',
@@ -22,21 +23,23 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     private logger                  : LoggerService,
     private authService             : AuthService,
     private likeService             : LikeService,
-    private userActivitiesService   : UserActivitiesService
+    private userActivitiesService   : UserActivitiesService,
+    private postStateService        : PostStateService
   ) { }
   isLiked;
   likeId                            : string;
-  data                              : Post | Comment | SubComment;
+  data;
   type                              : number;
   user                              : User;
   likeSubscription                  : Subscription;
   like                              : Like;
+  isPost                            : boolean;
   @Input() post                     : Post;
   @Input() comment                  : Comment;
   @Input() subComment               : SubComment;
   ngOnInit() {
     this.initData();
-    // this.checkLiked();
+    this.checkLiked();
   }
 
   initData() {
@@ -45,31 +48,18 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
       this.data                     = this.post;
       this.mode                     = MODE.POST;
       this.type                     = 1;
+      this.isPost                   = true;
     }
     if (this.comment) {
       this.data                     = this.comment;
       this.mode                     = MODE.COMMENT;
       this.type                     = 2;
     }
-
-    if (this.subComment) {
-      this.data                     = this.subComment;
-      this.mode                     = MODE.SUB_COMMENT;
-      this.type                     = 3;
-    }
   }
 
-  /* checkLiked() {
-    this.likeSubscription = this.likeService.isLiked(this.data, this.type).subscribe(res => {
-      if (res.docs.length) {
-        this.like                   = res.docs[0].data() as Like;
-        this.isLiked                = true;
-      } else {
-        this.isLiked                = false;
-      }
-      this.logger.info('### LIKE ###', this.like);
-    });
-  } */
+  checkLiked() {
+    this.isLiked = this.data.isLiked ? true : false;
+  }
 
   clickLike() {
     const data                      = this.data;
@@ -79,7 +69,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     this.logger.info('### type', this.type);
     this.logger.info('### mode', this.mode);
     if (this.isLiked) {
-      this.removeLike();
+      this.removeLike(data);
       return;
     } else {
       this.addLike(data);
@@ -120,15 +110,17 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     const dataId                    = this.getId();
     this.likeService.addLike(dataId, dto, this.type, dataDTO).subscribe(res => {
       this.logger.info('### like successfully added');
+      this.isLiked = res;
     });
   }
 
-  removeLike() {
-    const likeId                    = this.like.likeId;
+  removeLike(data) {
+    const likeId                    = data.isLiked.likeId;
+    this.logger.info('### like id', likeId);
     this.likeService.removeLike(likeId, this.data, this.type).subscribe(res => {
       this.logger.info('### like removed', res);
-
-    })
+      this.isLiked = null;
+    });
   }
 
   cleanUp(data) {

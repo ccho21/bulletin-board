@@ -1,12 +1,12 @@
 import { User } from '@app/shared/models/user';
 
-export interface SubComment {
-    subCommentId?          : string;
+export interface CommentExtendedDTO {
+    commentId?          : string;
     comment             : string;
     createdAt           : string;
     updatedAt?          : string;
     author              : User;
+    depth?              : number;
     postId?             : string;
-    commentId?          : string;
-    likes               : Array<string>;
+    isLiked             : boolean;
 }

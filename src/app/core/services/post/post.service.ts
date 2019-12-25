@@ -35,11 +35,8 @@ export class PostService {
   }
 
   /* Get post */
-  getPost(id: string) {
-    return this.db
-      .collection<Post>("posts")
-      .doc(id)
-      .snapshotChanges();
+  getPost(postId: string) {
+    return this.db.collection<Post>("posts").doc(postId).get();
   }
 
   /* Create post */

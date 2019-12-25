@@ -8,16 +8,10 @@
     <div class="d-post-box-left">
       <div class="" *ngIf="hasImage">
         <img
-          src="{{ post.photoURL }}"
-          alt="post.name"
+          src="{{ updatedPost.photoURL }}"
+          alt="updatedPost.name"
           class="img-fluid d-post-img"
         />
-      </div>
-
-      <div class="d-post col-md-10 m-auto p-0">
-        <div class="row">
-          <div class="col-md-7 p-0"></div>
-        </div>
       </div>
     </div>
     <div class="w-75">
@@ -27,11 +21,11 @@
             <div class="align-self-center">
               <img
                 class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-                src="{{ post.author.photoURL }}"
+                src="{{ updatedPost.author.photoURL }}"
               />
             </div>
             <div class="font-weight-bold flex-grow-1">
-              {{ post.author.displayName }}
+              {{ updatedPost.author.displayName }}
             </div>
             <div class="pr-2">
               <a class="d-flex align-items-center"
@@ -41,16 +35,13 @@
           </div>
 
           <div class="d-post-comments">
-            <app-comments [post]="post"></app-comments>
+            <app-comments [post]="updatedPost"></app-comments>
           </div>
           <!-- Post Detail -->
           <div class="d-post-detail pl-3">
             <div class="row mx-0 d-post-detail-functions">
               <div>
-                <a type="button" (click)="clickLike()" class="">
-                  <i class="nc-icon nc-favourite-28"></i>
-                  <!-- <i class="fa fa-heart" [ngClass]="{ heart: isLiked }"></!-->
-                </a>
+                <app-fln-like [post]="updatedPost"></app-fln-like>
               </div>
               <div class=" ml-2 flex-grow-1">
                 <i class="nc-icon nc-chat-33"></i>
@@ -62,14 +53,14 @@
             <div class="row mx-0 d-post-detail-likes">
               <img
                 class="media-object c-img-thumnail img-circle img-no-padding img-responsive d-post-detail-likes-likes-user"
-                src="{{ post.author.photoURL }}"
+                src="{{ updatedPost.author.photoURL }}"
               />
               <div>
                 Liked by first like and others
               </div>
             </div>
             <div class="row mx-0">
-              {{ post.createdAt | postTime }}
+              {{ updatedPost.createdAt | postTime }}
             </div>
           </div>
           <!-- comment -->
@@ -79,79 +70,5 @@
         </div>
       </div>
     </div>
-
-    <!-- <small *ngIf="post">
-  <h3>POST DETAIL</h3>
-  <pre>
-    {{ post | json }}
-</pre
-  >
-</small>
- -->
-    <!-- <small *ngIf="user">
-  <h3>USER DETAIL</h3>
-  <pre>
-      {{ user | json }}
-  </pre>
-</small>
- -->
-
-    <!-- <div class="row">
-    <div class="col-md-8 ml-auto mr-auto">
-      <div class="text-center">
-        <span class="label label-warning main-tag">post category</span
-        ><a
-          ><h3 class="title">
-            {{ post.title }}
-          </h3></a
-        >
-        <h6 class="title-uppercase">{{ post.createdAt | postTime }}</h6>
-      </div>
-    </div>
-    <div class="col-md-10 ml-auto mr-auto">
-      <a
-        ><div class="" *ngIf="hasImage">
-          <img src="{{ post.photoURL }}" alt="post.name" class="img-fluid" />
-        </div>
-        <p class="image-thumb text-center"></p
-      ></a>
-      <div class="article-content">
-        <blockquote class="blockquote">
-          <p>
-            {{ post.content }}
-          </p>
-          <footer>
-            - {{ post.author.displayName }}
-            <cite title="Source Title">Trust Agents</cite>
-          </footer>
-        </blockquote>
-      </div>
-      <br />
-      <div class="article-footer">
-        <div class="container">
-          <div class="row align-items-center">
-            <div class="col-md-6">
-              <h5>Tags:</h5>
-              <span class="label label-default mb-2 mr-2 ">Motivational</span
-              ><span class="label label-default mb-2 mr-2">Newsletter</span
-              ><span class="label label-warning mb-2 mr-2">Trending</span>
-            </div>
-            <div class="col-md-6">
-              <div class="text-right">
-                <app-fln-like [post]="post"></app-fln-like>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr />
-      <div>
-          <app-comments
-            [post]="post"
-          ></app-comments>
-        </div>
-    </div>
-   
-  </div> -->
   </div>
 </div>

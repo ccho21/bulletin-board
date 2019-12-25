@@ -10,8 +10,14 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 import { Post } from "@app/shared/models/post";
 import { Comment } from "@app/shared/models/comment";
 import { User } from "@app/shared/models/user";
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { LikeService } from '@app/core/services/like/like.service';
+import { PostStateService } from '@app/containers/posts/post-state.service';
+import { Like } from '@app/shared/models/like';
+import { ActivatedRoute } from '@angular/router';
+
+
 
 @Component({
   selector: "app-comments",
@@ -22,30 +28,30 @@ export class CommentsComponent implements OnInit, OnDestroy {
   
   comment: Comment;
   user: User;
-  commentList: Comment[] = [];
-  filteredCommentList = [];
+  commentList: Array<Comment> = [];
   addCommentValid: boolean;
   commentSubscription: Subscription;
-
   commentForm;
+  likeList: Array<Like> = [];
   @Input() post: Post;
   constructor(
     private logger: LoggerService,
     private commentService: CommentService,
-    private authService: AuthService
+    private authService: AuthService,
+    private likeService: LikeService,
+    private postStateService: PostStateService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.commentForm = new FormControl('');
+    this.logger.info(this.post);
     this.getComments(this.post);
   }
 
   getComments(post) {
     const postId = post.postId;
-    this.commentSubscription = this.commentService.getComments(postId).subscribe(results => {
-      this.commentList = results.docs.map(cur => ({...cur.data()} as Comment));
-      this.logger.info('commentList', this.commentList);
-    });
+    this.commentList = this.postStateService.getComments(postId);    
   }
 
    // HELPER

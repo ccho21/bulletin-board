@@ -1,5 +1,4 @@
 import { User } from '@app/shared/models/user';
-import { Reply } from 'app/shared/models/reply';
 
 export interface Comment {
     commentId?          : string;
@@ -7,6 +6,6 @@ export interface Comment {
     createdAt           : string;
     updatedAt?          : string;
     author              : User;
-    depth?               : number;
+    depth?              : number;
     postId?             : string;
 }

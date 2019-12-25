@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { LoggerService } from '@app/core/services/logger/logger.service';
-import { PostService } from '../shared/post.service';
+import { PostService } from '../../../core/services/post/post.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { User } from '@app/shared/models/user';
 import { Post } from "../../../shared/models/post";
@@ -49,22 +49,22 @@ export class PostEditComponent implements OnInit {
 
 
   ngOnInit() {
-    this.postId = this.route.snapshot.paramMap.get('id');
-    this.logger.info(this.postId);
+    // this.postId = this.route.snapshot.paramMap.get('id');
+    // this.logger.info(this.postId);
 
-    this.getPost(this.postId);
-    this.initForm();
+    // this.getPost(this.postId);
+    // this.initForm();
 
 
   }
-  getPost(postId) {
+  /* getPost(postId) {
     this.postService.getPost(postId).subscribe(res => {
       this.logger.info(res);
       this.post = res.payload.data() as Post;
 
       this.uplaodForm(this.post);
     });
-  }
+  } */
   initForm() {
     this.postFormGroup = new FormGroup({
       title: new FormControl(''),

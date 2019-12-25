@@ -10,7 +10,7 @@ import { Like } from '@app/shared/models/like';
 import { View } from '@app/shared/models/view';
 import { Post } from '@app/shared/models/post';
 import { AuthService } from '../auth/auth.service';
-import { PostService } from '@app/containers/posts/shared/post.service';
+import { PostService } from '@app/core/services/post/post.service';
 
 
 @Injectable({

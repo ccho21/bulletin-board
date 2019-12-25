@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
-import { PostService } from '../shared/post.service';
+import { PostService } from '../../../core/services/post/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
 import { LikeService } from '@app/core/services/like/like.service';
@@ -7,6 +7,7 @@ import { concatMap, toArray } from 'rxjs/operators';
 import { of, Subscription, from, forkJoin  } from 'rxjs';
 import { CommentService } from '../../../core/services/comment/comment.service';
 import { Router } from '@angular/router';
+import { PostStateService } from '../post-state.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -24,7 +25,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     private postService: PostService,
     private likeService: LikeService,
     private commentService: CommentService,
-    private router: Router
+    private router: Router,
+    private postStateService: PostStateService
   ) { }
 
   ngOnInit() {
@@ -48,7 +50,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         ]);
       }),
       concatMap(results => {
-          const post = results[0];
+        const post = results[0];
         post.likes = results[1].docs.map(cur => cur.data());
         post.comments = results[2].docs.map(cur => cur.data());
         return of(post);
@@ -57,6 +59,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     ).subscribe(results => {
       this.logger.info('### final Post LIST ###', results);
       this.posts = results as Post[];
+      this.postStateService.setPosts(this.posts);
     });
   }
 

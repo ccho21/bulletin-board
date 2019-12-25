@@ -32,7 +32,6 @@ export class CommentDetailComponent implements OnInit {
 
   ngOnInit() {
     this.commentForm = new FormControl("");
-    this.logger.info('### comment !!! ', this.comment);
   }
 
   updateComment(commentDTO): void {

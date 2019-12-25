@@ -24,7 +24,7 @@ import { PostDetailComponent } from './post-detail/post-detail.component';
 import { PostNewComponent } from './post-new/post-new.component';
 import { PostEditComponent } from './post-edit/post-edit.component';
 import { PostListComponent } from './post-list/post-list.component';
-import { PostService } from './shared/post.service';
+import { PostService } from '../../core/services/post/post.service';
 import { PostRoutingModule } from './post-routing.module';
 import { LikeService } from '@app/core/services/like/like.service';
 import { ViewService } from '@app/core/services/view/view.service';
@@ -34,7 +34,7 @@ import { PipesModule } from '@app/core/pipes/pipes.module';
 
 import { CommentsComponent } from '@app/containers/comments/comments.component';
 import { CommentDetailComponent } from '@app/containers/comments/comment-detail/comment-detail.component';
-
+import { PostStateService } from './post-state.service';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -68,7 +68,7 @@ import { CommentDetailComponent } from '@app/containers/comments/comment-detail/
   exports: [
     PostListComponent
   ],
-  providers: [NgbActiveModal, PostService, LikeService, ViewService],
+  providers: [NgbActiveModal, PostService, LikeService, ViewService, PostStateService],
   bootstrap: [PostListComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

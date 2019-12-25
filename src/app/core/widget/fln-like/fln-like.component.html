@@ -1,6 +1,8 @@
-<div>
-  <button type="button" (click)="clickLike()" class="btn btn-link btn-danger">
-    <i class="nc-icon nc-favourite-28"></i>
-    <!-- <i class="fa fa-heart" [ngClass]="{ heart: isLiked }"></!-->
-  </button>
+
+<div class="c-like">
+  <a type="button" (click)="clickLike()" class="c-like-link">
+    <i class="nc-icon nc-favourite-28" *ngIf="!isLiked"></i>
+    <i class="fa fa-heart text-danger" *ngIf="isLiked"></i>
+    <!-- <i class="fa fa-heart text-danger" *ngIf="isLiked" [ngClass]="{ heart: isLiked }"></i> -->
+  </a>
 </div>

@@ -3,9 +3,8 @@
 <div class="p-comments">
   <ul
     class="list-group list-unstyled"
-    *ngFor="let comment of commentList; index as i"
   >
-    <li>
+    <li *ngFor="let comment of commentList; index as i">
       <app-comment-detail
         [comment]="comment"
         [post]="post"

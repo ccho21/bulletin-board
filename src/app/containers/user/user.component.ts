@@ -6,7 +6,7 @@ import { switchMap, mergeMap, map } from 'rxjs/operators';
 import { UserService } from '@app/core/services/user/user.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
-import { PostService } from '../posts/shared/post.service';
+import { PostService } from '../../core/services/post/post.service';
 import { Post } from '@app/shared/models/post';
 import { CommentService } from '../../core/services/comment/comment.service';
 import { LikeService } from '@app/core/services/like/like.service';

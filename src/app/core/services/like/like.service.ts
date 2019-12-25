@@ -38,38 +38,29 @@ export class LikeService {
     return this.db.collectionGroup('likes', ref => ref.where('postId', '==', postId).orderBy('type')).get();
   }
 
+  getLikesByUidAndPostId(postId) {
+    const {uid} = this.authService.getCurrentUser();
+    return this.db.collectionGroup('likes', ref => ref.where('postId', '==', postId).where('user.uid', '==', uid).orderBy('type')).get();
+  }
+
   getLikesByUid() {
     const {uid} = this.authService.getCurrentUser();
     return this.db.collectionGroup('likes', ref => ref.where('user.uid', '==', uid).orderBy('type')).get();
   }
 
   addLike(dataId: string, like: Like, t: number, dataDTO: Post | Comment) {
+    const { uid } = this.authService.getCurrentUser();
     const likeId = this.db.createId();
     const likeDTO = this.cleanUndefined(like);
-    const { uid } = this.authService.getCurrentUser();
+    likeDTO.likeId = likeId;
     const query = this.db.doc(`user-activities/${uid}/likes/${likeId}`).set(likeDTO);
-    return of(query);
+    return of(likeDTO);
   }
 
- /*  addLike(dataId: string, like: Like, t: number, dataDTO: Post | Comment | SubComment) {
-    const likeId = this.db.createId();
-    const likeDTO = this.cleanUndefined(like);
-    const path = this.getPath(like, t);
-    likeDTO.likeId = likeId;
-
-    const query = this.db
-      .collection<Like>('likes').doc(likeId).set(likeDTO);
-    return of(query);
-  } */
-
   removeLike(likeId, data, t: number) {
-    this.logger.info('likeId to DELETE ###', likeId);
-    const path = this.getPath(data, t);
-    const dataId = this.getId(data, t);
-    
-    const query = this.db
-      .collection<Like>('likes').doc(likeId).delete();
-    return from(query);
+    const { uid } = this.authService.getCurrentUser();
+    const query = this.db.doc(`user-activities/${uid}/likes/${likeId}`).delete().then();
+    return of(null);
   }
   
   removeLikes(dataId: string, type: number) {

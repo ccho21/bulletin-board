@@ -1,0 +1,12 @@
+.c-like {
+    &-link {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        i {
+            color: grey;
+            font-size: inherit;
+            width: inherit;
+        }
+    }
+}
