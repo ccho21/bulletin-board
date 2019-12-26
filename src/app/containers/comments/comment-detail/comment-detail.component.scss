@@ -21,5 +21,17 @@
     &-content {
         display: flex;
         align-items: center;
+        & p {
+            font-size: inherit;
+        }
+    }
+
+    &-function {
+        display: flex;
+        align-items:center;
+        font-size: .8rem;
+    }
+    .cd-comment-reply {
+        font-weight:500;
     }
 }

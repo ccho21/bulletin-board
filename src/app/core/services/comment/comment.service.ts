@@ -55,7 +55,7 @@ export class CommentService {
 
     const query = this.db
       .collection<Comment>(path).doc(commentDTO.commentId).set(commentDTO);
-    return of(query);
+    return of(commentDTO);
   }
 
   updateComment(postId: string, mainCommentId: string, commentDTO: Comment) {

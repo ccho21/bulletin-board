@@ -1,16 +1,23 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { Post } from '@app/shared/models/post';
 import { LoggerService } from "@app/core/services/logger/logger.service";
 import { User } from '@app/shared/models/user';
 import { Like } from '@app/shared/models/like';
 import { PostExtendedDTO } from '@app/shared/extended-models/post-extended-dto';
 import { Comment } from "@app/shared/models/comment";
-
+import { Subject } from 'rxjs';
 @Injectable({
     providedIn: "root"
 })
 export class PostStateService {
     private posts: Array<PostExtendedDTO>;
+
+    private commentSubject = new Subject<Comment>();
+    private commentSubjectSubscription$ = this.commentSubject.asObservable();
+    
+    private replySubject = new Subject<Comment>(); 
+    private replySubjectSubscription$ = this.replySubject.asObservable();
+    
     constructor(
         private logger: LoggerService
     ) { }
@@ -29,6 +36,7 @@ export class PostStateService {
 
     setPost(post: Post) {
         const pIndex = this.posts.findIndex(p => p.postId === post.postId);
+        this.logger.info('### posted');
         this.posts[pIndex] = { ...post };
     }
 
@@ -41,6 +49,22 @@ export class PostStateService {
         const post = this.getPost(postId);
         const likes = post.likes;
         return likes;
+    }
+
+    updateCommentDTO(commentDTO) {
+        this.commentSubject.next(commentDTO);
+    }
+
+    getCommentDTO() {
+        return this.commentSubjectSubscription$;
+    }
+
+    updateReplyDTO(commentDTO) {
+        this.replySubject.next(commentDTO);
+    }
+    
+    getReplyDTO() {
+        return this.replySubjectSubscription$;
     }
 }
 

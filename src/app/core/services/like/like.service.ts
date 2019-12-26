@@ -59,8 +59,8 @@ export class LikeService {
 
   removeLike(likeId, data, t: number) {
     const { uid } = this.authService.getCurrentUser();
-    const query = this.db.doc(`user-activities/${uid}/likes/${likeId}`).delete().then();
-    return of(null);
+    const query = this.db.doc(`user-activities/${uid}/likes/${likeId}`).delete();
+    return of(query);
   }
   
   removeLikes(dataId: string, type: number) {

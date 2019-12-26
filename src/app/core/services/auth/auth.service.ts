@@ -110,13 +110,13 @@ export class AuthService {
           uid: result.user.uid,
           email: result.user.email,
           emailVerified: result.user.emailVerified,
-          displayName: user.displayName,
+          displayName: user.displayName.split(' ').join('_').toLowerCase(),
           photoURL: user.photoURL
         };
         
         this.logger.info('### userdata DTO', userData);
         this.afAuth.auth.currentUser.updateProfile({
-          displayName: user.displayName,
+          displayName: user.displayName.split(' ').join('_').toLowerCase(),
           photoURL: user.photoURL
         });
         this.sendVerificationMail();
@@ -171,9 +171,14 @@ export class AuthService {
             uid: result.user.uid,
             email: result.user.email,
             emailVerified: result.user.emailVerified,
-            displayName: result.user.displayName,
+            displayName: result.user.displayName.split(' ').join('_').toLowerCase(),
             photoURL: result.user.photoURL
           };
+
+          this.afAuth.auth.currentUser.updateProfile({
+            displayName: result.user.displayName.split(' ').join('_').toLowerCase(),
+            photoURL: result.user.photoURL
+          });
           this.userService.setUserData(userData);
           this.router.navigate(['/']);
         });

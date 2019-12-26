@@ -33,7 +33,9 @@ export class CommentsComponent implements OnInit, OnDestroy {
   commentSubscription: Subscription;
   commentForm;
   likeList: Array<Like> = [];
-  @Input() post: Post;
+
+  @Input() post;
+  
   constructor(
     private logger: LoggerService,
     private commentService: CommentService,
@@ -47,6 +49,11 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.commentForm = new FormControl('');
     this.logger.info(this.post);
     this.getComments(this.post);
+
+    this.commentSubscription = this.postStateService.getCommentDTO().subscribe(res => {
+      this.logger.info('### res what will be printed', res);
+      this.addComment(res);
+    })
   }
 
   getComments(post) {
@@ -63,6 +70,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
   }
   
   addComment(comment): void {
+    this.logger.info('### came comment');
     const postId = this.post.postId;
     const depth = COMMENT.COMMENT;
     const commentDTO = this.cleanUp({
@@ -72,7 +80,9 @@ export class CommentsComponent implements OnInit, OnDestroy {
     });
     this.commentService.addComment(postId, commentDTO).subscribe(res => {
       this.logger.info("### a comment was succesfully added", res);
-      // update post
+      this.commentList.unshift(res);
+      this.post.comments = this.commentList;
+      this.postStateService.setPost({...this.post});
     });
   }
 

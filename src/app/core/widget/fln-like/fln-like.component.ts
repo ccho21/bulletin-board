@@ -118,17 +118,9 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     const likeId                    = data.isLiked.likeId;
     this.logger.info('### like id', likeId);
     this.likeService.removeLike(likeId, this.data, this.type).subscribe(res => {
-      this.logger.info('### like removed', res);
+      this.logger.info('### like removed');
       this.isLiked = null;
     });
-  }
-
-  cleanUp(data) {
-    const copiedData                = Object.assign({}, data);
-    if (copiedData.hasOwnProperty('author')) {
-      delete copiedData.author;
-    }
-    return copiedData;
   }
 
   getDTO(data) {

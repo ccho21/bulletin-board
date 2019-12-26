@@ -24,7 +24,12 @@ export class ViewService {
     private authService: AuthService,
     private postService: PostService
   ) { }
-
+  
+  getViewsByPostId(postId) {
+    const { uid } = this.authService.getCurrentUser();
+    const query = this.db.collection<View>('views', ref => ref.where('postId', '==', postId)).get();
+    return query;
+  }
   
   addView(post:Post, uid) {
     const viewId = this.db.createId();

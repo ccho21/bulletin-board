@@ -12,6 +12,7 @@ import { Post } from "@app/shared/models/post";
 
 import { Subscription, of, from, forkJoin } from 'rxjs';
 import { toArray, concatMap } from 'rxjs/operators';
+import { PostStateService } from '@app/containers/posts/post-state.service';
 
 @Component({
   selector: 'app-comment-detail',
@@ -28,10 +29,12 @@ export class CommentDetailComponent implements OnInit {
   constructor(
     private logger: LoggerService,
     private commentService: CommentService,
+    private postStateService: PostStateService
   ) { }
 
   ngOnInit() {
     this.commentForm = new FormControl("");
+    this.logger.info('### comment', this.comment);
   }
 
   updateComment(commentDTO): void {
@@ -51,6 +54,10 @@ export class CommentDetailComponent implements OnInit {
       // update post
     });
   }
+  addReply(comment) { 
+    this.logger.info('### comment', comment);
+    this.postStateService.updateReplyDTO(comment);
+  }
 
   onSubmit(): void {
     if (!this.commentForm.valid) {
@@ -64,17 +71,6 @@ export class CommentDetailComponent implements OnInit {
     delete copiedData.editCommentValid;
     delete copiedData.addCommentValid;
     return copiedData;
-  }
-
-  closeComment(comment): void {
-    if (comment.addCommentValid) {
-      delete comment.addCommentValid;
-    }
-  }
-
-  // COMMENT WRITE
-  openComment(comment): void {
-    comment.addCommentValid = true;
   }
 
   editComment(comment): void {
@@ -95,10 +91,6 @@ export class CommentDetailComponent implements OnInit {
     comment.editCommentValid = false;
   }
 
-  addReply(comment): void {
-    this.logger.info("comment", comment);
-    comment.addCommentValid = !comment.addCommentValid;
-  }
 }
 
 enum COMMENT {
