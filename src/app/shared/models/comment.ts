@@ -8,4 +8,6 @@ export interface Comment {
     author              : User;
     depth?              : number;
     postId?             : string;
+    commentTo?          : Comment;
+    commentTag?         : string;
 }

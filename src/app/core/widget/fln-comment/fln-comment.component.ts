@@ -20,7 +20,8 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
   @Output() commentEmit: EventEmitter<any> = new EventEmitter();
   
   replySubscription : Subscription
-  
+  userNameTag
+  parentComment: Comment;
   constructor(
     private logger: LoggerService,
     private authService: AuthService,
@@ -34,8 +35,9 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
    
     this.postStateService.getReplyDTO().subscribe(res => {
       this.logger.info('### REPLY!!!', res);
-      const userNameTag = `@${res.author.displayName} `;
-      this.commentForm.patchValue(userNameTag);
+      this.userNameTag = `@${res.author.displayName}`;
+      this.parentComment = res;
+      this.commentForm.patchValue(`${this.userNameTag} `);
     })
   }
   
@@ -43,6 +45,7 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
     if (!this.commentForm.valid) {
       return;
     }
+   
     const comment = this.commentForm.value;
     const author: User = this.authService.getCurrentUser();
     const commentDTO: Comment = {
@@ -50,6 +53,12 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
       comment,
       createdAt: new Date().toISOString(),
     };
+
+    if(this.userNameTag && this.parentComment) {
+        commentDTO.commentTo = this.parentComment;
+        commentDTO.commentTag = this.userNameTag;
+        commentDTO.depth = 2;
+    }
     this.logger.info('###comment DTO ready to go', commentDTO);
     this.postStateService.updateCommentDTO(commentDTO);
     this.commentForm.reset();

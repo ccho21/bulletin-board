@@ -39,30 +39,34 @@ export class CommentService {
       .collectionGroup<Comment>('comments', ref => ref.where('author.uid', '==', uid).orderBy('createdAt')).get();
   }
 
-  getPath(postId: string, mainCommentId?: string) {
-    if (!mainCommentId) {
-      return `posts/${postId}/comments/`;
+  getPath(commentDTO) {
+    if (commentDTO.depth === 1) {
+      return `posts/${commentDTO.postId}/comments/${commentDTO.commentId}`;
     }
     else {
-      return `posts/${postId}/comments/${mainCommentId}`;
+      return `posts/${commentDTO.postId}/comments/${commentDTO.commentTo.commentId}/comments/${commentDTO.commentId}`;
     }
   }
 
-  addComment(postId, commentDTO: Comment) {
+  addComment(commentDTO: Comment) {
     const id = this.db.createId();
-    const path = this.getPath(postId);
     commentDTO.commentId = id;
-
-    const query = this.db
-      .collection<Comment>(path).doc(commentDTO.commentId).set(commentDTO);
-    return of(commentDTO);
+    const path = this.getPath(commentDTO);
+    
+    const query = from(this.db
+      .doc(path).set(commentDTO)).pipe(res => {
+        this.logger.info('### success DTO', res);
+        return of(commentDTO);
+      });
+    return query;
   }
 
   updateComment(postId: string, mainCommentId: string, commentDTO: Comment) {
-    const path = this.getPath(postId, mainCommentId);
+  /*   const path = this.getPath(postId, mainCommentId);
     const query = this.db
       .collection<Comment>(path).doc(commentDTO.commentId).update(commentDTO);
-    return of(query);
+    return of(query); */
+    return of(null);
   }
 
   deleteComment(postId: string, commentId: string) {
