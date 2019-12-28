@@ -26,6 +26,8 @@ export class CommentDetailComponent implements OnInit {
   addCommentValid: boolean;
   commentForm: FormControl;
   editCommentValid: boolean;
+  isCommentVisible: boolean = false;
+  subCommentList: Array<Comment> = [];
   constructor(
     private logger: LoggerService,
     private commentService: CommentService,
@@ -34,7 +36,7 @@ export class CommentDetailComponent implements OnInit {
 
   ngOnInit() {
     this.commentForm = new FormControl("");
-    this.logger.info('### comment', this.comment);
+    // this.logger.info('### comment', this.comment);
   }
 
   updateComment(commentDTO): void {
@@ -91,6 +93,19 @@ export class CommentDetailComponent implements OnInit {
     comment.editCommentValid = false;
   }
 
+  showReplies(e, comment) {
+    e.preventDefault();
+    this.isCommentVisible = !this.isCommentVisible;
+    if(this.isCommentVisible) {
+      if(!(this.subCommentList.length > 0)) {
+        this.generateSubComments(comment);
+      }
+    }
+  }
+  generateSubComments(comment) {
+    this.subCommentList = comment.comments;
+    this.logger.info('sub comment list', this.subCommentList);
+  }
 }
 
 enum COMMENT {

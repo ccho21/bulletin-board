@@ -46,7 +46,7 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
       return;
     }
    
-    const comment = this.commentForm.value;
+    const comment = this.commentForm.value.replace(`${this.userNameTag} `, '');
     const author: User = this.authService.getCurrentUser();
     const commentDTO: Comment = {
       author,

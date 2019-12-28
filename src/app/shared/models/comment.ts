@@ -10,4 +10,5 @@ export interface Comment {
     postId?             : string;
     commentTo?          : Comment;
     commentTag?         : string;
+    comments?           : Array<Comment>
 }

@@ -1,10 +1,10 @@
 <div class="p-1" *ngIf="comment">
   <div class="media cd-comment">
-    <div class="pull-left" href="#">
+    <div class="align-self-baseline mt-1 mr-3" href="#">
       <div class="">
         <img
           alt="Tim Picture"
-          class="media-object c-img-thumnail img-circle img-no-padding img-responsive mb-0 mr-3"
+          class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
           src="{{ comment.author.photoURL }}"
         />
       </div>
@@ -34,15 +34,58 @@
           >
         </div>
         <div>
-          <a
-            class="cd-comment-reply"
-            (click)="addReply(comment)"
-            >reply</a>
+          <a class="cd-comment-reply" (click)="addReply(comment)">reply</a>
+        </div>
+      </div>
+      <div *ngIf="comment.hasOwnProperty('comments')">
+        <a href="#" (click)="showReplies($event, comment)">replies</a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Sub Comment -->
+  <div *ngIf="isCommentVisible">
+    <div class="media cd-comment ml-5" *ngFor="let sc of comment.comments">
+      <div class="align-self-baseline mt-1 mr-3" href="#">
+        <div class="">
+          <img
+            alt="Tim Picture"
+            class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+            src="{{ sc.author.photoURL }}"
+          />
+        </div>
+      </div>
+      <div class="media-body">
+        <div class="cd-comment-content">
+          <div>
+            <h6 class="media-heading mr-3">{{ sc.author.displayName }}</h6>
+          </div>
+          <p class="flex-grow-1">
+            <a href="">{{sc.commentTag}}</a> {{ sc.comment }}
+          </p>
+          <app-fln-like [comment]="sc"></app-fln-like>
+        </div>
+        <div class="cd-comment-function">
+          <div class="mr-3">
+            <span
+              class="text-muted"
+              *ngIf="comment.hasOwnProperty('updatedAt'); else createAt"
+            >
+              {{ sc.updatedAt | postTime }}
+            </span>
+            <ng-template #createAt
+              ><span class="text-muted">
+                {{ sc.createdAt | postTime }}
+              </span></ng-template
+            >
+          </div>
+          <div>
+            <a class="cd-comment-reply" (click)="addReply(comment)">reply</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
   <!--   <div class="function-box d-flex">
       <a
         class="btn btn-info btn-link pull-right "

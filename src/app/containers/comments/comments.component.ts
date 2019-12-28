@@ -25,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ["./comments.component.scss"]
 })
 export class CommentsComponent implements OnInit, OnDestroy {
-  
+
   comment: Comment;
   user: User;
   commentList: Array<Comment> = [];
@@ -35,7 +35,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
   likeList: Array<Like> = [];
 
   @Input() post;
-  
+
   constructor(
     private logger: LoggerService,
     private commentService: CommentService,
@@ -51,24 +51,54 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.getComments(this.post);
 
     this.commentSubscription = this.postStateService.getCommentDTO().subscribe(res => {
-      this.logger.info('### res what will be printed', res);
+      this.logger.info('### COMMMENT DTO BEFORE ADDED', res);
       this.addComment(res);
     })
   }
 
   getComments(post) {
     const postId = post.postId;
-    this.commentList = this.postStateService.getComments(postId);    
+    const comments = this.postStateService.getComments(postId);
+    const cMap = new Map();
+    const scMap = new Map();
+    this.logger.info('### COMMMENTS', this.commentList);
+
+    // saparate sub comments and main comments.
+    comments.forEach(comment => {
+      if (comment.hasOwnProperty('commentTo')) {
+        scMap.set(comment.commentId, comment);
+      }
+      else {
+        cMap.set(comment.commentId, comment);
+      }
+    });
+
+    // put sub comments under the main comments
+    Array.from(scMap).map(subComment => {
+      const cId = subComment[1].commentTo.commentId;
+      const mainComment = cMap.get(cId);
+      if (mainComment) {
+        if (mainComment.hasOwnProperty('comments')) {
+          mainComment.comments.push(subComment[1]);
+        }
+        else {
+          mainComment.comments = [subComment[1]];
+        }
+      }
+    })
+    this.logger.info('###', cMap);
+    this.commentList = Array.from(cMap).map(c => ({ ...c[1] }));
+    this.logger.info('###', this.commentList);
   }
 
-   // HELPER
-   cleanUp(data): Comment {
+  // HELPER
+  cleanUp(data): Comment {
     const copiedData = Object.assign({}, data);
     delete copiedData.editCommentValid;
     delete copiedData.addCommentValid;
     return copiedData;
   }
-  
+
   addComment(comment): void {
     this.logger.info('### came comment');
     const postId = this.post.postId;
@@ -78,7 +108,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
       ...comment,
       depth
     });
-    if(commentDTO.hasOwnProperty('commentTo') && commentDTO.hasOwnProperty('commentTag')) {
+    if (commentDTO.hasOwnProperty('commentTo') && commentDTO.hasOwnProperty('commentTag')) {
       commentDTO.depth = COMMENT.SUB_COMMENT;
     }
     this.logger.info('### commentDTO', commentDTO);
@@ -86,12 +116,12 @@ export class CommentsComponent implements OnInit, OnDestroy {
       this.logger.info("### a comment was succesfully added", res);
       this.commentList.unshift(res);
       this.post.comments = this.commentList;
-      this.postStateService.setPost({...this.post});
+      this.postStateService.setPost({ ...this.post });
     });
   }
 
   ngOnDestroy() {
-    if(this.commentSubscription) {
+    if (this.commentSubscription) {
       this.commentSubscription.unsubscribe();
     }
   }
