@@ -38,7 +38,7 @@
         </div>
       </div>
       <div *ngIf="comment.hasOwnProperty('comments')">
-        <a href="#" (click)="showReplies($event, comment)">replies</a>
+        <a (click)="showReplies($event, comment)">replies</a>
       </div>
     </div>
   </div>
@@ -61,7 +61,7 @@
             <h6 class="media-heading mr-3">{{ sc.author.displayName }}</h6>
           </div>
           <p class="flex-grow-1">
-            <a href="">{{sc.commentTag}}</a> {{ sc.comment }}
+            <a href="#">{{sc.commentTag}}</a> {{ sc.comment }}
           </p>
           <app-fln-like [comment]="sc"></app-fln-like>
         </div>
@@ -80,7 +80,7 @@
             >
           </div>
           <div>
-            <a class="cd-comment-reply" (click)="addReply(comment)">reply</a>
+            <a class="cd-comment-reply" (click)="addReply(sc)">reply</a>
           </div>
         </div>
       </div>

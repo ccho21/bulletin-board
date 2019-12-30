@@ -56,7 +56,7 @@ export class CommentDetailComponent implements OnInit {
       // update post
     });
   }
-  addReply(comment) { 
+  addReply(comment, main?) { 
     this.logger.info('### comment', comment);
     this.postStateService.updateReplyDTO(comment);
   }

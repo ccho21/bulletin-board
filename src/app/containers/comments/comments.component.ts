@@ -111,12 +111,26 @@ export class CommentsComponent implements OnInit, OnDestroy {
     if (commentDTO.hasOwnProperty('commentTo') && commentDTO.hasOwnProperty('commentTag')) {
       commentDTO.depth = COMMENT.SUB_COMMENT;
     }
+
     this.logger.info('### commentDTO', commentDTO);
     this.commentService.addComment(commentDTO).subscribe(res => {
-      this.logger.info("### a comment was succesfully added", res);
-      this.commentList.unshift(res);
-      this.post.comments = this.commentList;
+      if(res.hasOwnProperty('commentTo')) {
+        this.commentList = this.commentList.map(comment => {
+          if(comment.commentId === res.commentTo.commentId) {
+            if(comment.hasOwnProperty('comments')) {
+              comment.comments.unshift(res);
+            } else {
+              comment.comments = [{...res}];
+            }
+          }
+          return comment;
+        });
+      } else {
+        this.commentList.unshift(res);
+        this.post.comments = this.commentList;
+      }
       this.postStateService.setPost({ ...this.post });
+      this.logger.info('### FINAL CHECK ', this.commentList);
     });
   }
 
