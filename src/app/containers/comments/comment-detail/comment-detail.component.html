@@ -37,7 +37,7 @@
           <a class="cd-comment-reply" (click)="addReply(comment)">reply</a>
         </div>
       </div>
-      <div *ngIf="comment.hasOwnProperty('comments')">
+      <div *ngIf="comment.comments.length > 0">
         <a (click)="showReplies($event, comment)">replies</a>
       </div>
     </div>
@@ -80,7 +80,7 @@
             >
           </div>
           <div>
-            <a class="cd-comment-reply" (click)="addReply(sc, comment)">reply</a>
+            <a class="cd-comment-reply" (click)="addReply(sc)">reply</a>
           </div>
         </div>
       </div>

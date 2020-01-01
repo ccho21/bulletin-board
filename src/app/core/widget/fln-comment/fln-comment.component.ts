@@ -36,11 +36,17 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
     this.postStateService.getReplyDTO().subscribe(res => {
       this.logger.info('### REPLY!!!', res);
       this.userNameTag = `@${res.author.displayName}`;
-      this.parentComment = res;
+      this.parentComment = this.cleanUpComments(res);
       this.commentForm.patchValue(`${this.userNameTag} `);
     })
   }
   
+  cleanUpComments(c) {
+    const comment = {...c};
+    delete comment.comments;
+    return comment;
+  }
+
   onSubmit() {
     if (!this.commentForm.valid) {
       return;
@@ -52,13 +58,23 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
       author,
       comment,
       createdAt: new Date().toISOString(),
+      depth: 1,
+      comments: []
     };
 
     if(this.userNameTag && this.parentComment) {
-        commentDTO.commentTo = this.parentComment;
+        if(this.parentComment.hasOwnProperty('commentTo')) {
+          commentDTO.commentTo = this.parentComment.commentTo;
+          commentDTO.parentCommentId = this.parentComment.parentCommentId;
+        } 
+        else {
+          commentDTO.commentTo = this.parentComment;
+          commentDTO.parentCommentId = this.parentComment.commentId;
+        }
         commentDTO.commentTag = this.userNameTag;
         commentDTO.depth = 2;
     }
+
     this.logger.info('###comment DTO ready to go', commentDTO);
     this.postStateService.updateCommentDTO(commentDTO);
     this.commentForm.reset();

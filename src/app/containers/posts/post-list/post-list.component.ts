@@ -36,6 +36,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   initData() {
     this.getPosts();
   }
+  
   getPosts() {
     this.postSubscription = this.postService.getPosts().pipe(
       concatMap(results => {
@@ -70,6 +71,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.initData();
     }); */
   }
+
   editPost(post) {
     this.logger.info(post);
     this.router.navigateByUrl(`/posts/${post.postId}/edit`);
@@ -78,6 +80,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   getBackgroundImageUrl(post) {
     return `url(${post.photoURL})`
   }
+
   ngOnDestroy() {
     this.logger.info('### post list is destroyed#######');
     if (this.postSubscription) {

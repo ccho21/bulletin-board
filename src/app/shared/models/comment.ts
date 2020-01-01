@@ -11,4 +11,5 @@ export interface Comment {
     commentTo?          : Comment;
     commentTag?         : string;
     comments?           : Array<Comment>
+    parentCommentId?    : string;
 }

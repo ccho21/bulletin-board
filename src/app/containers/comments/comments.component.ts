@@ -102,11 +102,9 @@ export class CommentsComponent implements OnInit, OnDestroy {
   addComment(comment): void {
     this.logger.info('### came comment');
     const postId = this.post.postId;
-    const depth = COMMENT.COMMENT;
     const commentDTO = this.cleanUp({
       postId,
       ...comment,
-      depth
     });
     if (commentDTO.hasOwnProperty('commentTo') && commentDTO.hasOwnProperty('commentTag')) {
       commentDTO.depth = COMMENT.SUB_COMMENT;
@@ -114,19 +112,15 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
     this.logger.info('### commentDTO', commentDTO);
     this.commentService.addComment(commentDTO).subscribe(res => {
-      if(res.hasOwnProperty('commentTo')) {
+      if(res.hasOwnProperty('parentCommentId')) {
         this.commentList = this.commentList.map(comment => {
-          if(comment.commentId === res.commentTo.commentId) {
-            if(comment.hasOwnProperty('comments')) {
-              comment.comments.unshift(res);
-            } else {
-              comment.comments = [{...res}];
-            }
+          if(comment.commentId === res.parentCommentId) {
+              comment.comments.push({...res});
           }
           return comment;
         });
       } else {
-        this.commentList.unshift(res);
+        this.commentList.push(res); 
         this.post.comments = this.commentList;
       }
       this.postStateService.setPost({ ...this.post });
