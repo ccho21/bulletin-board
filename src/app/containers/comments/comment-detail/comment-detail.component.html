@@ -38,7 +38,7 @@
         </div>
       </div>
       <div *ngIf="comment.comments.length > 0">
-        <a (click)="showReplies($event, comment)">replies</a>
+        <a (click)="showReplies($event, comment)">replies ({{comment.comments.length}})</a>
       </div>
     </div>
   </div>

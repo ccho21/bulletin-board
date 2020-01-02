@@ -30,13 +30,15 @@
     "hammerjs": "^2.0.8",
     "jw-bootstrap-switch-ng2": "^2.0.5",
     "ng2-nouislider": "^1.8.2",
+    "ngx-quill": "^7.3.11",
     "nouislider": "^14.0.3",
+    "quill": "^1.3.7",
     "rxjs": "~6.5.2",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.20",
+    "@angular-devkit/build-angular": "^0.803.21",
     "@angular/cli": "^8.3.20",
     "@angular/compiler-cli": "^8.2.14",
     "@angular/language-service": "^8.2.14",

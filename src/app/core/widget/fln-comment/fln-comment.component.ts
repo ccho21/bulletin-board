@@ -40,7 +40,7 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
       this.commentForm.patchValue(`${this.userNameTag} `);
     })
   }
-  
+    
   cleanUpComments(c) {
     const comment = {...c};
     delete comment.comments;

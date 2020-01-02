@@ -94,23 +94,14 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     }
   }
 
-  createSubCommentDTO(subComment): Like {
-    return {
-      type                          : 3,
-      subCommentId                  : subComment.subCommentId,
-      commentId                     : subComment.commentId,
-      postId                        : subComment.postId,
-      user                          : this.user
-    }
-  }
-
   addLike(data) {
     let dto                         : Like = this.getDTO(data);
     const dataDTO                   = { ...data };
     const dataId                    = this.getId();
     this.likeService.addLike(dataId, dto, this.type, dataDTO).subscribe(res => {
-      this.logger.info('### like successfully added');
+      this.logger.info('### like successfully added', res);
       this.isLiked = res;
+      this.data.likes.push({...res});
     });
   }
 
@@ -119,6 +110,8 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     this.logger.info('### like id', likeId);
     this.likeService.removeLike(likeId, this.data, this.type).subscribe(res => {
       this.logger.info('### like removed');
+      const likeIndex = this.data.likes.findIndex(like => like.likeId === likeId);
+      this.data.likes.splice(likeIndex, 1);
       this.isLiked = null;
     });
   }
@@ -130,9 +123,6 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     else if (this.mode === MODE.POST) {
       return this.createPostDTO(data);
     }
-    else {
-      return this.createSubCommentDTO(data);
-    }
   }
 
   getId() {
@@ -141,9 +131,6 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     }
     else if (this.mode === MODE.POST) {
       return this.post.postId;
-    }
-    else {
-      return this.subComment.subCommentId;
     }
   }
 

@@ -63,4 +63,8 @@ export class ModalService {
       this.logger.info('### modal result ', res);
     });
   }
+  openVerticallyCentered(component) {
+    const modalRef              = this.modalService.open(component, { scrollable: true, centered: true }).result;
+    return of(modalRef);
+  }
 }

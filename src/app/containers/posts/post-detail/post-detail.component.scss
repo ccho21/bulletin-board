@@ -90,3 +90,22 @@
         }
     }
 }
+
+.d-user-liked-post {
+    font-size: .8rem;
+    .user-detail {
+        font-size: inherit;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+    }
+    button {
+        font-size: inherit;
+    }
+    .c-img-thumnail {
+        height: 1.8rem;
+    }
+    .modal-body {
+        height: 20rem;
+    }
+}

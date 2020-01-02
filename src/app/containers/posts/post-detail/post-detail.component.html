@@ -56,7 +56,10 @@
                 src="{{ updatedPost.author.photoURL }}"
               />
               <div>
-                Liked by first like and others
+                Liked by {{ updatedPost.author.displayName }} and
+                <a (click)="displayUsers(updatedPost, usersLikedPost)">
+                  {{ getPostLikes(updatedPost) }} others
+                </a>
               </div>
             </div>
             <div class="row mx-0">
@@ -72,3 +75,30 @@
     </div>
   </div>
 </div>
+
+  <ng-template #usersLikedPost let-modal>
+    <div class="d-user-liked-post">
+      <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">Likes</h6>
+      </div>
+      <div class="modal-body px-4">
+        <div *ngFor="let like of postLikes">
+          <div class="user-detail">
+            <div>
+              <img
+                alt="like.user.displayName"
+                class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+                src="{{ like.user.photoURL }}"
+              />
+            </div>
+            <div class="flex-grow-1">
+              {{like.user.displayName}}
+            </div>
+            <div>
+              <button class="btn btn-outline-info btn-sm">Follow</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
