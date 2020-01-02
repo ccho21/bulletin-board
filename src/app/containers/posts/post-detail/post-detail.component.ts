@@ -131,6 +131,25 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.postService.updatePost(post.postId, post);
   }
 
+  getFirstLikeDisplayName( post ): string {
+    if(post.likes.length) {
+      const p = post.likes.filter(p => p.type === 1);
+      return p[0].user.photoURL;
+    }
+    else {
+      return '';
+    }
+  }
+  getFirstListPhotoURL( post ) : string {
+    if(post.likes.length) {
+      const p = post.likes.filter(p => p.type === 1);
+      return p[0].user.displayName;
+    }
+    else {
+      return '';
+    }
+  }
+
   ngOnDestroy() {
     this.logger.info('### post detail destroyed ####');
     this.postSubscription.unsubscribe();

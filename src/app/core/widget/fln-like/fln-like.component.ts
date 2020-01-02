@@ -69,7 +69,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     this.logger.info('### type', this.type);
     this.logger.info('### mode', this.mode);
     if (this.isLiked) {
-      this.removeLike(data);
+      this.removeLike(this.isLiked);
       return;
     } else {
       this.addLike(data);
@@ -105,13 +105,13 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     });
   }
 
-  removeLike(data) {
-    const likeId                    = data.isLiked.likeId;
+  removeLike(isLiked) {
+    const likeId                    = isLiked.likeId;
     this.logger.info('### like id', likeId);
     this.likeService.removeLike(likeId, this.data, this.type).subscribe(res => {
-      this.logger.info('### like removed');
       const likeIndex = this.data.likes.findIndex(like => like.likeId === likeId);
       this.data.likes.splice(likeIndex, 1);
+      this.logger.info('### like removed', this.data.likes);
       this.isLiked = null;
     });
   }

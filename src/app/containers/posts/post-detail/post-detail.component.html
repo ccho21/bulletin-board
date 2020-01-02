@@ -53,12 +53,15 @@
             <div class="row mx-0 d-post-detail-likes">
               <img
                 class="media-object c-img-thumnail img-circle img-no-padding img-responsive d-post-detail-likes-likes-user"
-                src="{{ updatedPost.author.photoURL }}"
+                src="{{ getFirstListPhotoURL(updatedPost) }}"
               />
               <div>
-                Liked by {{ updatedPost.author.displayName }} and
+                Liked by <a><span class="font-weight-bold">{{ getFirstLikeDisplayName(updatedPost) }}</span></a>
+                 and
                 <a (click)="displayUsers(updatedPost, usersLikedPost)">
-                  {{ getPostLikes(updatedPost) }} others
+                  <span class="font-weight-bold">
+                    {{ getPostLikes(updatedPost) }} others
+                  </span>
                 </a>
               </div>
             </div>
