@@ -2,11 +2,8 @@
   <div class="media cd-comment">
     <div class="align-self-baseline mt-1 mr-3" href="#">
       <div class="">
-        <img
-          alt="Tim Picture"
-          class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-          src="{{ comment.author.photoURL }}"
-        />
+        <img alt="Tim Picture" class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+          src="{{ comment.author.photoURL }}" />
       </div>
     </div>
     <div class="media-body">
@@ -17,21 +14,24 @@
         <p class="flex-grow-1">
           {{ comment.comment }}
         </p>
+        <!-- functions -->
+        <div class="cd-comment-actions">
+          <a (click)="openActionModal(userActions)">
+            <i class="fa fa-ellipsis-h"></i>
+          </a>
+        </div>
+        <!-- Likes -->
         <app-fln-like [comment]="comment"></app-fln-like>
+
       </div>
       <div class="cd-comment-function">
         <div class="mr-3">
-          <span
-            class="text-muted"
-            *ngIf="comment.hasOwnProperty('updatedAt'); else createAt"
-          >
+          <span class="text-muted" *ngIf="comment.hasOwnProperty('updatedAt'); else createAt">
             {{ comment.updatedAt | postTime }}
           </span>
-          <ng-template #createAt
-            ><span class="text-muted">
+          <ng-template #createAt><span class="text-muted">
               {{ comment.createdAt | postTime }}
-            </span></ng-template
-          >
+            </span></ng-template>
         </div>
         <div>
           <a class="cd-comment-reply" (click)="addReply(comment)">reply</a>
@@ -42,17 +42,16 @@
       </div>
     </div>
   </div>
-  
-  <!-- Sub Comment -->
+
+
+
+  <!-- Sub Comment MOVE IT TO WIDGET LATER -->
   <div *ngIf="isCommentVisible">
     <div class="media cd-comment ml-5" *ngFor="let sc of comment.comments">
       <div class="align-self-baseline mt-1 mr-3" href="#">
         <div class="">
-          <img
-            alt="Tim Picture"
-            class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-            src="{{ sc.author.photoURL }}"
-          />
+          <img alt="Tim Picture" class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+            src="{{ sc.author.photoURL }}" />
         </div>
       </div>
       <div class="media-body">
@@ -63,21 +62,24 @@
           <p class="flex-grow-1">
             <a href="#">{{sc.commentTag}}</a> {{ sc.comment }}
           </p>
+
+          <!-- functions -->
+          <div class="cd-comment-actions">
+            <a (click)="openActionModal(userActions)">
+              <i class="fa fa-ellipsis-h"></i>
+            </a>
+          </div>
+          <!-- Likes -->
           <app-fln-like [comment]="sc"></app-fln-like>
         </div>
         <div class="cd-comment-function">
           <div class="mr-3">
-            <span
-              class="text-muted"
-              *ngIf="comment.hasOwnProperty('updatedAt'); else createAt"
-            >
+            <span class="text-muted" *ngIf="comment.hasOwnProperty('updatedAt'); else createAt">
               {{ sc.updatedAt | postTime }}
             </span>
-            <ng-template #createAt
-              ><span class="text-muted">
+            <ng-template #createAt><span class="text-muted">
                 {{ sc.createdAt | postTime }}
-              </span></ng-template
-            >
+              </span></ng-template>
           </div>
           <div>
             <a class="cd-comment-reply" (click)="addReply(sc)">reply</a>
@@ -87,3 +89,17 @@
     </div>
   </div>
 </div>
+
+<ng-template #userActions let-modal>
+  <div class="">
+    <div class="modal-body p-0">
+      <div class="px-3 pt-3 text-center">
+        <a class="w-100 d-block h-100" (click)="editComment()">Edit</a>
+      </div>
+      <hr>
+      <div class="px-3 pb-3 text-center text-danger">
+        <a  class="w-100 d-block h-100" (click)="deleteComment()">Delete</a>
+      </div>
+    </div>
+  </div>
+</ng-template>

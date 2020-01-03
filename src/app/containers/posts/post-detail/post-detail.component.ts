@@ -128,7 +128,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     });
   }
   updatePost(post) {
-    this.postService.updatePost(post.postId, post);
+    // this.postService.updatePost(post.postId, post);
+    this.logger.info('### update post should be implemented');
+  }
+
+  deletePost(post) {
+    this.logger.info('### delete post should be implemented');
   }
 
   getFirstLikeDisplayName( post ): string {
@@ -153,5 +158,9 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.logger.info('### post detail destroyed ####');
     this.postSubscription.unsubscribe();
+  }
+  /* UI STUFF */
+  openActionModal(component) {
+    this.modalService.openSmallCentered(component);
   }
 }

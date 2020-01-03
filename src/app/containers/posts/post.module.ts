@@ -35,6 +35,7 @@ import { PipesModule } from '@app/core/pipes/pipes.module';
 import { CommentsComponent } from '@app/containers/comments/comments.component';
 import { CommentDetailComponent } from '@app/containers/comments/comment-detail/comment-detail.component';
 import { PostStateService } from './post-state.service';
+import { FlnUploadTaskComponent } from '@app/core/widget/fln-upload-task/fln-upload-task.component';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -44,7 +45,8 @@ import { PostStateService } from './post-state.service';
     CommentsComponent,
     FlnCommentComponent,
     FlnLikeComponent,
-    CommentDetailComponent
+    CommentDetailComponent,
+    FlnUploadTaskComponent
   ],
   entryComponents: [
     PostListComponent,

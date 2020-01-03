@@ -15,8 +15,16 @@
 .cd-comment {
     align-items: center;
     font-size: .8rem;
+    &:hover {
+        .cd-comment-actions {
+            visibility: visible;
+        }
+    }
     h6 {
         margin: 0;
+    }
+    &-actions {
+        visibility: hidden;
     }
     &-content {
         display: flex;

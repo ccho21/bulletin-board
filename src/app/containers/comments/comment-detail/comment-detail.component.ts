@@ -13,25 +13,27 @@ import { Post } from "@app/shared/models/post";
 import { Subscription, of, from, forkJoin } from 'rxjs';
 import { toArray, concatMap } from 'rxjs/operators';
 import { PostStateService } from '@app/containers/posts/post-state.service';
+import { ModalService } from '@app/core/services/modal/modal.service';
 
 @Component({
-  selector: 'app-comment-detail',
+  selector   : 'app-comment-detail',
   templateUrl: './comment-detail.component.html',
-  styleUrls: ['./comment-detail.component.scss']
+  styleUrls  : ['./comment-detail.component.scss']
 })
 export class CommentDetailComponent implements OnInit {
 
-  @Input() post: Post;
-  @Input() comment: Comment;
-  addCommentValid: boolean;
-  commentForm: FormControl;
-  editCommentValid: boolean;
-  isCommentVisible: boolean = false;
-  subCommentList: Array<Comment> = [];
+  @Input() post          : Post;
+  @Input() comment       : Comment;
+         addCommentValid : boolean;
+         commentForm     : FormControl;
+         editCommentValid: boolean;
+         isCommentVisible: boolean = false;
+         subCommentList  : Array<Comment> = [];
   constructor(
-    private logger: LoggerService,
-    private commentService: CommentService,
-    private postStateService: PostStateService
+    private logger          : LoggerService,
+    private commentService  : CommentService,
+    private postStateService: PostStateService,
+    private modalService    : ModalService
   ) { }
 
   ngOnInit() {
@@ -40,16 +42,16 @@ export class CommentDetailComponent implements OnInit {
   }
 
   updateComment(commentDTO): void {
-    const postId = this.post.postId;
-    const commentId = commentDTO.commentId;
-    commentDTO = this.cleanUp(commentDTO);
+    const postId     = this.post.postId;
+    const commentId  = commentDTO.commentId;
+          commentDTO = this.cleanUp(commentDTO);
     this.commentService.updateComment(postId, commentId, commentDTO).subscribe(res => {
       this.logger.info('### updating comment is successful. ', res);
     });
   }
 
   deleteComment(comment): void {
-    const postId = this.post.postId;
+    const postId    = this.post.postId;
     const commentId = comment.commentId;
     this.commentService.deleteComment(postId, commentId).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
@@ -87,7 +89,7 @@ export class CommentDetailComponent implements OnInit {
     const commentDTO = { ...comment };
     if (newComment !== comment) {
       // updateAt - createdAt = (when it is the last update occured). 
-      commentDTO.comment = newComment;
+      commentDTO.comment   = newComment;
       commentDTO.updatedAt = new Date().toISOString();
       this.updateComment(commentDTO);
     }
@@ -107,9 +109,13 @@ export class CommentDetailComponent implements OnInit {
     this.subCommentList = comment.comments;
     this.logger.info('sub comment list', this.subCommentList);
   }
+
+  openActionModal(component) {
+    this.modalService.openSmallCentered(component);
+  }
 }
 
 enum COMMENT {
-  COMMENT = 1,
+  COMMENT     = 1,
   SUB_COMMENT = 2
 }

@@ -67,4 +67,9 @@ export class ModalService {
     const modalRef              = this.modalService.open(component, { scrollable: true, centered: true }).result;
     return of(modalRef);
   }
+
+  openSmallCentered(component) {
+    const modalRef              = this.modalService.open(component, { scrollable: true, centered: true, size: 'sm' }).result;
+    return of(modalRef);
+  }
 }

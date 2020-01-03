@@ -17,6 +17,7 @@ export class PostNewComponent implements OnInit, OnDestroy {
   post: Post;
   postFormGroup: FormGroup;
   file: Upload;
+  files: Upload[] = [];
   isSubmitted: boolean;
   uploadSubscription: Subscription;
   isRegisterValid: boolean;
@@ -57,7 +58,16 @@ export class PostNewComponent implements OnInit, OnDestroy {
     this.file = new Upload(e.target.files.item(0));
     this.logger.info("files", this.file);
   }
-  onSubmit() {
+  uploadFiles(e) {
+    const files = e.target.files;
+    this.logger.info(files, typeof files);
+    for(let i=0; i < files.length; i++) {
+      this.files.push(new Upload(files[i]));
+    }
+    this.logger.info('### files', this.files);
+  }
+
+  /* onSubmit() {
     if (!this.postFormGroup.valid) {
       return;
     }
@@ -84,6 +94,35 @@ export class PostNewComponent implements OnInit, OnDestroy {
         this.logger.info('### successfully posted data', res);
       })
     }
+  } */
+
+  onSubmit() {
+    if (!this.postFormGroup.valid) {
+      return;
+    }
+
+    // check submit valid
+    if (this.isSubmitted) {
+      return;
+    }
+
+    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
+    const author: User = { displayName, uid, photoURL, email, emailVerified };
+    const postDTO: Post = { ...this.postFormGroup.value, author, createdAt: new Date().toISOString(), likes: [], comments: [], views: 0 };
+    this.logger.info('###  post', postDTO);
+    this.postDTO = postDTO;
+
+    // if file exists, start upload.
+    /* if (this.files.length) {
+      this.uploadService.startUpload(this.files).subscribe(res => {
+        this.isRegisterValid = false;
+      });
+    } else {
+      postDTO.photoURL = this.basePhoto;
+      this.postService.addPost(postDTO).subscribe(res => {
+        this.logger.info('### successfully posted data', res);
+      })
+    } */
   }
   ngOnDestroy() {
     if(this.uploadSubscription) {

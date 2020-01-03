@@ -78,24 +78,17 @@
             </div>
           </div>
           <div class="row">
-            <input hidden type="file" #uploader (change)="uploadFile($event)" />
+            <input hidden type="file" #uploader (change)="uploadFiles($event)" multiple/>
             <button
-              _ngcontent-c4=""
               class="btn btn-outline-primary btn-round"
               type="button"
               (click)="uploader.click()"
             >
-              Add profile photo
+              Add pictures
             </button>
-            <div *ngIf="file">
-              <button
-                _ngcontent-c7=""
-                class="btn btn-danger btn-round btn-sm"
-                type="button"
-              >
-                <i _ngcontent-c7="" class="nc-icon nc-album-2"></i>
-                {{ file.file.name }}
-              </button>
+            <div *ngFor="let file of files">
+             
+              <app-fln-upload-task [file]="file"></app-fln-upload-task>
             </div>
           </div>
           <div class="row">
@@ -121,3 +114,4 @@
     </div>
   </div>
 </div>
+

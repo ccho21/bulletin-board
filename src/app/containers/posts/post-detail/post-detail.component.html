@@ -28,9 +28,10 @@
               {{ updatedPost.author.displayName }}
             </div>
             <div class="pr-2">
-              <a class="d-flex align-items-center"
-                ><i class="nc-icon nc-bullet-list-67"></i
-              ></a>
+              <a class="d-flex align-items-center" (click)="openActionModal(userActions)">
+                <i class="fa fa-ellipsis-h"></i>
+                <!-- <i class="nc-icon nc-bullet-list-67"></i> -->
+              </a>
             </div>
           </div>
 
@@ -79,29 +80,45 @@
   </div>
 </div>
 
-  <ng-template #usersLikedPost let-modal>
-    <div class="d-user-liked-post">
-      <div class="modal-header">
-        <h6 class="modal-title" id="modal-basic-title">Likes</h6>
+
+<ng-template #userActions let-modal>
+  <div class="">
+    <div class="modal-body p-0">
+      <div class="px-3 pt-3 text-center">
+        <a class="w-100 d-block h-100" (click)="updatePost(updatedPost)">Edit</a>
       </div>
-      <div class="modal-body px-4">
-        <div *ngFor="let like of postLikes">
-          <div class="user-detail">
-            <div>
-              <img
-                alt="like.user.displayName"
-                class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-                src="{{ like.user.photoURL }}"
-              />
-            </div>
-            <div class="flex-grow-1">
-              {{like.user.displayName}}
-            </div>
-            <div>
-              <button class="btn btn-outline-info btn-sm">Follow</button>
-            </div>
+      <hr>
+      <div class="px-3 pb-3 text-center text-danger">
+        <a  class="w-100 d-block h-100" (click)="deletePost(updatedPost)">Delete</a>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #usersLikedPost let-modal>
+  <div class="d-user-liked-post">
+    <div class="modal-header">
+      <h6 class="modal-title" id="modal-basic-title">Likes</h6>
+    </div>
+    <div class="modal-body px-4">
+      <div *ngFor="let like of postLikes">
+        <div class="user-detail">
+          <div>
+            <img
+              alt="like.user.displayName"
+              class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+              src="{{ like.user.photoURL }}"
+            />
+          </div>
+          <div class="flex-grow-1">
+            {{like.user.displayName}}
+          </div>
+          <div>
+            <button class="btn btn-outline-info btn-sm">Follow</button>
           </div>
         </div>
       </div>
     </div>
-  </ng-template>
+  </div>
+</ng-template>
