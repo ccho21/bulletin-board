@@ -58,7 +58,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   }
 
   checkLiked() {
-    this.isLiked = this.data.isLiked ? true : false;
+    this.isLiked = this.data.isLiked ? this.data.isLiked : null;
   }
 
   clickLike() {
@@ -74,6 +74,60 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     } else {
       this.addLike(data);
       return;
+    }
+  }
+
+
+  addLike(data) {
+    let dto                         : Like = this.getDTO(data);
+    const dataDTO                   = { ...data };
+    const dataId                    = this.getId();
+    this.likeService.addLike(dataId, dto, this.type, dataDTO).subscribe(res => {
+      this.logger.info('### like successfully added', res);
+      this.isLiked = res;
+      if(this.data.hasOwnProperty('likes')) {
+        this.data.likes.push({...res});
+      }
+      else { 
+        this.data.likes = [{...res}];
+      }
+      this.postStateService.setPost(this.data);
+    });
+  }
+
+  removeLike(isLiked) {
+    const likeId                    = isLiked.likeId;
+    this.likeService.removeLike(likeId, this.data, this.type).subscribe(res => {
+      const likeIndex = this.data.likes.findIndex(like => like.likeId === likeId);
+      this.data.likes.splice(likeIndex, 1);
+      this.logger.info('### like removed', this.data);
+      this.isLiked = null;
+      this.postStateService.setPost(this.data);
+    });
+  }
+
+  ngOnDestroy() {
+    this.logger.info('########### fln-like destroyed');
+    if (this.likeSubscription) {
+      this.likeSubscription.unsubscribe();
+    }
+  }
+  /* HELPER */
+  getDTO(data) {
+    if (this.mode === MODE.COMMENT) {
+      return this.createCommentDTO(data);
+    }
+    else if (this.mode === MODE.POST) {
+      return this.createPostDTO(data);
+    }
+  }
+
+  getId() {
+    if (this.mode === MODE.COMMENT) {
+      return this.comment.commentId;
+    }
+    else if (this.mode === MODE.POST) {
+      return this.post.postId;
     }
   }
 
@@ -94,52 +148,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     }
   }
 
-  addLike(data) {
-    let dto                         : Like = this.getDTO(data);
-    const dataDTO                   = { ...data };
-    const dataId                    = this.getId();
-    this.likeService.addLike(dataId, dto, this.type, dataDTO).subscribe(res => {
-      this.logger.info('### like successfully added', res);
-      this.isLiked = res;
-      this.data.likes.push({...res});
-    });
-  }
 
-  removeLike(isLiked) {
-    const likeId                    = isLiked.likeId;
-    this.logger.info('### like id', likeId);
-    this.likeService.removeLike(likeId, this.data, this.type).subscribe(res => {
-      const likeIndex = this.data.likes.findIndex(like => like.likeId === likeId);
-      this.data.likes.splice(likeIndex, 1);
-      this.logger.info('### like removed', this.data.likes);
-      this.isLiked = null;
-    });
-  }
-
-  getDTO(data) {
-    if (this.mode === MODE.COMMENT) {
-      return this.createCommentDTO(data);
-    }
-    else if (this.mode === MODE.POST) {
-      return this.createPostDTO(data);
-    }
-  }
-
-  getId() {
-    if (this.mode === MODE.COMMENT) {
-      return this.comment.commentId;
-    }
-    else if (this.mode === MODE.POST) {
-      return this.post.postId;
-    }
-  }
-
-  ngOnDestroy() {
-    this.logger.info('########### fln-like destroyed');
-    if (this.likeSubscription) {
-      this.likeSubscription.unsubscribe();
-    }
-  }
 }
 
 enum MODE {

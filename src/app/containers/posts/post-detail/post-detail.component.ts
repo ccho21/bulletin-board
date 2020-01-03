@@ -134,7 +134,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   getFirstLikeDisplayName( post ): string {
     if(post.likes.length) {
       const p = post.likes.filter(p => p.type === 1);
-      return p[0].user.photoURL;
+      return p[0].user.userName;
     }
     else {
       return '';
@@ -143,7 +143,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   getFirstListPhotoURL( post ) : string {
     if(post.likes.length) {
       const p = post.likes.filter(p => p.type === 1);
-      return p[0].user.displayName;
+      return p[0].user.photoURL;
     }
     else {
       return '';

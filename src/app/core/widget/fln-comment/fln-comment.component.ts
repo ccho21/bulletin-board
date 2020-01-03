@@ -30,7 +30,6 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.logger.info(this.comment);
     this.commentForm = new FormControl('');
    
     this.postStateService.getReplyDTO().subscribe(res => {
@@ -59,7 +58,7 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
       comment,
       createdAt: new Date().toISOString(),
       depth: 1,
-      comments: []
+      comments: [],
     };
 
     if(this.userNameTag && this.parentComment) {
