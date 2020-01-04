@@ -88,7 +88,7 @@
             </button>
             <div *ngFor="let file of files">
              
-              <app-fln-upload-task [file]="file"></app-fln-upload-task>
+              <app-fln-upload-task [file]="file" (fileStatusEmit)="updateFileStatusEmit($event)"></app-fln-upload-task>
             </div>
           </div>
           <div class="row">

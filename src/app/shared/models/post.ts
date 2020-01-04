@@ -7,6 +7,7 @@ export interface Post {
   createdAt     : string;
   updatedAt?    : string;
   photoURL?     : string;
+  photoURLs?    : Array<string>;
   author        : User;
   content       : string;
   categoryId    : string;

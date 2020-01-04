@@ -31,6 +31,7 @@ export class UploadService {
   ) { }
 
   startUpload(upload: Upload) {
+    
     // The storage path
     const path = `${this.basePath}/${Date.now()}_${upload.file.name}`;
 
@@ -43,12 +44,13 @@ export class UploadService {
     // Progress monitoring
     this.percentage = this.angularFireUploadTask.percentageChanges();
 
-    this.snapshot = this.angularFireUploadTask.snapshotChanges().pipe(
+    this.angularFireUploadTask.snapshotChanges().pipe(
       tap((res) => {
         return res;
       }),
       // The file's download URL
       finalize(async () => {
+        this.logger.info('### filnalize');
         this.downloadURL = await ref.getDownloadURL().toPromise();
         const fileDTO = {
           path: path,
@@ -58,9 +60,12 @@ export class UploadService {
         };
         this.postProfile(fileDTO);
       })
-    );
-    return this.snapshot;
+    ).subscribe(res => {
+      this.logger.info('### start upload subscribed', res);
+    });
+    return this.percentage;
   }
+
   postProfile(fileDTO) {
     this.fbService.createProfilePicture(fileDTO).subscribe(res => {
       this.logger.info('### the file is uploaded and is going to be posted with', res)

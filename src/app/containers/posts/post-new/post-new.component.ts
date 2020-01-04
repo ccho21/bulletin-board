@@ -6,7 +6,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 import { User } from '@app/shared/models/user';
 import { Post } from "../../../shared/models/post";
 import { Upload } from '@app/shared/models/upload';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, forkJoin } from 'rxjs';
 import { UploadService } from '@app/core/services/upload/upload.service';
 @Component({
   selector: "app-post-new",
@@ -22,7 +22,9 @@ export class PostNewComponent implements OnInit, OnDestroy {
   uploadSubscription: Subscription;
   isRegisterValid: boolean;
   postDTO: Post;
-  basePhoto: string = `https://firebasestorage.googleapis.com/v0/b/bulletin-board-d1815.appspot.com/o/uploads%2F1575514437441_temp-main4.jpg?alt=media&token=044f04f0-89cd-4027-865e-eb6680ad008b`; 
+  basePhoto: string = `https://firebasestorage.googleapis.com/v0/b/bulletin-board-d1815.appspot.com/o/uploads%2F1575514437441_temp-main4.jpg?alt=media&token=044f04f0-89cd-4027-865e-eb6680ad008b`;
+  filesStatus: Array<boolean> = [];
+  photoUrls: Array<string> = [];
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -33,16 +35,20 @@ export class PostNewComponent implements OnInit, OnDestroy {
     this.uploadSubscription = this.uploadService
       .getUploadStatus()
       .subscribe((res: any) => {
+        this.logger.info('### subject from upload service ', res);
         if (res) {
+          this.filesStatus.push(true);
           const fileDTO = res;
-          this.isRegisterValid = true;
-          if (fileDTO) {
-            this.postDTO.photoURL = fileDTO.url;
-          }
+          this.photoUrls.push(fileDTO.url);
         }
-        this.postService.addPost(this.postDTO).subscribe(res => {
-          this.logger.info('### successfully posted data', res);
-        })
+        else {
+          this.filesStatus.push(false);
+        }
+        this.logger.info('### file status', this.filesStatus);
+        if (this.filesStatus.length === this.files.length) {
+          this.isRegisterValid = this.filesStatus.every(cur => cur);
+          this.logger.info('###', this.isRegisterValid);
+        }
       });
   }
 
@@ -58,15 +64,48 @@ export class PostNewComponent implements OnInit, OnDestroy {
     this.file = new Upload(e.target.files.item(0));
     this.logger.info("files", this.file);
   }
+
   uploadFiles(e) {
     const files = e.target.files;
     this.logger.info(files, typeof files);
-    for(let i=0; i < files.length; i++) {
+    for (let i = 0; i < files.length; i++) {
       this.files.push(new Upload(files[i]));
     }
     this.logger.info('### files', this.files);
   }
 
+  updateFileStatusEmit(status) {
+    // this.filesStatus.push(status);
+
+  }
+
+  onSubmit() {
+    if (!this.postFormGroup.valid) {
+      return;
+    }
+
+    // check submit valid
+    if (this.isSubmitted) {
+      return;
+    }
+
+
+    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
+    const author: User = { displayName, uid, photoURL, email, emailVerified };
+    const postDTO: Post = { ...this.postFormGroup.value, author, createdAt: new Date().toISOString(), likes: [], comments: [], views: 0 };
+    this.logger.info('###  post', postDTO);
+    this.postDTO = postDTO;
+
+    // if file exists, start upload.
+    if (this.photoUrls) {
+      postDTO.photoURLs = [...this.photoUrls];
+    } else {
+      postDTO.photoURLs = [this.basePhoto];
+    }
+    this.postService.addPost(postDTO).subscribe(res => {
+      this.logger.info('### successfully posted data', res);
+    })
+  }
   /* onSubmit() {
     if (!this.postFormGroup.valid) {
       return;
@@ -96,36 +135,9 @@ export class PostNewComponent implements OnInit, OnDestroy {
     }
   } */
 
-  onSubmit() {
-    if (!this.postFormGroup.valid) {
-      return;
-    }
 
-    // check submit valid
-    if (this.isSubmitted) {
-      return;
-    }
-
-    const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
-    const author: User = { displayName, uid, photoURL, email, emailVerified };
-    const postDTO: Post = { ...this.postFormGroup.value, author, createdAt: new Date().toISOString(), likes: [], comments: [], views: 0 };
-    this.logger.info('###  post', postDTO);
-    this.postDTO = postDTO;
-
-    // if file exists, start upload.
-    /* if (this.files.length) {
-      this.uploadService.startUpload(this.files).subscribe(res => {
-        this.isRegisterValid = false;
-      });
-    } else {
-      postDTO.photoURL = this.basePhoto;
-      this.postService.addPost(postDTO).subscribe(res => {
-        this.logger.info('### successfully posted data', res);
-      })
-    } */
-  }
   ngOnDestroy() {
-    if(this.uploadSubscription) {
+    if (this.uploadSubscription) {
       this.uploadSubscription.unsubscribe();
     }
   }

@@ -147,8 +147,6 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
       user                          : this.user
     }
   }
-
-
 }
 
 enum MODE {

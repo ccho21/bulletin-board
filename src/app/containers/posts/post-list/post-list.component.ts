@@ -78,7 +78,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
   
   getBackgroundImageUrl(post) {
-    return `url(${post.photoURL})`
+    return `url(${post.photoURL[0]})`
   }
 
   ngOnDestroy() {
