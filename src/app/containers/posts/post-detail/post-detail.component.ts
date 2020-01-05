@@ -77,7 +77,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       this.logger.info('### final ', result);
       this.updatedPost                            = result;
       this.postStateService.setPosts([this.updatedPost]);
-      if (this.updatedPost.photoURL) {
+      if (this.updatedPost.photoURLs.length) {
         this.hasImage                             = true;
       }
       this.hasPost                                = true;

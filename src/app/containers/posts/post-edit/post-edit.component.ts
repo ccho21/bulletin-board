@@ -38,7 +38,7 @@ export class PostEditComponent implements OnInit {
         const fileDTO = res;
         this.isRegisterValid = true;
         if (fileDTO) {
-          this.postDTO.photoURL = fileDTO.url;
+          this.postDTO.photoURLs = fileDTO.url;
         }
       }
       this.postService.updatePost(this.post.postId, this.postDTO).subscribe(res => {
@@ -109,7 +109,7 @@ export class PostEditComponent implements OnInit {
         this.isRegisterValid = false;
       });
     } else {
-      postFormGroup.photoURL = this.post.photoURL;
+      postFormGroup.photoURL = this.post.photoURLs;
       this.updatePost(postId, postDTO).subscribe(res => {
         this.logger.info('### successfully Deleted Post', res);
       })

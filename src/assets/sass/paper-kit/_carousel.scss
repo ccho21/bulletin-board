@@ -108,3 +108,20 @@ ngb-carousel{
     }
 
 }
+
+
+// custom 
+
+.d-post-img {
+    .carousel-inner, .carousel-item {
+        height: 100%;
+         & > div {
+             height: 100%;
+         }
+         .carousel-item img {
+            height: 100%;
+            border : none;
+            border-radius: 0;
+        }
+    }
+}

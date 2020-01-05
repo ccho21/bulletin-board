@@ -7,11 +7,19 @@
   <div class="d-flex justify-content-center">
     <div class="d-post-box-left">
       <div class="" *ngIf="hasImage">
-        <img
-          src="{{ updatedPost.photoURL }}"
+        <!-- <img
+          src="{{ updatedPost.photoURLs[0] }}"
           alt="updatedPost.name"
           class="img-fluid d-post-img"
-        />
+        /> -->
+        <ngb-carousel *ngIf="updatedPost" [showNavigationIndicators]="true" class="d-post-img">
+          <ng-template ngbSlide *ngFor="let image of updatedPost.photoURLs">
+            <div class="picsum-img-wrapper">
+              <img [src]="image" alt="Random slide">
+            </div>
+          </ng-template>
+        </ngb-carousel>
+
       </div>
     </div>
     <div class="w-75">
@@ -21,7 +29,7 @@
             <div class="align-self-center">
               <img
                 class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-                src="{{ updatedPost.author.photoURL }}"
+                src="{{ updatedPost.author.photoURLs }}"
               />
             </div>
             <div class="font-weight-bold flex-grow-1">
@@ -122,3 +130,7 @@
     </div>
   </div>
 </ng-template>
+
+<pre>
+  {{updatedPost | json}}
+</pre>
