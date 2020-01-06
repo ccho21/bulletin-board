@@ -27,10 +27,8 @@
         <div class="d-post-contents">
           <div class="d-post-heading d-flex align-items-center">
             <div class="align-self-center">
-              <img
-                class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-                src="{{ updatedPost.author.photoURLs }}"
-              />
+              <img class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+                src="{{ updatedPost.author.photoURLs }}" />
             </div>
             <div class="font-weight-bold flex-grow-1">
               {{ updatedPost.author.displayName }}
@@ -59,14 +57,13 @@
                 <i class="nc-icon nc-bookmark-2"></i>
               </div>
             </div>
-            <div class="row mx-0 d-post-detail-likes">
+            <div class="row mx-0 d-post-detail-likes" *ngIf="getFirstLikeDisplayName(updatedPost) else noLikes">
               <img
                 class="media-object c-img-thumnail img-circle img-no-padding img-responsive d-post-detail-likes-likes-user"
-                src="{{ getFirstListPhotoURL(updatedPost) }}"
-              />
+                src="{{ getFirstListPhotoURL(updatedPost) }}" />
               <div>
                 Liked by <a><span class="font-weight-bold">{{ getFirstLikeDisplayName(updatedPost) }}</span></a>
-                 and
+                and
                 <a (click)="displayUsers(updatedPost, usersLikedPost)">
                   <span class="font-weight-bold">
                     {{ getPostLikes(updatedPost) }} others
@@ -74,6 +71,12 @@
                 </a>
               </div>
             </div>
+            <ng-template #noLikes>
+              <div>
+                <a><span class="font-weight-bold"> 0 </span></a> likes
+              </div>
+            </ng-template>
+
             <div class="row mx-0">
               {{ updatedPost.createdAt | postTime }}
             </div>
@@ -97,7 +100,7 @@
       </div>
       <hr>
       <div class="px-3 pb-3 text-center text-danger">
-        <a  class="w-100 d-block h-100" (click)="deletePost(updatedPost)">Delete</a>
+        <a class="w-100 d-block h-100" (click)="deletePost(updatedPost)">Delete</a>
       </div>
     </div>
   </div>
@@ -113,11 +116,9 @@
       <div *ngFor="let like of postLikes">
         <div class="user-detail">
           <div>
-            <img
-              alt="like.user.displayName"
+            <img alt="like.user.displayName"
               class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-              src="{{ like.user.photoURL }}"
-            />
+              src="{{ like.user.photoURL }}" />
           </div>
           <div class="flex-grow-1">
             {{like.user.displayName}}

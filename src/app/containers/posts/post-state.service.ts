@@ -45,9 +45,16 @@ export class PostStateService {
         const comments = post.comments;
         return comments;
     }
-    getLikes(postId: string): Array<Like> {
+    
+    getLikesForPost(postId: string): Array<Like> {
         const post = this.getPost(postId);
-        const likes = post.likes;
+        const likes = post.likes.filter(like => like.type === 1);
+        return likes;
+    }
+
+    getLikesForComment(postId: string): Array<Like> {
+        const post = this.getPost(postId);
+        const likes = post.likes.filter(like => like.type === 2);
         return likes;
     }
 

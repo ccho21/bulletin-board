@@ -47,7 +47,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.commentForm = new FormControl('');
-    this.logger.info(this.post);
+    this.logger.info('### POST in Comment Component', this.post);
     this.getComments(this.post);
 
     this.commentSubscription = this.postStateService.getCommentDTO().subscribe(res => {
@@ -61,7 +61,6 @@ export class CommentsComponent implements OnInit, OnDestroy {
     const comments = this.postStateService.getComments(postId);
     const cMap = new Map();
     const scMap = new Map();
-    this.logger.info('### COMMMENTS', this.commentList);
 
     // saparate sub comments and main comments.
     comments.forEach(comment => {
@@ -73,10 +72,34 @@ export class CommentsComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Adding likes to comment
+    const likes = this.postStateService.getLikesForComment(postId);
+    likes.forEach(l => {
+      const lId = l.commentId;
+      const cLike = cMap.get(lId);
+      const scLike = scMap.get(lId);
+      if(cMap.get(lId)) {
+        if (cLike.hasOwnProperty('likes')) {
+          cLike.likes.push(l);
+        }
+        else {
+          cLike.likes = [l];
+        }
+      }
+      if(scMap.get(lId)) {
+        if (scLike.hasOwnProperty('likes')) {
+          scLike.likes.push(l);
+        }
+        else {
+          scLike.likes = [l];
+        }
+      }
+    });
+
     // put sub comments under the main comments
     Array.from(scMap).map(subComment => {
-      const cId = subComment[1].commentTo.commentId;
-      const mainComment = cMap.get(cId);
+      const sCommentId = subComment[1].commentTo.commentId;
+      const mainComment = cMap.get(sCommentId);
       if (mainComment) {
         if (mainComment.hasOwnProperty('comments')) {
           mainComment.comments.push(subComment[1]);
@@ -85,10 +108,15 @@ export class CommentsComponent implements OnInit, OnDestroy {
           mainComment.comments = [subComment[1]];
         }
       }
-    })
+    });
+    
+   
+
     this.logger.info('###', cMap);
+
     this.commentList = Array.from(cMap).map(c => ({ ...c[1] }));
-    this.logger.info('###', this.commentList);
+    this.logger.info('### COMMMENTS', this.commentList);
+
   }
 
   // HELPER

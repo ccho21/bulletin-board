@@ -59,7 +59,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           ]);
         }),
         concatMap(results => {
-          this.logger.info('###Results', results);
           p.comments                              = results[0].docs.map(cur => cur.data());
           p.likes                                 = results[1].docs.map(cur => cur.data());
           return of(p);
@@ -108,12 +107,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
   //
 
-  getPostLikes(p) {
-    const postLikes                               = p.likes.filter(like => like.type === 1);
-    this.postLikes                                = postLikes;
-    return postLikes.length;
-  }
-
   displayUsers(post, content) {
     this.logger.info('### display Users', this.postLikes);
     this.modalService.openVerticallyCentered(content).subscribe(res => {
@@ -136,10 +129,16 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.logger.info('### delete post should be implemented');
   }
 
+  getPostLikes(p) {
+    const postLikes                               = p.likes.filter(like => like.type === 1);
+    this.postLikes                                = postLikes;
+    return postLikes.slice(1).length;
+  }
+
   getFirstLikeDisplayName( post ): string {
     if(post.likes.length) {
       const p = post.likes.filter(p => p.type === 1);
-      return p[0].user.userName;
+      return p[0].user.displayName;
     }
     else {
       return '';

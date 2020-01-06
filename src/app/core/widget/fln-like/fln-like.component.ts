@@ -98,9 +98,9 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   removeLike(isLiked) {
     const likeId                    = isLiked.likeId;
     this.likeService.removeLike(likeId, this.data, this.type).subscribe(res => {
+      this.logger.info('### like removed', this.data);
       const likeIndex = this.data.likes.findIndex(like => like.likeId === likeId);
       this.data.likes.splice(likeIndex, 1);
-      this.logger.info('### like removed', this.data);
       this.isLiked = null;
       this.postStateService.setPost(this.data);
     });
