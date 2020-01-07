@@ -36,6 +36,7 @@ import { CommentsComponent } from '@app/containers/comments/comments.component';
 import { CommentDetailComponent } from '@app/containers/comments/comment-detail/comment-detail.component';
 import { PostStateService } from './post-state.service';
 import { FlnUploadTaskComponent } from '@app/core/widget/fln-upload-task/fln-upload-task.component';
+import { PostModalComponent } from './post-modal/post-modal.component';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -46,10 +47,12 @@ import { FlnUploadTaskComponent } from '@app/core/widget/fln-upload-task/fln-upl
     FlnCommentComponent,
     FlnLikeComponent,
     CommentDetailComponent,
-    FlnUploadTaskComponent
+    FlnUploadTaskComponent,
+    PostModalComponent
   ],
   entryComponents: [
     PostListComponent,
+    PostModalComponent
   ],
   imports: [
     PostRoutingModule,
@@ -68,7 +71,7 @@ import { FlnUploadTaskComponent } from '@app/core/widget/fln-upload-task/fln-upl
     PipesModule
   ],
   exports: [
-    PostListComponent
+    PostListComponent,
   ],
   providers: [NgbActiveModal, PostService, LikeService, ViewService, PostStateService],
   bootstrap: [PostListComponent],

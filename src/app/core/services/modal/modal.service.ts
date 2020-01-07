@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from '../logger/logger.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { from, of } from 'rxjs';
+import { MatDialogRef, MatDialog } from '@angular/material';
+
+import { from, of, Observable } from 'rxjs';
 import { SignUpComponent } from '@app/components/sign-up/sign-up.component';
 import { SignInComponent } from '@app/components/sign-in/sign-in.component';
 import { AuthService } from '../auth/auth.service';
+
+import {PostModalComponent} from '@app/containers/posts/post-modal/post-modal.component';
+ 
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +19,8 @@ export class ModalService {
     private logger: LoggerService,
     private modalService: NgbModal,
     private activeModal: NgbActiveModal,
-    private authService: AuthService
+    private authService: AuthService,
+    private matDialog: MatDialog
   ) { }
   // SIGN IN
   signInOpen() {
@@ -71,5 +77,27 @@ export class ModalService {
   openSmallCentered(component) {
     const modalRef              = this.modalService.open(component, { scrollable: true, centered: true, size: 'sm' }).result;
     return of(modalRef);
+  }
+
+/*   postDetailPopup(post): Observable<any> {
+    let dialogRef: MatDialogRef<PostModalComponent>;
+    this.logger.info('##### post', post);
+    dialogRef = this.matDialog.open(PostModalComponent, {
+      width: '100%',
+      height: 'auto',
+      disableClose: true,
+      data: { id: post.postId }
+    });
+    return dialogRef.afterClosed();
+  } */
+  postDetailPopup(post) {
+    let dialogRef: MatDialogRef<PostModalComponent>;
+    this.logger.info('##### post', post);
+    dialogRef = this.matDialog.open(PostModalComponent, {
+      width: '55%',
+      height: 'auto',
+      data: { id: post.postId }
+    });
+    return dialogRef.afterClosed();
   }
 }

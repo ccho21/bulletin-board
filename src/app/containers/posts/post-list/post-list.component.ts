@@ -8,6 +8,7 @@ import { of, Subscription, from, forkJoin  } from 'rxjs';
 import { CommentService } from '../../../core/services/comment/comment.service';
 import { Router } from '@angular/router';
 import { PostStateService } from '../post-state.service';
+import { ModalService } from '@app/core/services/modal/modal.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -26,7 +27,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     private likeService: LikeService,
     private commentService: CommentService,
     private router: Router,
-    private postStateService: PostStateService
+    private postStateService: PostStateService,
+    private modalService: ModalService,
   ) { }
 
   ngOnInit() {
@@ -86,5 +88,12 @@ export class PostListComponent implements OnInit, OnDestroy {
     if (this.postSubscription) {
       this.postSubscription.unsubscribe();
     }
+  }
+
+  postDetailPopup(post) {
+    this.logger.info(post);
+    this.modalService.postDetailPopup(post).subscribe(res => {
+    this.router.navigate(['/posts']);
+    });
   }
 }

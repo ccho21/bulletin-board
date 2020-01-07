@@ -10,6 +10,6 @@ export const postRouterConfig: Routes = [
     { path: 'post-list',  redirectTo:'/posts'},
     { path: 'posts',  component: PostListComponent },
     { path: 'posts/create', component: PostNewComponent },
-    { path: 'posts/:id', component: PostDetailComponent },
+    { path: 'posts/:id', component: PostDetailComponent},
     { path: 'posts/:id/edit', component: PostEditComponent },
 ];

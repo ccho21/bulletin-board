@@ -1,17 +1,7 @@
-<div class="section section-dark text-center">
-  <div class="container">
-    <h2 class="title">Post Detail</h2>
-  </div>
-</div>
-<div class="container" *ngIf="hasPost">
-  <div class="d-flex justify-content-center">
+<div class="container p-0 d-post">
+  <div class="d-flex justify-content-center" *ngIf="hasPost">
     <div class="d-post-box-left">
       <div class="" *ngIf="hasImage">
-        <!-- <img
-          src="{{ updatedPost.photoURLs[0] }}"
-          alt="updatedPost.name"
-          class="img-fluid d-post-img"
-        /> -->
         <ngb-carousel *ngIf="updatedPost" [showNavigationIndicators]="true" class="d-post-img">
           <ng-template ngbSlide *ngFor="let image of updatedPost.photoURLs">
             <div class="picsum-img-wrapper">
@@ -131,7 +121,3 @@
     </div>
   </div>
 </ng-template>
-
-<pre>
-  {{updatedPost | json}}
-</pre>

@@ -11,7 +11,7 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
-        <a routerLink="{{post.postId}}" routerLinkActive="router-link-active">
+        <a (click)="postDetailPopup(post)">
           <div class="post">
             <div class="post-box">
               <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
