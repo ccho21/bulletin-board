@@ -1,20 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { LoggerService } from '../logger/logger.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialogRef, MatDialog } from '@angular/material';
 
-import { from, of, Observable } from 'rxjs';
+import { from, of, Observable, Subject } from 'rxjs';
 import { SignUpComponent } from '@app/components/sign-up/sign-up.component';
 import { SignInComponent } from '@app/components/sign-in/sign-in.component';
 import { AuthService } from '../auth/auth.service';
 
-import {PostModalComponent} from '@app/containers/posts/post-modal/post-modal.component';
- 
+import { PostModalComponent } from '@app/containers/posts/post-modal/post-modal.component';
+import { PostDetailComponent } from '@app/containers/posts/post-detail/post-detail.component';
 @Injectable({
   providedIn: 'root'
 })
-export class ModalService {
-
+export class ModalService implements OnDestroy {
+  destroy = new Subject<any>();
+  currentDialog = null;
   constructor(
     private logger: LoggerService,
     private modalService: NgbModal,
@@ -25,15 +26,15 @@ export class ModalService {
   // SIGN IN
   signInOpen() {
     this.logger.info('sign in open ');
-    const modalRef              = this.modalService.open(SignInComponent).result;
+    const modalRef = this.modalService.open(SignInComponent).result;
     from(modalRef).subscribe(res => {
       this.logger.info('### modal result ', res);
-      if(res === 'SignUp') {
+      if (res === 'SignUp') {
         this.activeModal.close();
         this.signUpOpen();
-        return ;
+        return;
       }
-      if(res && res !== 'SignUp') {
+      if (res && res !== 'SignUp') {
         this.activeModal.close();
         this.authService.updateSignInSource(true);
       }
@@ -41,15 +42,15 @@ export class ModalService {
   }
   signUpOpen() {
     this.logger.info('sign up open ');
-    const modalRef              = this.modalService.open(SignUpComponent, { size: 'lg' })
+    const modalRef = this.modalService.open(SignUpComponent, { size: 'lg' })
       .result;
     from(modalRef).subscribe(res => {
       this.logger.info('### modal result ', res);
-      if(res === 'SignIn') {
+      if (res === 'SignIn') {
         this.activeModal.close();
         this.signInOpen();
       }
-      if(res && res !== 'SignIn') {
+      if (res && res !== 'SignIn') {
         this.authService.updateSignInSource(true);
       }
       this.close();
@@ -64,40 +65,34 @@ export class ModalService {
     this.activeModal.close();
   }
   open(component) {
-    const modalRef              = this.modalService.open(component).result;
+    const modalRef = this.modalService.open(component).result;
     of(modalRef).subscribe(res => {
       this.logger.info('### modal result ', res);
     });
   }
   openVerticallyCentered(component) {
-    const modalRef              = this.modalService.open(component, { scrollable: true, centered: true }).result;
+    const modalRef = this.modalService.open(component, { scrollable: true, centered: true }).result;
     return of(modalRef);
   }
 
   openSmallCentered(component) {
-    const modalRef              = this.modalService.open(component, { scrollable: true, centered: true, size: 'sm' }).result;
+    const modalRef = this.modalService.open(component, { scrollable: true, centered: true, size: 'sm' }).result;
     return of(modalRef);
   }
 
-/*   postDetailPopup(post): Observable<any> {
-    let dialogRef: MatDialogRef<PostModalComponent>;
-    this.logger.info('##### post', post);
-    dialogRef = this.matDialog.open(PostModalComponent, {
-      width: '100%',
+  postDetailPopup(postId) {
+    let dialogRef: MatDialogRef<PostDetailComponent>;
+    this.logger.info('##### postId', postId);
+    dialogRef = this.matDialog.open(PostDetailComponent, {
+      width: '58%',
       height: 'auto',
-      disableClose: true,
-      data: { id: post.postId }
+      data: { id: postId }
     });
+    dialogRef.componentInstance.postId = postId;
     return dialogRef.afterClosed();
-  } */
-  postDetailPopup(post) {
-    let dialogRef: MatDialogRef<PostModalComponent>;
-    this.logger.info('##### post', post);
-    dialogRef = this.matDialog.open(PostModalComponent, {
-      width: '55%',
-      height: 'auto',
-      data: { id: post.postId }
-    });
-    return dialogRef.afterClosed();
+  }
+
+  ngOnDestroy() {
+    this.destroy.next();
   }
 }

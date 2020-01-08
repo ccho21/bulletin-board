@@ -52,7 +52,7 @@ import { PostModalComponent } from './post-modal/post-modal.component';
   ],
   entryComponents: [
     PostListComponent,
-    PostModalComponent
+    PostDetailComponent
   ],
   imports: [
     PostRoutingModule,

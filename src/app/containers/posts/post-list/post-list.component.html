@@ -11,7 +11,7 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
-        <a (click)="postDetailPopup(post)">
+        <a [routerLink]="[post.postId]">
           <div class="post">
             <div class="post-box">
               <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
@@ -23,58 +23,21 @@
             </div>
           </div>
         </a>
-        <button class="btn btn-warning" (click)="editPost(post)">edit</button>
-        <button class="btn btn-danger" (click)="deletePost(post)">delete</button>
+        <!-- <button class="btn btn-warning" (click)="editPost(post)">edit</button>
+        <button class="btn btn-danger" (click)="deletePost(post)">delete</button> -->
       </div>
     </div>
-    <!-- <small *ngIf="posts">
+   
+  </div>
+</section>
+<div>
+  <router-outlet></router-outlet>
+</div>
+
+
+ <!-- <small *ngIf="posts">
       <h3>POST LIST</h3>
       <pre>
           {{ posts | json }}
       </pre>
     </small> -->
-  </div>
-</section>
-
-
- <!-- <table class="table">
-        <thead>
-          <tr>
-            <th class="text-center">#</th>
-            <th>Date</th>
-            <th>Title</th>
-            <th class="">Content</th>
-            <th class="">Author</th>
-            <th class="text-center">Replies</th>
-            <th class="text-center">Views</th>
-            <th class="text-center">Likes</th>
-            <th class="text-center"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="ng-star-inserted" *ngFor="let post of posts; index as i">
-            <td class="text-center">{{i + 1}}</td>
-            <td> {{ post.createdAt | postTime }}</td>
-            <td><a routerLink="{{post.postId}}" routerLinkActive="router-link-active">{{ post.title }}</a></td>
-            <td class="">{{ post.content}}</td>
-            <td class="">
-              <div class="author-profile">
-                <img class="img-circle img-no-padding img-responsive" [src]="post.author.photoURL"
-                  [alt]="post.author.name">
-              </div>
-            </td>
-            <td class="text-center">
-              {{post.comments.length }}
-            </td>
-            <td class="text-center">{{post.views}}</td>
-            <td class="text-center">{{post.likes.length}}</td>
-            <td>
-              <div class="d-flex">
-                <app-fln-like [post]="post"></app-fln-like>
-                <button class="btn btn-warning" (click)="editPost(post)">edit</button>
-                <button class="btn btn-danger" (click)="deletePost(post)">delete</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table> -->

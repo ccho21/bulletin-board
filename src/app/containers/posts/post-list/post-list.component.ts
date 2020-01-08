@@ -4,7 +4,7 @@ import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
 import { LikeService } from '@app/core/services/like/like.service';
 import { concatMap, toArray } from 'rxjs/operators';
-import { of, Subscription, from, forkJoin  } from 'rxjs';
+import { of, Subscription, from, forkJoin } from 'rxjs';
 import { CommentService } from '../../../core/services/comment/comment.service';
 import { Router } from '@angular/router';
 import { PostStateService } from '../post-state.service';
@@ -15,12 +15,11 @@ import { ModalService } from '@app/core/services/modal/modal.service';
   styleUrls: ['./post-list.component.scss']
 })
 export class PostListComponent implements OnInit, OnDestroy {
-  likeSubscription: Subscription
   posts: Array<Post> = [];
   isPostLiked;
   postSubscription: Subscription;
   filteredPostList;
-  
+
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -38,7 +37,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   initData() {
     this.getPosts();
   }
-  
+
   getPosts() {
     this.postSubscription = this.postService.getPosts().pipe(
       concatMap(results => {
@@ -78,9 +77,9 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.logger.info(post);
     this.router.navigateByUrl(`/posts/${post.postId}/edit`);
   }
-  
+
   getBackgroundImageUrl(post) {
-    return `url(${post.photoURL[0]})`
+    return `url(${post.photoURLs[0]})`;
   }
 
   ngOnDestroy() {
@@ -88,12 +87,5 @@ export class PostListComponent implements OnInit, OnDestroy {
     if (this.postSubscription) {
       this.postSubscription.unsubscribe();
     }
-  }
-
-  postDetailPopup(post) {
-    this.logger.info(post);
-    this.modalService.postDetailPopup(post).subscribe(res => {
-    this.router.navigate(['/posts']);
-    });
   }
 }

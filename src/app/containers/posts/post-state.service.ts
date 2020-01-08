@@ -14,10 +14,10 @@ export class PostStateService {
 
     private commentSubject = new Subject<Comment>();
     private commentSubjectSubscription$ = this.commentSubject.asObservable();
-    
-    private replySubject = new Subject<Comment>(); 
+
+    private replySubject = new Subject<Comment>();
     private replySubjectSubscription$ = this.replySubject.asObservable();
-    
+
     constructor(
         private logger: LoggerService
     ) { }
@@ -45,7 +45,7 @@ export class PostStateService {
         const comments = post.comments;
         return comments;
     }
-    
+
     getLikesForPost(postId: string): Array<Like> {
         const post = this.getPost(postId);
         const likes = post.likes.filter(like => like.type === 1);
@@ -69,7 +69,7 @@ export class PostStateService {
     updateReplyDTO(commentDTO) {
         this.replySubject.next(commentDTO);
     }
-    
+
     getReplyDTO() {
         return this.replySubjectSubscription$;
     }
