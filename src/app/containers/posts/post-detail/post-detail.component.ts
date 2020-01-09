@@ -41,7 +41,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     private postStateService: PostStateService,
     private modalService: ModalService,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
@@ -80,9 +79,11 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((result: any) => {
-        this.logger.info('### final ', result);
+        this.logger.info('### GET POST DETAIL FINAL', result);
         this.updatedPost = result;
-        // this.postStateService.setPosts([this.updatedPost]);
+        this.postIndex = this.postStateService.setPost(this.updatedPost);
+        this.logger.info('### post INDEX', this.postIndex);
+
         if (this.updatedPost.photoURLs.length) {
           this.hasImage = true;
         }
@@ -92,6 +93,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   //
   findPost(postId) {
     const posts = this.postStateService.getPosts();
+    this.logger.info('########### POSTS!!! in post detail ', posts);
     const postIndex = posts.findIndex(post => post.postId === postId);
     this.postIndex = postIndex;
     return posts[postIndex];
@@ -169,20 +171,20 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   clickNext() {
-    this.logger.info('### what the heck this is?', this.data);
+    this.postStateService.closeEmit(true);
     const listLength = this.postStateService.getPostListLength();
     if (this.postIndex !== listLength - 1) {
       const postId = this.postStateService.getPostIdByIndex(this.postIndex + 1);
+      
       this.router.navigateByUrl(`posts/${postId}`);
-      this.postStateService.closeEmit(true);
     }
   }
   clickBack() {
     if (this.postIndex !== 0) {
       const postId = this.postStateService.getPostIdByIndex(this.postIndex - 1);
       this.postStateService.setPostIndex(this.postIndex - 1);
-      this.router.navigateByUrl(`posts/${postId}`);
       this.postStateService.closeEmit(true);
+      this.router.navigateByUrl(`posts/${postId}`);
     }
   }
 

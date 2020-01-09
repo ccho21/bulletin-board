@@ -38,10 +38,11 @@ export class PostStateService {
         return this.posts.slice(pIndex, pIndex + 1)[0];
     }
 
-    setPost(post: Post) {
+    setPost(post: Post): number {
         const pIndex = this.posts.findIndex(p => p.postId === post.postId);
         this.logger.info('### posted');
         this.posts[pIndex] = { ...post };
+        return pIndex;
     }
 
     getComments(postId: string): Array<Comment> {
@@ -101,6 +102,7 @@ export class PostStateService {
     getPostIdList() {
         return this.posts.map(post => post.postId);
     }
+
     getPostIdByIndex(index) {
         this.logger.info('##### posts', this.posts);
         return this.posts[index].postId;

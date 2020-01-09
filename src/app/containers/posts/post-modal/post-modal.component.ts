@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PostDetailComponent } from '../post-detail/post-detail.component';
 import { ModalService } from '@app/core/services/modal/modal.service';
@@ -16,6 +16,7 @@ import { PostStateService } from '../post-state.service';
 export class PostModalComponent implements OnDestroy, OnInit {
   destroy = new Subject<any>();
   dialogRef: MatDialogRef<PostDetailComponent>;
+  closeSubscription: Subscription;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -55,5 +56,8 @@ export class PostModalComponent implements OnDestroy, OnInit {
   ngOnDestroy() {
     this.logger.info('### POST MODAL DESTROYED');
     this.destroy.next();
+    if (this.closeSubscription) {
+      this.closeSubscription.unsubscribe();
+    }
   }
 }
