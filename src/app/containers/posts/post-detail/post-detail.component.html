@@ -1,83 +1,94 @@
-<div class="container p-0 d-post">
-  <div class="d-flex justify-content-center" *ngIf="hasPost">
-    <div class="d-post-box-left">
-      <div class="" *ngIf="hasImage">
-        <ngb-carousel *ngIf="updatedPost" [showNavigationIndicators]="true" class="d-post-img">
-          <ng-template ngbSlide *ngFor="let image of updatedPost.photoURLs">
-            <div class="picsum-img-wrapper">
-              <img [src]="image" alt="Random slide">
-            </div>
-          </ng-template>
-        </ngb-carousel>
-
+<div class="d-post-wrapper"  *ngIf="hasPost">
+  <div class="d-post-wrapper-arrrow-left bg-dark text-white">
+    <a (click)="clickBack()">
+      <i class="nc-icon nc-minimal-left"></i>
+    </a>
+  </div>
+  <div class="p-0 d-post">
+    <div class="d-flex justify-content-center">
+      <div class="d-post-box-left">
+        <div class="" *ngIf="hasImage">
+          <ngb-carousel *ngIf="updatedPost" [showNavigationIndicators]="true" class="d-post-img">
+            <ng-template ngbSlide *ngFor="let image of updatedPost.photoURLs">
+              <div class="picsum-img-wrapper">
+                <img [src]="image" alt="Random slide">
+              </div>
+            </ng-template>
+          </ngb-carousel>
+        </div>
       </div>
-    </div>
-    <div class="w-75">
-      <div class="d-post-box-right">
-        <div class="d-post-contents">
-          <div class="d-post-heading d-flex align-items-center">
-            <div class="align-self-center">
-              <img class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
-                src="{{ updatedPost.author.photoURLs }}" />
-            </div>
-            <div class="font-weight-bold flex-grow-1">
-              {{ updatedPost.author.displayName }}
-            </div>
-            <div class="pr-2">
-              <a class="d-flex align-items-center" (click)="openActionModal(userActions)">
-                <i class="fa fa-ellipsis-h"></i>
-                <!-- <i class="nc-icon nc-bullet-list-67"></i> -->
-              </a>
-            </div>
-          </div>
-
-          <div class="d-post-comments">
-            <app-comments [post]="updatedPost"></app-comments>
-          </div>
-          <!-- Post Detail -->
-          <div class="d-post-detail pl-3">
-            <div class="row mx-0 d-post-detail-functions">
-              <div>
-                <app-fln-like [post]="updatedPost"></app-fln-like>
+      <div class="w-75">
+        <div class="d-post-box-right">
+          <div class="d-post-contents">
+            <div class="d-post-heading d-flex align-items-center">
+              <div class="align-self-center">
+                <img class="media-object c-img-thumnail img-circle img-no-padding img-responsive"
+                  src="{{ updatedPost.author.photoURLs }}" />
               </div>
-              <div class=" ml-2 flex-grow-1">
-                <i class="nc-icon nc-chat-33"></i>
+              <div class="font-weight-bold flex-grow-1">
+                {{ updatedPost.author.displayName }}
               </div>
-              <div class="ml-2">
-                <i class="nc-icon nc-bookmark-2"></i>
-              </div>
-            </div>
-            <div class="row mx-0 d-post-detail-likes" *ngIf="getFirstLikeDisplayName(updatedPost) else noLikes">
-              <img
-                class="media-object c-img-thumnail img-circle img-no-padding img-responsive d-post-detail-likes-likes-user"
-                src="{{ getFirstListPhotoURL(updatedPost) }}" />
-              <div>
-                Liked by <a><span class="font-weight-bold">{{ getFirstLikeDisplayName(updatedPost) }}</span></a>
-                and
-                <a (click)="displayUsers(updatedPost, usersLikedPost)">
-                  <span class="font-weight-bold">
-                    {{ getPostLikes(updatedPost) }} others
-                  </span>
+              <div class="pr-2">
+                <a class="d-flex align-items-center" (click)="openActionModal(userActions)">
+                  <i class="fa fa-ellipsis-h"></i>
+                  <!-- <i class="nc-icon nc-bullet-list-67"></i> -->
                 </a>
               </div>
             </div>
-            <ng-template #noLikes>
-              <div>
-                <a><span class="font-weight-bold"> 0 </span></a> likes
-              </div>
-            </ng-template>
-
-            <div class="row mx-0">
-              {{ updatedPost.createdAt | postTime }}
+  
+            <div class="d-post-comments">
+              <app-comments [post]="updatedPost"></app-comments>
             </div>
-          </div>
-          <!-- comment -->
-          <div class="d-post-comment-write">
-            <app-fln-comment></app-fln-comment>
+            <!-- Post Detail -->
+            <div class="d-post-detail pl-3">
+              <div class="row mx-0 d-post-detail-functions">
+                <div>
+                  <app-fln-like [post]="updatedPost"></app-fln-like>
+                </div>
+                <div class=" ml-2 flex-grow-1">
+                  <i class="nc-icon nc-chat-33"></i>
+                </div>
+                <div class="ml-2">
+                  <i class="nc-icon nc-bookmark-2"></i>
+                </div>
+              </div>
+              <div class="row mx-0 d-post-detail-likes" *ngIf="getFirstLikeDisplayName(updatedPost) else noLikes">
+                <img
+                  class="media-object c-img-thumnail img-circle img-no-padding img-responsive d-post-detail-likes-likes-user"
+                  src="{{ getFirstListPhotoURL(updatedPost) }}" />
+                <div>
+                  Liked by <a><span class="font-weight-bold">{{ getFirstLikeDisplayName(updatedPost) }}</span></a>
+                  and
+                  <a (click)="displayUsers(updatedPost, usersLikedPost)">
+                    <span class="font-weight-bold">
+                      {{ getPostLikes(updatedPost) }} others
+                    </span>
+                  </a>
+                </div>
+              </div>
+              <ng-template #noLikes>
+                <div>
+                  <a><span class="font-weight-bold"> 0 </span></a> likes
+                </div>
+              </ng-template>
+  
+              <div class="row mx-0">
+                {{ updatedPost.createdAt | postTime }}
+              </div>
+            </div>
+            <!-- comment -->
+            <div class="d-post-comment-write">
+              <app-fln-comment></app-fln-comment>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div class="d-post-wrapper-arrrow-right bg-dark text-white">
+    <a (click)="clickNext()">
+      <i class="nc-icon nc-minimal-right"></i>
+    </a>
   </div>
 </div>
 

@@ -79,19 +79,19 @@ export class ModalService implements OnDestroy {
     const modalRef = this.modalService.open(component, { scrollable: true, centered: true, size: 'sm' }).result;
     return of(modalRef);
   }
-
+/* 
   postDetailPopup(postId) {
     let dialogRef: MatDialogRef<PostDetailComponent>;
     this.logger.info('##### postId', postId);
     dialogRef = this.matDialog.open(PostDetailComponent, {
-      width: '58%',
-      height: 'auto',
+      width: '1140px',
+      height: '600px',
       data: { id: postId }
     });
     dialogRef.componentInstance.postId = postId;
     return dialogRef.afterClosed();
   }
-
+ */
   ngOnDestroy() {
     this.destroy.next();
   }

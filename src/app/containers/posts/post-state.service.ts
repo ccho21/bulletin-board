@@ -1,16 +1,16 @@
-import { Injectable, OnDestroy } from "@angular/core";
+import { Injectable, OnDestroy } from '@angular/core';
 import { Post } from '@app/shared/models/post';
-import { LoggerService } from "@app/core/services/logger/logger.service";
+import { LoggerService } from '@app/core/services/logger/logger.service';
 import { User } from '@app/shared/models/user';
 import { Like } from '@app/shared/models/like';
 import { PostExtendedDTO } from '@app/shared/extended-models/post-extended-dto';
-import { Comment } from "@app/shared/models/comment";
+import { Comment } from '@app/shared/models/comment';
 import { Subject } from 'rxjs';
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class PostStateService {
-    private posts: Array<PostExtendedDTO>;
+    private posts: Array<PostExtendedDTO> = [];
 
     private commentSubject = new Subject<Comment>();
     private commentSubjectSubscription$ = this.commentSubject.asObservable();
@@ -18,6 +18,10 @@ export class PostStateService {
     private replySubject = new Subject<Comment>();
     private replySubjectSubscription$ = this.replySubject.asObservable();
 
+    private closeSubject = new Subject<any>();
+    private closeSubjectSubscription$ = this.closeSubject.asObservable();
+
+    postIndex: number;
     constructor(
         private logger: LoggerService
     ) { }
@@ -73,5 +77,38 @@ export class PostStateService {
     getReplyDTO() {
         return this.replySubjectSubscription$;
     }
+
+    closeEmit(close) {
+        this.closeSubject.next(close);
+    }
+    getCloseEmitted() {
+        return this.closeSubjectSubscription$;
+    }
+
+    setPostIndex(postIndex) {
+        this.postIndex = postIndex;
+    }
+
+    getPostIndex() {
+        this.logger.info('### this.post index', this.postIndex);
+        return this.postIndex;
+    }
+
+    findPostIndex(postId) {
+        return this.posts.findIndex(post => post.postId === postId);
+    }
+
+    getPostIdList() {
+        return this.posts.map(post => post.postId);
+    }
+    getPostIdByIndex(index) {
+        this.logger.info('##### posts', this.posts);
+        return this.posts[index].postId;
+    }
+    getPostListLength() {
+        return this.posts.length;
+    }
+
+
 }
 

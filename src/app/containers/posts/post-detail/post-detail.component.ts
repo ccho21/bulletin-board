@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Post } from '../../../shared/models/post';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from '../../../core/services/post/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
-import { Observable, from, Subscription, pipe, forkJoin, of } from 'rxjs';
+import { Observable, from, Subscription, pipe, forkJoin, of, Subject } from 'rxjs';
 import { User } from '@app/shared/models/user';
 import { LikeService } from '@app/core/services/like/like.service';
 import { Like } from '@app/shared/models/like';
@@ -13,6 +13,7 @@ import { concatMap } from 'rxjs/operators';
 import { CommentService } from '@app/core/services/comment/comment.service';
 import { PostStateService } from '../post-state.service';
 import { ModalService } from '@app/core/services/modal/modal.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
@@ -28,30 +29,30 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   hasPost: boolean;
   hasImage: boolean;
   postId: string;
+  postIndex: number;
+
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
     private logger: LoggerService,
     private likeService: LikeService,
-    private viewService: ViewService,
     private userActivitiesService: UserActivitiesService,
     private commentService: CommentService,
     private postStateService: PostStateService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
-    // if (!this.post) {
-    //   this.getPost(this.post);
-    // }
-    if (this.postId) {
-      this.getPost(this.postId);
-    }
+    this.logger.info('###catching postID', this.postId);
+    this.getPost(this.postId);
   }
 
   getPost(postId): void {
     let request: Observable<any>;
-    if (postId) {
+    const post = this.findPost(postId);
+    if (!post) {
       let p;
       request = this.postService.getPost(postId).pipe(
         concatMap((res: firebase.firestore.DocumentSnapshot) => {
@@ -67,6 +68,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           return of(p);
         })
       );
+    } else {
+      request = of(post);
     }
     this.postSubscription = request
       .pipe(
@@ -79,7 +82,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       .subscribe((result: any) => {
         this.logger.info('### final ', result);
         this.updatedPost = result;
-        this.postStateService.setPosts([this.updatedPost]);
+        // this.postStateService.setPosts([this.updatedPost]);
         if (this.updatedPost.photoURLs.length) {
           this.hasImage = true;
         }
@@ -87,6 +90,13 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       });
   }
   //
+  findPost(postId) {
+    const posts = this.postStateService.getPosts();
+    const postIndex = posts.findIndex(post => post.postId === postId);
+    this.postIndex = postIndex;
+    return posts[postIndex];
+  }
+
   getLikesByPostIdAndUid(post) {
     return this.likeService.getLikesByUidAndPostId(post.postId).pipe(
       concatMap(res => {
@@ -158,14 +168,32 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    this.logger.info('### post detail destroyed ####');
-    if (this.postSubscription) {
-      this.postSubscription.unsubscribe();
+  clickNext() {
+    this.logger.info('### what the heck this is?', this.data);
+    const listLength = this.postStateService.getPostListLength();
+    if (this.postIndex !== listLength - 1) {
+      const postId = this.postStateService.getPostIdByIndex(this.postIndex + 1);
+      this.router.navigateByUrl(`posts/${postId}`);
+      this.postStateService.closeEmit(true);
     }
   }
+  clickBack() {
+    if (this.postIndex !== 0) {
+      const postId = this.postStateService.getPostIdByIndex(this.postIndex - 1);
+      this.postStateService.setPostIndex(this.postIndex - 1);
+      this.router.navigateByUrl(`posts/${postId}`);
+      this.postStateService.closeEmit(true);
+    }
+  }
+
   /* UI STUFF */
   openActionModal(component) {
     this.modalService.openSmallCentered(component);
+  }
+
+  ngOnDestroy() {
+    if (this.postSubscription) {
+      this.postSubscription.unsubscribe();
+    }
   }
 }

@@ -82,6 +82,11 @@ export class PostListComponent implements OnInit, OnDestroy {
     return `url(${post.photoURLs[0]})`;
   }
 
+  clickPost(post, index) {
+    this.postStateService.setPostIndex(index);
+    this.router.navigateByUrl(`posts/${post.postId}`);
+  }
+
   ngOnDestroy() {
     this.logger.info('### post list is destroyed#######');
     if (this.postSubscription) {

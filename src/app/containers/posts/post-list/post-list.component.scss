@@ -62,4 +62,7 @@
 
 ::ng-deep .mat-dialog-container {
   padding: 0 !important;
+  border-radius: 0;
+  box-shadow: none !important;
+  background-color: transparent !important;
 }
