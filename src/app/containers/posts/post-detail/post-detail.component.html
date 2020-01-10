@@ -1,5 +1,5 @@
 <div class="d-post-wrapper"  *ngIf="hasPost">
-  <div class="d-post-wrapper-arrrow-left bg-dark text-white">
+  <div class="d-post-wrapper-arrrow-left" [ngClass]="{'invisible': !leftArrowValid}">
     <a (click)="clickBack()">
       <i class="nc-icon nc-minimal-left"></i>
     </a>
@@ -85,7 +85,7 @@
       </div>
     </div>
   </div>
-  <div class="d-post-wrapper-arrrow-right bg-dark text-white">
+  <div class="d-post-wrapper-arrrow-right" [ngClass]="{'invisible': !rightArrowValid}">
     <a (click)="clickNext()">
       <i class="nc-icon nc-minimal-right"></i>
     </a>

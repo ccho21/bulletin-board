@@ -16,7 +16,7 @@ import { PostStateService } from '../post-state.service';
 export class PostModalComponent implements OnDestroy, OnInit {
   destroy = new Subject<any>();
   dialogRef: MatDialogRef<PostDetailComponent>;
-  closeSubscription: Subscription;
+  postIdSubscription: Subscription;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -24,40 +24,45 @@ export class PostModalComponent implements OnDestroy, OnInit {
     private matDialog: MatDialog,
     private postStateService: PostStateService
   ) {
-
+    this.postIdSubscription = this.postStateService.postIdEmitted().subscribe(res => {
+      if (res) {
+        this.dialogRef.close('page');
+        const postId = res;
+        this.logger.info(postId);
+        this.goToPost(postId);
+      }
+    });
   }
   ngOnInit() {
-    this.route.params.pipe(takeUntil(this.destroy)).subscribe(params => {
+    this.route.params.subscribe(params => {
       this.logger.info('### route START');
       // When router navigates on this component is takes the params and opens up the photo detail modal
       const postId = params.id;
-      this.logger.info('##### postId', postId);
+
       this.dialogRef = this.matDialog.open(PostDetailComponent, {
         width: '1140px',
         height: '600px',
       });
       this.dialogRef.componentInstance.postId = postId;
-      this.logger.info('### DIALOGREF #########', this.dialogRef);
       this.dialogRef.afterClosed().subscribe(res => {
-        this.router.navigateByUrl('/posts');
+        this.logger.info('########## AFTER CLOSED', res);
+        if (!res) {
+          this.router.navigateByUrl('posts');
+        }
       }, error => {
         alert(error);
-        this.router.navigateByUrl('/posts');
       });
     });
-
-    this.postStateService.getCloseEmitted().subscribe(res => {
-      if (res) {
-        this.dialogRef.close();
-      }
-    });
+  }
+  goToPost(postId) {
+    this.router.navigateByUrl(`posts/${postId}`);
   }
 
   ngOnDestroy() {
     this.logger.info('### POST MODAL DESTROYED');
-    this.destroy.next();
-    if (this.closeSubscription) {
-      this.closeSubscription.unsubscribe();
+    // this.destroy.next();
+    if (this.postIdSubscription) {
+      this.postIdSubscription.unsubscribe();
     }
   }
 }

@@ -31,6 +31,9 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   postId: string;
   postIndex: number;
 
+  postListLength: number;
+  leftArrowValid = true;
+  rightArrowValid = true;
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
@@ -83,18 +86,30 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         this.updatedPost = result;
         this.postIndex = this.postStateService.setPost(this.updatedPost);
         this.logger.info('### post INDEX', this.postIndex);
-
+        this.checkValidArrow(this.postIndex);
         if (this.updatedPost.photoURLs.length) {
           this.hasImage = true;
         }
         this.hasPost = true;
       });
   }
+
+  checkValidArrow(postIndex) {
+    this.logger.info('### postIndex ',postIndex);
+    this.logger.info('### length ', this.postListLength);
+    this.logger.info(this.leftArrowValid, this.rightArrowValid);
+    if (postIndex === this.postListLength - 1) {
+      this.rightArrowValid = false;
+    } else if (postIndex === 0) {
+      this.leftArrowValid = false;
+    }
+  }
   //
   findPost(postId) {
     const posts = this.postStateService.getPosts();
     this.logger.info('########### POSTS!!! in post detail ', posts);
     const postIndex = posts.findIndex(post => post.postId === postId);
+    this.postListLength = posts.length;
     this.postIndex = postIndex;
     return posts[postIndex];
   }
@@ -171,20 +186,18 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   clickNext() {
-    this.postStateService.closeEmit(true);
     const listLength = this.postStateService.getPostListLength();
     if (this.postIndex !== listLength - 1) {
       const postId = this.postStateService.getPostIdByIndex(this.postIndex + 1);
-      
-      this.router.navigateByUrl(`posts/${postId}`);
+      this.postStateService.postIdEmit(postId);
     }
   }
+
   clickBack() {
     if (this.postIndex !== 0) {
       const postId = this.postStateService.getPostIdByIndex(this.postIndex - 1);
       this.postStateService.setPostIndex(this.postIndex - 1);
-      this.postStateService.closeEmit(true);
-      this.router.navigateByUrl(`posts/${postId}`);
+      this.postStateService.postIdEmit(postId);
     }
   }
 

@@ -21,6 +21,10 @@
             & i {
                 font-size: 2rem;
                 vertical-align: middle;
+
+                font-weight: bold;
+                color: rgba(255, 255, 255, .9);
+                text-shadow: 1px 1px rgba(50,50,50,.4);
             }
             & .fa {
                 width: 100%;
@@ -36,6 +40,10 @@
             & i {
                 font-size: 2rem;
                 vertical-align: middle;
+
+                font-weight: bold;
+                color: rgba(255, 255, 255, .8);
+                text-shadow: 2px 2px rgba(0,0,0,.4);
             }
             & .fa {
                 width: 100%;
