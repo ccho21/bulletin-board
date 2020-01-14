@@ -110,7 +110,5 @@ export class PostStateService {
     getPostListLength() {
         return this.posts.length;
     }
-
-
 }
 
