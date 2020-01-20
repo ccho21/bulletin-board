@@ -65,7 +65,6 @@ import { UserComponent } from './containers/user/user.component';
 // PIPE
 import { PipesModule } from './core/pipes/pipes.module';
 import { UserActivitiesService } from './core/services/user-activities/user-activities.service';
-import { FlnRichEditorComponent } from './core/widget/fln-rich-editor/fln-rich-editor.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -104,7 +103,6 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     LoaderComponent,
     ClickOutsideDirective,
     UserComponent,
-    FlnRichEditorComponent,
   ],
   entryComponents: [AppComponent],
   imports: [

@@ -52,6 +52,7 @@ import { MainRoutingModule } from './main-routing.module';
     PostModule
   ],
   entryComponents: [MainComponent],
+  exports: [MainComponent],
   providers: [NgbActiveModal],
   bootstrap: [MainComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

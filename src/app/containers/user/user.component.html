@@ -87,13 +87,13 @@
           <div *ngIf="likedPostsByComment.length !== 0; else lpcValid">
               <div *ngFor="let p of likedPostsByComment">
                 <div class="media">
-                  <a [routerLink]="['/posts', likedPostsByComment.postId]" routerLinkActive="router-link-active" >
+                  <!-- <a [routerLink]="['/posts', likedPostsByComment.postId]" routerLinkActive="router-link-active" >
                     <img
                       class="img-thumbnail img-responsive c-img-thumnail mr-3"
                       src="{{ p.photoURL }}"
                       alt="{{p.title}}"
                     />
-                  </a>
+                  </a> -->
                   <div class="media-body">
                     <div class="d-flex justify-content-between">
                       <h5 class="mt-0">{{ p.title }}</h5>

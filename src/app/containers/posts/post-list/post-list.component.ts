@@ -68,9 +68,6 @@ export class PostListComponent implements OnInit, OnDestroy {
   deletePost(post) {
     const postId = post.postId;
     this.postService.deletePost(postId);
-    /* .subscribe(res => {
-      this.initData();
-    }); */
   }
 
   editPost(post) {

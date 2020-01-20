@@ -9,9 +9,10 @@ import { ForgotPasswordComponent } from './containers/auth/forgot-password/forgo
 import { AuthGuard } from './shared/guard/auth.guard';
 import { SecureInnerPagesGuard } from './shared/guard/secure-inner-pages.guard';
 import { UserComponent } from './containers/user/user.component';
+import { AppComponent } from './app.component';
 
 export const rootRouterConfig: Routes = [
-  { path: '', component: MainComponent, pathMatch: 'full' },
+  // { path: '', component: AppComponent, pathMatch: 'full' },
   {
     path: 'user/:id', component: UserComponent,
   },
@@ -25,7 +26,7 @@ export const rootRouterConfig: Routes = [
     component: VerifyEmailComponent,
     canActivate: [SecureInnerPagesGuard]
   },
-  { path: '**', component: MainComponent } // temporary
+  // { path: '**', component: MainComponent } // temporary
 ];
 
 const routes: Routes = [];

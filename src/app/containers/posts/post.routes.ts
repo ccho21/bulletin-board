@@ -8,12 +8,7 @@ import { PostModalComponent } from './post-modal/post-modal.component';
 // Import all the components for which navigation service has to be activated
 
 export const postRouterConfig: Routes = [
-    {
-        path: '', component: PostListComponent,
-        children: [
-            { path: 'create', component: PostNewComponent },
-            { path: ':id', component: PostModalComponent },
-            { path: ':id/edit', component: PostEditComponent },
-        ]
-    }
+    { path: 'posts/create', component: PostModalComponent },
+    { path: 'posts/:id', component: PostModalComponent },
+    { path: 'posts/:id/edit', component: PostEditComponent },
 ];

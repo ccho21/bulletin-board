@@ -21,6 +21,9 @@ export class PostStateService {
     private postIdSubject = new Subject<any>();
     private postIdSubjectSubscription$ = this.postIdSubject.asObservable();
 
+    private postCloseSubject = new Subject<any>();
+    private postCloseSubjectSubscription$ = this.postCloseSubject.asObservable();
+
     postIndex: number;
     constructor(
         private logger: LoggerService
@@ -79,11 +82,19 @@ export class PostStateService {
         return this.replySubjectSubscription$;
     }
 
-    postIdEmit(close) {
-        this.postIdSubject.next(close);
+    postIdEmit(id) {
+        this.postIdSubject.next(id);
     }
     postIdEmitted() {
         return this.postIdSubjectSubscription$;
+    }
+
+    postCloseEmit(close) {
+        this.postCloseSubject.next(close);
+    }
+
+    postCloseEmitted() {
+        return this.postCloseSubjectSubscription$;
     }
 
     setPostIndex(postIndex) {

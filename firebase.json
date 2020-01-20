@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/bulletin-board",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",

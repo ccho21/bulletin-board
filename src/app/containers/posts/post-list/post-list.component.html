@@ -1,14 +1,9 @@
-<!-- <div class="section section-dark text-center">
-  <div class="container">
-    <h2 class="title">Let's talk</h2>
-  </div>
-</div> -->
 <section>
   <div class="container">
-    <div class="row">
+    <!-- <div class="row">
       <a href="#" class="btn btn-link btn-info" [routerLink]="['/posts/create']"
         routerLinkActive="router-link-active">create</a>
-    </div>
+    </div> -->
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
         <a (click)="clickPost(post, i)">
@@ -17,7 +12,7 @@
               <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
               </div>
               <div class="post-content">
-                <div class="mr-4"> <i class="fa fa-heart" [ngClass]="{ heart: isLiked }"></i> {{post.likes.length}} </div>
+                <div class="mr-4"> <i class="fa fa-heart"></i> {{post.likes.length}} </div>
                 <div> <i class="nc-icon nc-chat-33"></i> {{post.comments.length}} </div>
               </div>
             </div>
@@ -27,7 +22,11 @@
         <button class="btn btn-danger" (click)="deletePost(post)">delete</button> -->
       </div>
     </div>
-   
+    
+    <div class="text-center">
+      <a href="#" class="btn btn-warning" [routerLink]="['/posts/create']"
+      routerLinkActive="router-link-active">create</a>
+    </div>
   </div>
 </section>
 
