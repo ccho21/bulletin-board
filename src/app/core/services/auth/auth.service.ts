@@ -29,7 +29,7 @@ export class AuthService {
     private loaderService: LoaderService,
     private userService: UserService
   ) {
-    /* Saving user data in localstorage when 
+    /* Saving user data in localstorage when
     logged in and setting up null when logged out */
     this.afAuth.authState.subscribe(user => {
       if (user) {
@@ -51,7 +51,7 @@ export class AuthService {
       return response;
     }
   }
-  getSignedUser() : any{
+  getSignedUser(): any {
     return this.afAuth.authState
       .pipe(this.firebaseAuthChangeListener);
   }
@@ -83,7 +83,7 @@ export class AuthService {
             this.logger.info('not verified');
             this.sendVerificationMail();
             this.loaderService.hide();
-            throw 'Email verification is required';
+            throw new Error('Email verification is required');
           }
         });
         // loader end;
@@ -100,7 +100,7 @@ export class AuthService {
     return from(this.afAuth.auth
       .createUserWithEmailAndPassword(user.email, user.password)
       .then(result => {
-        /* Call the SendVerificaitonMail() function when new user sign 
+        /* Call the SendVerificaitonMail() function when new user sign
         up and returns promise */
         this.logger.info(
           '### result from createUserWithEmailAndPassword',
@@ -113,7 +113,7 @@ export class AuthService {
           displayName: user.displayName.split(' ').join('_').toLowerCase(),
           photoURL: user.photoURL
         };
-        
+
         this.logger.info('### userdata DTO', userData);
         this.afAuth.auth.currentUser.updateProfile({
           displayName: user.displayName.split(' ').join('_').toLowerCase(),

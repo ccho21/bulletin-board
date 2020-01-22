@@ -1,9 +1,6 @@
 <section>
+
   <div class="container">
-    <!-- <div class="row">
-      <a href="#" class="btn btn-link btn-info" [routerLink]="['/posts/create']"
-        routerLinkActive="router-link-active">create</a>
-    </div> -->
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
         <a (click)="clickPost(post, i)">
@@ -18,21 +15,19 @@
             </div>
           </div>
         </a>
-        <!-- <button class="btn btn-warning" (click)="editPost(post)">edit</button>
-        <button class="btn btn-danger" (click)="deletePost(post)">delete</button> -->
       </div>
     </div>
-    
     <div class="text-center">
       <a href="#" class="btn btn-warning" [routerLink]="['/posts/create']"
-      routerLinkActive="router-link-active">create</a>
+        routerLinkActive="router-link-active">create</a>
     </div>
   </div>
 </section>
+<div>
+  <router-outlet></router-outlet>
+</div>
 
-
-
- <!-- <small *ngIf="posts">
+<!-- <small *ngIf="posts">
       <h3>POST LIST</h3>
       <pre>
           {{ posts | json }}

@@ -16,24 +16,23 @@
   </div>
   <div class="moving-clouds" style="background-image: url('assets/img/clouds.png'); "></div>
 </div>
-<div class="main">
-  <app-resume></app-resume>
-  <app-projects></app-projects>
 
-  <!-- <div class="section section-dark text-center">
-    <div class="container">
-      <h2 class="title">Let's share your thought with pictures</h2>
-    </div>
-  </div> -->
-  <div>
+<div class="main">
+  <div class="my-5">
     <div class="container">
       <h2 class="title text-center">Let's share your thought with pictures</h2>
     </div>
-    <app-post-list></app-post-list>
+    <div class="my-5">
+      <app-post-list></app-post-list>
+    </div>
   </div>
-  <div>
-    <router-outlet></router-outlet>
+  <div class="my-5">
+    <app-projects></app-projects>
   </div>
-  <!-- <app-contact-us></app-contact-us> -->
-  <!-- <app-about></app-about> -->
+  <div class="my-5">
+    <app-resume></app-resume>
+  </div>
+  <div class="my-5">
+    <app-contact-us></app-contact-us>
+  </div>
 </div>

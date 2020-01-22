@@ -19,11 +19,11 @@ export class HelperService {
   ) { }
 
 
-  /**
-* Delete all documents in specified collections.
-*
-* @param {string} collections Collection names
-* @return {Promise<number>} Total number of documents deleted (from all collections)
+/*
+  * Delete all documents in specified collections.
+  *
+  * @param {string} collections Collection names
+  * @return {Promise<number>} Total number of documents deleted (from all collections)
 */
   deleteCollection(collection): Promise<number> {
     this.logger.info('############ delete collection ###########');

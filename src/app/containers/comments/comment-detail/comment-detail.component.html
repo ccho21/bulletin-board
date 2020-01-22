@@ -15,7 +15,7 @@
           {{ comment.comment }}
         </p>
         <!-- functions -->
-        <div class="cd-comment-actions">
+        <div class="cd-comment-actions" *ngIf="isAuthor">
           <a (click)="openActionModal(userActions)">
             <i class="fa fa-ellipsis-h"></i>
           </a>

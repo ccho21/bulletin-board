@@ -29,7 +29,7 @@
                 {{ updatedPost.author.displayName }}
               </div>
               <div class="pr-2">
-                <a class="d-flex align-items-center" (click)="openActionModal(userActions)">
+                <a class="d-flex align-items-center" (click)="openActionModal(userActions)" *ngIf="isAuthor">
                   <i class="fa fa-ellipsis-h"></i>
                   <!-- <i class="nc-icon nc-bullet-list-67"></i> -->
                 </a>

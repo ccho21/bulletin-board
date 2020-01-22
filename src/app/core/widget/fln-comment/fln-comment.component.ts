@@ -15,12 +15,12 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./fln-comment.component.scss']
 })
 export class FlnCommentComponent implements OnInit, OnDestroy {
-  commentForm: FormControl
+  commentForm: FormControl;
   @Input() comment: Comment;
   @Output() commentEmit: EventEmitter<any> = new EventEmitter();
-  
-  replySubscription : Subscription
-  userNameTag
+
+  replySubscription: Subscription;
+  userNameTag;
   parentComment: Comment;
   constructor(
     private logger: LoggerService,
@@ -31,15 +31,15 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.commentForm = new FormControl('');
-   
+
     this.postStateService.getReplyDTO().subscribe(res => {
       this.logger.info('### REPLY!!!', res);
       this.userNameTag = `@${res.author.displayName}`;
       this.parentComment = this.cleanUpComments(res);
       this.commentForm.patchValue(`${this.userNameTag} `);
-    })
+    });
   }
-    
+
   cleanUpComments(c) {
     const comment = {...c};
     delete comment.comments;
@@ -50,7 +50,7 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
     if (!this.commentForm.valid) {
       return;
     }
-   
+
     const comment = this.commentForm.value.replace(`${this.userNameTag} `, '');
     const author: User = this.authService.getCurrentUser();
     const commentDTO: Comment = {
@@ -61,12 +61,11 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
       comments: [],
     };
 
-    if(this.userNameTag && this.parentComment) {
-        if(this.parentComment.hasOwnProperty('commentTo')) {
+    if (this.userNameTag && this.parentComment) {
+        if (this.parentComment.hasOwnProperty('commentTo')) {
           commentDTO.commentTo = this.parentComment.commentTo;
           commentDTO.parentCommentId = this.parentComment.parentCommentId;
-        } 
-        else {
+        } else {
           commentDTO.commentTo = this.parentComment;
           commentDTO.parentCommentId = this.parentComment.commentId;
         }
@@ -80,7 +79,7 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.replySubscription) {
+    if (this.replySubscription) {
       this.replySubscription.unsubscribe();
     }
   }

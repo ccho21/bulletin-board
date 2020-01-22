@@ -3,17 +3,18 @@ import {
   OnInit,
   Input,
   OnDestroy
-} from "@angular/core";
-import { FormControl } from "@angular/forms";
-import { LoggerService } from "@app/core/services/logger/logger.service";
-import { CommentService } from "@app/core/services/comment/comment.service";
-import { Comment } from "@app/shared/models/comment";
-import { Post } from "@app/shared/models/post";
+} from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { LoggerService } from '@app/core/services/logger/logger.service';
+import { CommentService } from '@app/core/services/comment/comment.service';
+import { Comment } from '@app/shared/models/comment';
+import { Post } from '@app/shared/models/post';
 
 import { Subscription, of, from, forkJoin } from 'rxjs';
 import { toArray, concatMap } from 'rxjs/operators';
 import { PostStateService } from '@app/containers/posts/post-state.service';
 import { ModalService } from '@app/core/services/modal/modal.service';
+import { AuthService } from '@app/core/services/auth/auth.service';
 
 @Component({
   selector   : 'app-comment-detail',
@@ -22,38 +23,50 @@ import { ModalService } from '@app/core/services/modal/modal.service';
 })
 export class CommentDetailComponent implements OnInit {
 
-  @Input() post          : Post;
-  @Input() comment       : Comment;
-         addCommentValid : boolean;
-         commentForm     : FormControl;
+  @Input() post: Post;
+  @Input() comment: Comment;
+         addCommentValid: boolean;
+         commentForm: FormControl;
          editCommentValid: boolean;
-         isCommentVisible: boolean = false;
-         subCommentList  : Array<Comment> = [];
+         isCommentVisible = false;
+         subCommentList: Array<Comment> = [];
+
+  isAuthor: boolean;
+
   constructor(
-    private logger          : LoggerService,
-    private commentService  : CommentService,
+    private logger: LoggerService,
+    private commentService: CommentService,
     private postStateService: PostStateService,
-    private modalService    : ModalService
+    private modalService: ModalService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.commentForm = new FormControl("");
-    // this.logger.info('### comment', this.comment);
+    this.commentForm = new FormControl('');
+
+    if (this.comment) {
+     this.isAuthor = this.isUserAuthor(this.comment);
+     this.logger.info('### is author', this.isAuthor);
+    }
+  }
+
+  isUserAuthor(comment: Comment): boolean {
+    const { uid } = this.authService.getCurrentUser();
+    const authorUid = comment.author.uid;
+    return uid === authorUid ? true : false;
   }
 
   updateComment(commentDTO): void {
     const postId     = this.post.postId;
     const commentId  = commentDTO.commentId;
-          commentDTO = this.cleanUp(commentDTO);
+    commentDTO = this.cleanUp(commentDTO);
     this.commentService.updateComment(postId, commentId, commentDTO).subscribe(res => {
       this.logger.info('### updating comment is successful. ', res);
     });
   }
 
   deleteComment(comment): void {
-    const postId    = this.post.postId;
-    const commentId = comment.commentId;
-    this.commentService.deleteComment(postId, commentId).subscribe(res => {
+    this.commentService.deleteComment({...comment}).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
       // update post
     });
@@ -88,7 +101,7 @@ export class CommentDetailComponent implements OnInit {
     const newComment = this.commentForm.value;
     const commentDTO = { ...comment };
     if (newComment !== comment) {
-      // updateAt - createdAt = (when it is the last update occured). 
+      // updateAt - createdAt = (when it is the last update occured).
       commentDTO.comment   = newComment;
       commentDTO.updatedAt = new Date().toISOString();
       this.updateComment(commentDTO);
@@ -99,8 +112,8 @@ export class CommentDetailComponent implements OnInit {
   showReplies(e, comment) {
     e.preventDefault();
     this.isCommentVisible = !this.isCommentVisible;
-    if(this.isCommentVisible) {
-      if(!(this.subCommentList.length > 0)) {
+    if (this.isCommentVisible) {
+      if (!(this.subCommentList.length > 0)) {
         this.generateSubComments(comment);
       }
     }

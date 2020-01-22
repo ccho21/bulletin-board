@@ -1,17 +1,17 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Post } from "../../../shared/models/post";
-import { LoggerService } from "@app/core/services/logger/logger.service";
-import { of, Observable, forkJoin, from } from "rxjs";
-import { concatMap, take } from "rxjs/operators";
-import { Comment } from "@app/shared/models/comment";
-import { Like } from "@app/shared/models/like";
-import { CommentService } from "@app/core/services/comment/comment.service";
-import { SubCommentService } from "@app/core/services/sub-comment/sub-comment.service";
-import { HelperService } from "@app/core/services/helper/helper.service";
-import { AuthService } from "@app/core/services/auth/auth.service";
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Post } from '../../../shared/models/post';
+import { LoggerService } from '@app/core/services/logger/logger.service';
+import { of, Observable, forkJoin, from } from 'rxjs';
+import { concatMap, take } from 'rxjs/operators';
+import { Comment } from '@app/shared/models/comment';
+import { Like } from '@app/shared/models/like';
+import { CommentService } from '@app/core/services/comment/comment.service';
+import { SubCommentService } from '@app/core/services/sub-comment/sub-comment.service';
+import { HelperService } from '@app/core/services/helper/helper.service';
+import { AuthService } from '@app/core/services/auth/auth.service';
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class PostService {
   constructor(
@@ -25,18 +25,18 @@ export class PostService {
 
   /* Get post list */
   getPosts() {
-    return this.db.collection<Post>("posts").get();
+    return this.db.collection<Post>('posts').get();
   }
 
   getPostsByUid() {
     const { uid } = this.authService.getCurrentUser();
     return this.db
-      .collection<Post>("posts", ref => ref.where("author.uid", "==", `${uid}`).orderBy('createdAt')).get();
+      .collection<Post>('posts', ref => ref.where('author.uid', '==', `${uid}`).orderBy('createdAt')).get();
   }
 
   /* Get post */
   getPost(postId: string) {
-    return this.db.collection<Post>("posts").doc(postId).get();
+    return this.db.collection<Post>('posts').doc(postId).get();
   }
 
   /* Create post */
@@ -44,14 +44,14 @@ export class PostService {
     const id = this.db.createId();
     post.postId = id;
     const query = this.db
-      .collection<Post>("posts").doc(post.postId).set(post);
+      .collection<Post>('posts').doc(post.postId).set(post);
     return of(query);
   }
 
   /* Update post */
   updatePost(id, post: Post) {
     const query = this.db
-      .collection<Post>("posts")
+      .collection<Post>('posts')
       .doc(id)
       .update(post);
     return of(query);
@@ -66,7 +66,7 @@ export class PostService {
       const postId = post.postId;
       requests.push(
         this.db
-          .collection<Post>("posts")
+          .collection<Post>('posts')
           .doc<Post>(postId)
           .valueChanges()
       );
@@ -77,22 +77,22 @@ export class PostService {
   /* Delete post */
   deletePost(id: string) {
     const postRef = this.db
-      .collectionGroup<Post>('posts', ref => ref.where('postId', '==', id).orderBy('createdAt'));
-    const commentRef = this.db.collectionGroup<Comment>('comments', ref => ref.where('postId', '==', id).orderBy('createdAt'))
+      .collection<Post>('posts', ref => ref.where('postId', '==', id));
+    const commentRef = this.db.collectionGroup<Comment>('comments', ref => ref.where('postId', '==', id).orderBy('createdAt'));
     const likeRef = this.db.collectionGroup('likes', ref => ref.where('postId', '==', id).orderBy('type'));
-    
-    const query = forkJoin(
-      from(this.helperService.deleteCollection(postRef)),
-      from(this.helperService.deleteCollection(commentRef)),
-      from(this.helperService.deleteCollection(likeRef)),
-    );
+
+    const query = forkJoin([
+      of(this.helperService.deleteCollection(postRef)),
+      of(this.helperService.deleteCollection(commentRef)),
+      of(this.helperService.deleteCollection(likeRef))
+    ]);
     return query;
   }
 
   /* ACTIVITIES */
   updatePostViews(post: Post) {
     let count = 0;
-    if (post.hasOwnProperty("views")) {
+    if (post.hasOwnProperty('views')) {
       count = post.views += 1;
     } else {
       count = post.views = 1;
@@ -111,7 +111,7 @@ export class PostService {
     filterPosts.forEach((postId, i) => {
       requests.push(
         this.db
-          .collection<Post>("posts")
+          .collection<Post>('posts')
           .doc<Post>(postId)
           .valueChanges()
       );

@@ -17,26 +17,26 @@ import { PostStateService } from '@app/containers/posts/post-state.service';
   styleUrls                         : ['./fln-like.component.scss']
 })
 export class FlnLikeComponent implements OnInit, OnDestroy {
-  mode                              : MODE;
+  mode: MODE;
   constructor(
-    private route                   : ActivatedRoute,
-    private logger                  : LoggerService,
-    private authService             : AuthService,
-    private likeService             : LikeService,
-    private userActivitiesService   : UserActivitiesService,
-    private postStateService        : PostStateService
+    private route: ActivatedRoute,
+    private logger: LoggerService,
+    private authService: AuthService,
+    private likeService: LikeService,
+    private userActivitiesService: UserActivitiesService,
+    private postStateService: PostStateService
   ) { }
   isLiked;
-  likeId                            : string;
+  likeId: string;
   data;
-  type                              : number;
-  user                              : User;
-  likeSubscription                  : Subscription;
-  like                              : Like;
-  isPost                            : boolean;
-  @Input() post                     : Post;
-  @Input() comment                  : Comment;
-  @Input() subComment               : SubComment;
+  type: number;
+  user: User;
+  likeSubscription: Subscription;
+  like: Like;
+  isPost: boolean;
+  @Input() post: Post;
+  @Input() comment: Comment;
+  @Input() subComment: SubComment;
   ngOnInit() {
     this.initData();
     this.checkLiked();
@@ -79,16 +79,14 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
 
 
   addLike(data) {
-    let dto                         : Like = this.getDTO(data);
-    const dataDTO                   = { ...data };
+    const dto: Like = this.getDTO(data);
     const dataId                    = this.getId();
-    this.likeService.addLike(dataId, dto, this.type, dataDTO).subscribe(res => {
+    this.likeService.addLike(dataId, dto).subscribe(res => {
       this.logger.info('### like successfully added', res);
       this.isLiked = res;
-      if(this.data.hasOwnProperty('likes')) {
+      if (this.data.hasOwnProperty('likes')) {
         this.data.likes.push({...res});
-      }
-      else { 
+      } else {
         this.data.likes = [{...res}];
       }
       this.postStateService.setPost(this.data);
@@ -116,8 +114,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   getDTO(data) {
     if (this.mode === MODE.COMMENT) {
       return this.createCommentDTO(data);
-    }
-    else if (this.mode === MODE.POST) {
+    } else if (this.mode === MODE.POST) {
       return this.createPostDTO(data);
     }
   }
@@ -125,8 +122,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   getId() {
     if (this.mode === MODE.COMMENT) {
       return this.comment.commentId;
-    }
-    else if (this.mode === MODE.POST) {
+    } else if (this.mode === MODE.POST) {
       return this.post.postId;
     }
   }
@@ -136,16 +132,20 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
       type                          : 1,
       postId                        : post.postId,
       user                          : this.user
-    }
+    };
   }
 
   createCommentDTO(comment): Like {
-    return {
+    const dto: Like  = {
       type                          : 2,
       commentId                     : comment.commentId,
       postId                        : comment.postId,
       user                          : this.user
+    };
+    if (comment.hasOwnProperty('commentTo')) {
+      dto.pCommentId = comment.commentTo.commentId;
     }
+    return {...comment};
   }
 }
 

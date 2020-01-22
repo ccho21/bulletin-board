@@ -14,6 +14,7 @@ import { CommentService } from '@app/core/services/comment/comment.service';
 import { PostStateService } from '../post-state.service';
 import { ModalService } from '@app/core/services/modal/modal.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AuthService } from '@app/core/services/auth/auth.service';
 @Component({
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
@@ -34,6 +35,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   postListLength: number;
   leftArrowValid = true;
   rightArrowValid = true;
+  isAuthor: boolean;
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
@@ -44,11 +46,18 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     private postStateService: PostStateService,
     private modalService: ModalService,
     private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
     this.logger.info('###catching postID', this.postId);
     this.getPost(this.postId);
+  }
+
+  isUserAuthor(post): boolean {
+    const { uid } = this.authService.getCurrentUser();
+    const authorUid = post.author.uid;
+    return uid === authorUid ? true : false;
   }
 
   getPost(postId): void {
@@ -86,6 +95,10 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         this.updatedPost = result;
         this.postIndex = this.postStateService.setPost(this.updatedPost);
         this.logger.info('### post INDEX', this.postIndex);
+
+        // check if the current user matches with author of the post.
+        this.isAuthor = this.isUserAuthor(this.updatedPost);
+
         this.checkValidArrow(this.postIndex);
         if (this.updatedPost.photoURLs.length) {
           this.hasImage = true;
@@ -158,7 +171,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   deletePost(post) {
-    this.logger.info('### delete post should be implemented');
+    if (this.isAuthor) {
+      this.logger.info('### delete post should be implemented');
+      this.postService.deletePost(post.postId).subscribe(result => {
+        this.logger.info('### all deleted', result);
+      });
+    }
   }
 
   getPostLikes(p) {
