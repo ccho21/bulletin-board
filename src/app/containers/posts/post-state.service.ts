@@ -43,7 +43,7 @@ export class PostStateService {
 
     setPost(post: Post): number {
         const pIndex = this.posts.findIndex(p => p.postId === post.postId);
-        this.logger.info('### posted');
+        this.logger.info('### posted', this.posts);
         this.posts[pIndex] = { ...post };
         return pIndex;
     }

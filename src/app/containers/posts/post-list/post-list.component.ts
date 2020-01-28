@@ -72,7 +72,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   editPost(post) {
     this.logger.info(post);
-    this.router.navigateByUrl(`/posts/${post.postId}/edit`);
+    this.router.navigateByUrl(`/home/p/${post.postId}/edit`);
   }
 
   getBackgroundImageUrl(post) {
@@ -81,7 +81,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   clickPost(post, index) {
     this.postStateService.setPostIndex(index);
-    this.router.navigateByUrl(`posts/${post.postId}`);
+    this.router.navigateByUrl(`/home/p/${post.postId}`);
   }
 
   ngOnDestroy() {

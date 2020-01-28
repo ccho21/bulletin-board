@@ -22,6 +22,6 @@ export class ForgotPasswordComponent implements OnInit {
 
   goBack() {
     this.modalService.signInOpen();
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/home');
   }
 }

@@ -62,7 +62,7 @@ export class SignInComponent implements OnInit {
  
   close(link?: string) {
     this.activeModal.close();
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/home');
   }
 
 }

@@ -8,13 +8,18 @@
     <div class="d-flex justify-content-center">
       <div class="d-post-box-left">
         <div class="" *ngIf="hasImage">
-          <ngb-carousel *ngIf="updatedPost" [showNavigationIndicators]="true" class="d-post-img">
+          <ngb-carousel *ngIf="updatedPost && updatedPost.photoURLs.length > 1 else onePhoto" [showNavigationIndicators]="true" class="d-post-img">
             <ng-template ngbSlide *ngFor="let image of updatedPost.photoURLs">
               <div class="picsum-img-wrapper">
                 <img [src]="image" alt="Random slide">
               </div>
             </ng-template>
           </ngb-carousel>
+          <ng-template #onePhoto>
+            <div class="d-post-img">
+              <img [src]="updatedPost.photoURLs[0]" alt="{{updatedPost.title}}">
+            </div>
+          </ng-template>
         </div>
       </div>
       <div class="w-75">

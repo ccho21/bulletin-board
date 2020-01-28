@@ -26,7 +26,7 @@ export class VerifyEmailComponent implements OnInit {
       this.authService.signOut();
       this.modalService.signInOpen();
     }
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/home');
   }
   getUserData() {
     return this.authService.userData;

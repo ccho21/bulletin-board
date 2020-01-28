@@ -7,7 +7,7 @@ import { postRouterConfig } from './post.routes';
 const postsRoutes: Routes = postRouterConfig;
 @NgModule({
   imports: [
-      RouterModule.forRoot(postsRoutes)
+      RouterModule.forChild(postsRoutes)
     ],
   exports: [RouterModule]
 })

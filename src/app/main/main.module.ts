@@ -1,9 +1,7 @@
 // angular
-import { BrowserModule } from "@angular/platform-browser";
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 //Boostrap
 import { NgbModule, NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -22,8 +20,6 @@ import { ProjectsComponent } from "../components/projects/projects.component";
 import { MainComponent } from "./main.component";
 import { ResumeComponent } from '../components/resume/resume.component';
 
-import { PostModule} from '../containers/posts/post.module';
-
 // Main
 import { MainRoutingModule } from './main-routing.module';
  
@@ -37,10 +33,8 @@ import { MainRoutingModule } from './main-routing.module';
   ],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     NgbModule,
     MatProgressSpinnerModule,
     BrowserAnimationsModule,
@@ -49,12 +43,6 @@ import { MainRoutingModule } from './main-routing.module';
     MatSliderModule,
     MatDialogModule,
     MainRoutingModule,
-    PostModule
-  ],
-  entryComponents: [MainComponent],
-  exports: [MainComponent],
-  providers: [NgbActiveModal],
-  bootstrap: [MainComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  ]
 })
 export class MainModule {}

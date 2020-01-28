@@ -56,7 +56,6 @@ import { AuthGuard } from './shared/guard/auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ComponentsModule } from './components/components.module';
-import { PostModule } from './containers/posts/post.module';
 import { MainModule } from './main/main.module';
 import { ClickOutsideDirective } from './core/directives/click-outside.directive';
 import { UserComponent } from './containers/user/user.component';
@@ -107,7 +106,6 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   entryComponents: [AppComponent],
   imports: [
     BrowserModule,
-    PostModule,
     MainModule,
     AppRoutingModule,
     FormsModule,

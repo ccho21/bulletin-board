@@ -7,7 +7,7 @@ import { mainRouterConfig } from './main.routes';
 const mainRoutes: Routes = mainRouterConfig;
 @NgModule({
   imports: [
-      RouterModule.forRoot(mainRoutes)
+      RouterModule.forChild(mainRoutes)
     ],
   exports: [RouterModule]
 })

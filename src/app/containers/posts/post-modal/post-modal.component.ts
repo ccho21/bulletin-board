@@ -56,7 +56,7 @@ export class PostModalComponent implements OnDestroy, OnInit {
         this.detailDialogRef.afterClosed().subscribe(res => {
           this.logger.info('########## AFTER DETAIL CLOSED', res);
           if (!res) {
-            this.router.navigateByUrl('');
+            this.router.navigateByUrl('/home');
           }
         }, error => {
           alert(error);
@@ -69,7 +69,7 @@ export class PostModalComponent implements OnDestroy, OnInit {
         this.createDialogRef.afterClosed().subscribe(res => {
           this.logger.info('########## AFTER CREATE CLOSED', res);
           if (!res) {
-            this.router.navigateByUrl('');
+            this.router.navigateByUrl('/home');
           }
         }, error => {
           alert(error);
@@ -80,9 +80,9 @@ export class PostModalComponent implements OnDestroy, OnInit {
   }
   goToPost(postId?) {
     if (postId) {
-      this.router.navigateByUrl(`posts/${postId}`);
+      this.router.navigateByUrl(`/home/p/${postId}`);
     } else {
-      this.router.navigateByUrl('');
+      this.router.navigateByUrl('/home');
     }
   }
 
