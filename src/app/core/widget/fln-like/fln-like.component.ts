@@ -80,6 +80,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
 
   addLike(data) {
     const dto: Like = this.getDTO(data);
+    this.logger.info('### DTO to GO', dto);
     const dataId                    = this.getId();
     this.likeService.addLike(dataId, dto).subscribe(res => {
       this.logger.info('### like successfully added', res);
@@ -89,7 +90,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
       } else {
         this.data.likes = [{...res}];
       }
-      this.postStateService.setPost(this.data);
+      // this.postStateService.setPost(this.data);
     });
   }
 
@@ -100,7 +101,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
       const likeIndex = this.data.likes.findIndex(like => like.likeId === likeId);
       this.data.likes.splice(likeIndex, 1);
       this.isLiked = null;
-      this.postStateService.setPost(this.data);
+      // this.postStateService.setPost(this.data);
     });
   }
 
@@ -131,7 +132,8 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
     return {
       type                          : 1,
       postId                        : post.postId,
-      user                          : this.user
+      user                          : this.user,
+      createdAt                     : new Date().toISOString()
     };
   }
 
@@ -140,12 +142,13 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
       type                          : 2,
       commentId                     : comment.commentId,
       postId                        : comment.postId,
-      user                          : this.user
+      user                          : this.user,
+      createdAt                     : new Date().toISOString()
     };
     if (comment.hasOwnProperty('commentTo')) {
       dto.pCommentId = comment.commentTo.commentId;
     }
-    return {...comment};
+    return dto;
   }
 }
 

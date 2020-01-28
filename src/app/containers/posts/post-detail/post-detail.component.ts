@@ -74,6 +74,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           ]);
         }),
         concatMap(results => {
+          this.logger.info('### likes ', results[1]);
           p.comments = results[0].docs.map(cur => cur.data());
           p.likes = results[1].docs.map(cur => cur.data());
           return of(p);
@@ -89,8 +90,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           // book mark, like, view goes to this by forkjoin
           return this.getLikesByPostIdAndUid(p);
         })
-      )
-      .subscribe((result: any) => {
+      ).subscribe((result: any) => {
         this.logger.info('### GET POST DETAIL FINAL', result);
         this.updatedPost = result;
         this.postIndex = this.postStateService.setPost(this.updatedPost);
@@ -165,10 +165,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       this.logger.info('### get activities', res.docs[0].data());
     });
   }
+
   updatePost(post) {
     // this.postService.updatePost(post.postId, post);
     this.logger.info('### update post should be implemented');
   }
+
 
   deletePost(post) {
     if (this.isAuthor) {

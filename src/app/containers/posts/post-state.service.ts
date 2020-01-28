@@ -50,7 +50,8 @@ export class PostStateService {
 
     getComments(postId: string): Array<Comment> {
         const post = this.getPost(postId);
-        const comments = post.comments;
+        const comments = post.comments.slice();
+        this.logger.info('### comments in post state service ###', comments);
         return comments;
     }
 
@@ -65,7 +66,8 @@ export class PostStateService {
         const likes = post.likes.filter(like => like.type === 2);
         return likes;
     }
-
+    
+    /* SUBJECT */
     updateCommentDTO(commentDTO) {
         this.commentSubject.next(commentDTO);
     }

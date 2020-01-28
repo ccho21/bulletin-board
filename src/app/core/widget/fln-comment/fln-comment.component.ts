@@ -32,7 +32,7 @@ export class FlnCommentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.commentForm = new FormControl('');
 
-    this.postStateService.getReplyDTO().subscribe(res => {
+    this.replySubscription = this.postStateService.getReplyDTO().subscribe(res => {
       this.logger.info('### REPLY!!!', res);
       this.userNameTag = `@${res.author.displayName}`;
       this.parentComment = this.cleanUpComments(res);

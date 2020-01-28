@@ -50,11 +50,11 @@ export class PostModalComponent implements OnDestroy, OnInit {
       if (postId) {
         this.detailDialogRef = this.matDialog.open(PostDetailComponent, {
           width: '1140px',
-          height: '600px',
         });
         this.detailDialogRef.componentInstance.postId = postId;
         this.detailDialogRef.afterClosed().subscribe(res => {
           this.logger.info('########## AFTER DETAIL CLOSED', res);
+          this.logger.info('###############AFTER CLOSED ', this.postStateService.getPosts());
           if (!res) {
             this.router.navigateByUrl('/home');
           }

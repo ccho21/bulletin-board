@@ -3,13 +3,13 @@ import {
   OnInit,
   Input,
   OnDestroy
-} from "@angular/core";
-import { LoggerService } from "@app/core/services/logger/logger.service";
+} from '@angular/core';
+import { LoggerService } from '@app/core/services/logger/logger.service';
 import { CommentService } from '@app/core/services/comment/comment.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
-import { Post } from "@app/shared/models/post";
-import { Comment } from "@app/shared/models/comment";
-import { User } from "@app/shared/models/user";
+import { Post } from '@app/shared/models/post';
+import { Comment } from '@app/shared/models/comment';
+import { User } from '@app/shared/models/user';
 import { Subscription, forkJoin } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { LikeService } from '@app/core/services/like/like.service';
@@ -20,9 +20,9 @@ import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
-  selector: "app-comments",
-  templateUrl: "./comments.component.html",
-  styleUrls: ["./comments.component.scss"]
+  selector: 'app-comments',
+  templateUrl: './comments.component.html',
+  styleUrls: ['./comments.component.scss']
 })
 export class CommentsComponent implements OnInit, OnDestroy {
 
@@ -45,22 +45,26 @@ export class CommentsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.commentForm = new FormControl('');
     // this.logger.info('### POST in Comment Component', this.post);
-    this.getComments(this.post);
+
+    this.commentList = this.getComments(this.post);
+    this.logger.info('### COMMMENTS', this.commentList);
 
     this.commentSubscription = this.postStateService.getCommentDTO().subscribe(res => {
       // this.logger.info('### COMMMENT DTO BEFORE ADDED', res);
       this.addComment(res);
-    })
+    });
   }
 
   getComments(post) {
     const postId = post.postId;
     const comments = this.postStateService.getComments(postId);
+    this.logger.info('### coments', comments);
     const cMap = new Map();
     const scMap = new Map();
 
     // saparate sub comments and main comments.
     comments.forEach(comment => {
+      comment.comments = [];
       if (comment.hasOwnProperty('commentTo')) {
         scMap.set(comment.commentId, comment);
       } else {
@@ -70,6 +74,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
     // Adding likes to comment
     const likes = this.postStateService.getLikesForComment(postId);
+    
     likes.forEach(l => {
       const lId = l.commentId;
       const cLike = cMap.get(lId);
@@ -89,7 +94,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
         }
       }
     });
-
+    this.logger.info('### likes', likes);
     // put sub comments under the main comments
     Array.from(scMap).map(subComment => {
       const sCommentId = subComment[1].commentTo.commentId;
@@ -102,19 +107,9 @@ export class CommentsComponent implements OnInit, OnDestroy {
         }
       }
     });
-
-    this.commentList = Array.from(cMap).map(c => ({ ...c[1] }));
-    this.logger.info('### COMMMENTS', this.commentList);
-
+    return Array.from(cMap).map(c => ({ ...c[1] }));
   }
 
-  // HELPER
-  cleanUp(data): Comment {
-    const copiedData = Object.assign({}, data);
-    delete copiedData.editCommentValid;
-    delete copiedData.addCommentValid;
-    return copiedData;
-  }
 
   addComment(comment): void {
     this.logger.info('### came comment');
@@ -149,6 +144,14 @@ export class CommentsComponent implements OnInit, OnDestroy {
     if (this.commentSubscription) {
       this.commentSubscription.unsubscribe();
     }
+  }
+
+  // HELPER
+  cleanUp(data): Comment {
+    const copiedData = Object.assign({}, data);
+    delete copiedData.editCommentValid;
+    delete copiedData.addCommentValid;
+    return copiedData;
   }
 }
 
