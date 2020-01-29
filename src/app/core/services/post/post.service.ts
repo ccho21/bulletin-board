@@ -28,10 +28,9 @@ export class PostService {
     return this.db.collection<Post>('posts').get();
   }
 
-  getPostsByUid() {
-    const { uid } = this.authService.getCurrentUser();
+  getPostsByUid(uid) {
     return this.db
-      .collection<Post>('posts', ref => ref.where('author.uid', '==', `${uid}`).orderBy('createdAt')).get();
+      .collection<Post>('posts', ref => ref.where('author.uid', '==', `${uid}`)).get();
   }
 
   /* Get post */

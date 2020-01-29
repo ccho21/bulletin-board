@@ -12,7 +12,7 @@ import { UserComponent } from './containers/user/user.component';
 import { AppComponent } from './app.component';
 
 export const rootRouterConfig: Routes = [
-  { path: '', component: MainComponent, pathMatch: 'full' },
+  { path: '',  redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'user/:id', component: UserComponent,
   },
