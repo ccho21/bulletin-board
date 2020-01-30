@@ -10,11 +10,11 @@ import { PostStateService } from '@app/containers/posts/post-state.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-fln-comment',
-  templateUrl: './fln-comment.component.html',
-  styleUrls: ['./fln-comment.component.scss']
+  selector: 'app-wgt-comment',
+  templateUrl: './wgt-comment.component.html',
+  styleUrls: ['./wgt-comment.component.scss']
 })
-export class FlnCommentComponent implements OnInit, OnDestroy {
+export class WgtCommentComponent implements OnInit, OnDestroy {
   commentForm: FormControl;
   @Input() comment: Comment;
   @Output() commentEmit: EventEmitter<any> = new EventEmitter();

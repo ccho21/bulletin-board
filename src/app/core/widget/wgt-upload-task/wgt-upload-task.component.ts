@@ -8,11 +8,11 @@ import { Upload } from '@app/shared/models/upload';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-fln-upload-task',
-  templateUrl: './fln-upload-task.component.html',
-  styleUrls: ['./fln-upload-task.component.scss']
+  selector: 'app-wgt-upload-task',
+  templateUrl: './wgt-upload-task.component.html',
+  styleUrls: ['./wgt-upload-task.component.scss']
 })
-export class FlnUploadTaskComponent implements OnInit {
+export class WgtUploadTaskComponent implements OnInit {
   isPostValid: boolean;
   @Input() file: Upload;
   @Output() fileStatusEmit = new EventEmitter<boolean>();

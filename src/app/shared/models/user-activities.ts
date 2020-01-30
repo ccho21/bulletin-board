@@ -4,7 +4,4 @@ import {Like} from '@app/shared/models/like';
 
 export interface UserActivities {
     uid                  : string;
-    views?               : Array<View>;
-    likes?               : Array<Like>;
-    bookmarks?           : Array<Bookmark>;
 }

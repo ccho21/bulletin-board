@@ -12,11 +12,11 @@ import { Comment } from '@app/shared/models/comment';
 import { SubComment } from '@app/shared/models/sub-comment';
 import { PostStateService } from '@app/containers/posts/post-state.service';
 @Component({
-  selector                          : 'app-fln-like',
-  templateUrl                       : './fln-like.component.html',
-  styleUrls                         : ['./fln-like.component.scss']
+  selector                          : 'app-wgt-like',
+  templateUrl                       : './wgt-like.component.html',
+  styleUrls                         : ['./wgt-like.component.scss']
 })
-export class FlnLikeComponent implements OnInit, OnDestroy {
+export class WgtLikeComponent implements OnInit, OnDestroy {
   mode: MODE;
   constructor(
     private route: ActivatedRoute,
@@ -106,7 +106,7 @@ export class FlnLikeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.logger.info('########### fln-like destroyed');
+    this.logger.info('########### Wgt-like destroyed');
     if (this.likeSubscription) {
       this.likeSubscription.unsubscribe();
     }

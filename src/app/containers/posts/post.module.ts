@@ -24,15 +24,18 @@ import { PostService } from '../../core/services/post/post.service';
 import { PostRoutingModule } from './post-routing.module';
 import { LikeService } from '@app/core/services/like/like.service';
 import { ViewService } from '@app/core/services/view/view.service';
-import { FlnCommentComponent } from '@app/core/widget/fln-comment/fln-comment.component';
-import { FlnLikeComponent } from '@app/core/widget/fln-like/fln-like.component';
 import { PipesModule } from '@app/core/pipes/pipes.module';
 
 import { CommentsComponent } from '@app/containers/comments/comments.component';
 import { CommentDetailComponent } from '@app/containers/comments/comment-detail/comment-detail.component';
 import { PostStateService } from './post-state.service';
-import { FlnUploadTaskComponent } from '@app/core/widget/fln-upload-task/fln-upload-task.component';
 import { PostModalComponent } from './post-modal/post-modal.component';
+
+import { WgtUploadTaskComponent } from '@app/core/widget/wgt-upload-task/wgt-upload-task.component';
+import { WgtCommentComponent } from '@app/core/widget/wgt-comment/wgt-comment.component';
+import { WgtLikeComponent } from '@app/core/widget/wgt-like/wgt-like.component';
+import { WgtBookmarkComponent } from '@app/core/widget/wgt-bookmark/wgt-bookmark.component';
+import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -40,11 +43,12 @@ import { PostModalComponent } from './post-modal/post-modal.component';
     PostEditComponent,
     PostListComponent,
     CommentsComponent,
-    FlnCommentComponent,
-    FlnLikeComponent,
+    WgtCommentComponent,
+    WgtLikeComponent,
     CommentDetailComponent,
-    FlnUploadTaskComponent,
-    PostModalComponent
+    WgtUploadTaskComponent,
+    PostModalComponent,
+    WgtBookmarkComponent
   ],
   entryComponents: [
     PostListComponent,
@@ -68,7 +72,14 @@ import { PostModalComponent } from './post-modal/post-modal.component';
   exports: [
     PostListComponent,
   ],
-  providers: [NgbActiveModal, PostService, LikeService, ViewService, PostStateService],
+  providers: [
+    NgbActiveModal,
+    PostService,
+    LikeService,
+    ViewService,
+    PostStateService,
+    BookmarkService
+  ],
   bootstrap: [PostListComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -38,6 +38,10 @@ export class PostService {
     return this.db.collection<Post>('posts').doc(postId).get();
   }
 
+  getBookmarkedPost(postIds) {
+    return this.db.collection('posts', ref => ref.where('postId', 'in', postIds)).get();
+  }
+
   /* Create post */
   addPost(post: Post) {
     const id = this.db.createId();

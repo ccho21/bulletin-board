@@ -6,9 +6,10 @@ import { LikeService } from '@app/core/services/like/like.service';
 import { concatMap, toArray } from 'rxjs/operators';
 import { of, Subscription, from, forkJoin } from 'rxjs';
 import { CommentService } from '../../../core/services/comment/comment.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PostStateService } from '../post-state.service';
 import { ModalService } from '@app/core/services/modal/modal.service';
+import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -26,8 +27,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     private likeService: LikeService,
     private commentService: CommentService,
     private router: Router,
+    private route: ActivatedRoute,
     private postStateService: PostStateService,
-    private modalService: ModalService,
   ) { }
 
   ngOnInit() {
@@ -72,7 +73,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   editPost(post) {
     this.logger.info(post);
-    this.router.navigateByUrl(`/home/p/${post.postId}/edit`);
+    this.router.navigateByUrl(`p/${post.postId}/edit`);
   }
 
   getBackgroundImageUrl(post) {
@@ -81,7 +82,8 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   clickPost(post, index) {
     this.postStateService.setPostIndex(index);
-    this.router.navigateByUrl(`/home/p/${post.postId}`);
+    this.logger.info(this.route);
+    this.router.navigate([`p`, post.postId]);
   }
 
   ngOnDestroy() {

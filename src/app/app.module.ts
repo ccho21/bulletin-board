@@ -58,12 +58,11 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ComponentsModule } from './components/components.module';
 import { MainModule } from './main/main.module';
 import { ClickOutsideDirective } from './core/directives/click-outside.directive';
-import { UserComponent } from './containers/user/user.component';
-
 
 // PIPE
 import { PipesModule } from './core/pipes/pipes.module';
 import { UserActivitiesService } from './core/services/user-activities/user-activities.service';
+import { UserModule } from './user/user.module';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -101,12 +100,12 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     FooterComponent,
     LoaderComponent,
     ClickOutsideDirective,
-    UserComponent,
   ],
   entryComponents: [AppComponent],
   imports: [
     BrowserModule,
     MainModule,
+    UserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
@@ -124,7 +123,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     MatSliderModule,
     MatDialogModule,
     ComponentsModule,
-    PipesModule
+    PipesModule,
   ],
   providers: [
     FirebaseService,

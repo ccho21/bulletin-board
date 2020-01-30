@@ -5,23 +5,17 @@
     <main class="col-md-12">
       <div class="inner-adjust">
         <div class="border-bottom">
-          <h2 class="h2 mb-3">Hello {{ user.displayName }}</h2>
+          <h2 class="h2 mb-3">Hello {{ fullName }}</h2>
         </div>
         <!-- Show user data when logged in -->
         <div class="row">
           <div class="col-md-12">
             <div class="media align-items-center mt-5">
-                <img
-                  class="img-circle img-no-padding img-responsive mr-5 c-user-img"
-                  src="{{user.photoURL}}"
-                  alt="{{ user.displayName }}"
-                />
+              <img class="img-circle img-no-padding img-responsive mr-5 c-user-img" src="{{user.photoURL}}"
+                alt="{{ user.displayName }}" />
               <div class="media-body mb-3">
                 <p>
-                  Name:
-                  <strong>{{
-                    user.displayName ? user.displayName : "User"
-                  }}</strong>
+                  Name: <strong>{{ fullName }}</strong>
                 </p>
                 <p>
                   Email: <strong>{{ user.email }}</strong>
@@ -31,12 +25,12 @@
                 </p>
                 <hr />
                 <div class="d-flex">
-                  <p>{{ posts.length }} <strong> posts </strong></p>
+                  <p>{{ numOfPosts }} <strong> posts </strong></p>
                   <p class="ml-4">
-                    {{ comments.length }} <strong> comments </strong>
+                    {{ numOfComments }} <strong> comments </strong>
                   </p>
                   <p class="ml-4">
-                    {{ likes.length }} <strong> likes </strong>
+                    {{ numOfLikes }} <strong> likes </strong>
                   </p>
                 </div>
               </div>
@@ -45,6 +39,8 @@
         </div>
       </div>
     </main>
+    
+    <!-- <router-outlet></router-outlet> -->
 
     <!-- User activities  -->
     <section class="col-md-12">
@@ -53,23 +49,20 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <p class="mb-4">Posts the user liked</p>
-          <div *ngIf="likedPosts.length !== 0; else lpValid">
-            <div *ngFor="let likedPost of likedPosts">
+          <p class="mb-4">Posts the user bookmarked</p>
+          <div *ngFor="let bookmarkedPost of bookmarkedPosts">
+          <div *ngIf="bookmarkedPosts.length !== 0; else lpValid">
               <div class="media">
-                <a  [routerLink]="['/posts', likedPost.postId]" routerLinkActive="router-link-active">
-                  <img
-                    class="img-thumbnail img-responsive c-img-thumnail mr-3"
-                    src="{{likedPost.photoURL}}"
-                    alt="{{likedPost.title}}"
-                  />
+                <a [routerLink]="['p/', bookmarkedPost.postId]" routerLinkActive="router-link-active">
+                  <img class="img-thumbnail img-responsive c-img-thumnail mr-3" src="{{bookmarkedPost.photoURLs[0]}}"
+                    alt="{{bookmarkedPost.title}}" />
                 </a>
                 <div class="media-body">
                   <div class="d-flex justify-content-between">
-                    <h5 class="mt-0">{{ likedPost.title }}</h5>
-                    <span>{{ likedPost.createdAt | postTime }}</span>
+                    <h5 class="mt-0">{{ bookmarkedPost.title }}</h5>
+                    <span>{{ bookmarkedPost.createdAt | postTime }}</span>
                   </div>
-                  <p>{{ likedPost.content }}</p>
+                  <p>{{ bookmarkedPost.content }}</p>
                 </div>
               </div>
             </div>
@@ -85,30 +78,30 @@
             Posts the user commented
           </p>
           <div *ngIf="likedPostsByComment.length !== 0; else lpcValid">
-              <div *ngFor="let p of likedPostsByComment">
-                <div class="media">
-                  <!-- <a [routerLink]="['/posts', likedPostsByComment.postId]" routerLinkActive="router-link-active" >
+            <div *ngFor="let p of likedPostsByComment">
+              <div class="media">
+                <!-- <a [routerLink]="['/posts', likedPostsByComment.postId]" routerLinkActive="router-link-active" >
                     <img
                       class="img-thumbnail img-responsive c-img-thumnail mr-3"
                       src="{{ p.photoURL }}"
                       alt="{{p.title}}"
                     />
                   </a> -->
-                  <div class="media-body">
-                    <div class="d-flex justify-content-between">
-                      <h5 class="mt-0">{{ p.title }}</h5>
-                      <span>{{ p.createdAt | postTime  }}</span>
-                    </div>
-                    <p>{{ p.content }}</p>
+                <div class="media-body">
+                  <div class="d-flex justify-content-between">
+                    <h5 class="mt-0">{{ p.title }}</h5>
+                    <span>{{ p.createdAt | postTime  }}</span>
                   </div>
+                  <p>{{ p.content }}</p>
                 </div>
               </div>
             </div>
-            <ng-template #lpcValid>
-              <div>
-                No posts
-              </div>
-            </ng-template>
+          </div>
+          <ng-template #lpcValid>
+            <div>
+              No posts
+            </div>
+          </ng-template>
         </div>
       </div>
     </section>

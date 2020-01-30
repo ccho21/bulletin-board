@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FlnUploadTaskComponent } from './fln-upload-task.component';
+import { WgtRichEditorComponent } from './wgt-rich-editor.component';
 
-describe('FlnUploadTaskComponent', () => {
-  let component: FlnUploadTaskComponent;
-  let fixture: ComponentFixture<FlnUploadTaskComponent>;
+describe('WgtRichEditorComponent', () => {
+  let component: WgtRichEditorComponent;
+  let fixture: ComponentFixture<WgtRichEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FlnUploadTaskComponent ]
+      declarations: [ WgtRichEditorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FlnUploadTaskComponent);
+    fixture = TestBed.createComponent(WgtRichEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

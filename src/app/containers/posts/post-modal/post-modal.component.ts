@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, switchMap } from 'rxjs/operators';
 import { PostDetailComponent } from '../post-detail/post-detail.component';
 import { ModalService } from '@app/core/services/modal/modal.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
@@ -24,7 +25,8 @@ export class PostModalComponent implements OnDestroy, OnInit {
     private router: Router,
     private logger: LoggerService,
     private matDialog: MatDialog,
-    private postStateService: PostStateService
+    private postStateService: PostStateService,
+    private location: Location
   ) {
     this.postIdSubscription = this.postStateService.postIdEmitted().subscribe(res => {
       if (res) {
@@ -53,10 +55,14 @@ export class PostModalComponent implements OnDestroy, OnInit {
         });
         this.detailDialogRef.componentInstance.postId = postId;
         this.detailDialogRef.afterClosed().subscribe(res => {
-          this.logger.info('########## AFTER DETAIL CLOSED', res);
           this.logger.info('###############AFTER CLOSED ', this.postStateService.getPosts());
           if (!res) {
-            this.router.navigateByUrl('/home');
+
+           
+            this.logger.info('### Location',  this.location.path());
+            this.logger.info('### route URL', this.route);
+            this.logger.info('### route URL', this.router.routerState);
+            this.router.navigateByUrl(this.router.routerState.snapshot.url);
           }
         }, error => {
           alert(error);
@@ -67,9 +73,8 @@ export class PostModalComponent implements OnDestroy, OnInit {
         });
 
         this.createDialogRef.afterClosed().subscribe(res => {
-          this.logger.info('########## AFTER CREATE CLOSED', res);
           if (!res) {
-            this.router.navigateByUrl('/home');
+            this.router.navigateByUrl(this.router.routerState.snapshot.url);
           }
         }, error => {
           alert(error);
@@ -79,10 +84,11 @@ export class PostModalComponent implements OnDestroy, OnInit {
     });
   }
   goToPost(postId?) {
+    this.logger.info('### through hrer');
     if (postId) {
-      this.router.navigateByUrl(`/home/p/${postId}`);
+      this.router.navigateByUrl(`p/${postId}`);
     } else {
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl(this.router.routerState.snapshot.url);
     }
   }
 

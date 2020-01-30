@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FlnLikeComponent } from './fln-like.component';
+import { WgtUploadTaskComponent } from './wgt-upload-task.component';
 
-describe('FlnLikeComponent', () => {
-  let component: FlnLikeComponent;
-  let fixture: ComponentFixture<FlnLikeComponent>;
+describe('WgtUploadTaskComponent', () => {
+  let component: WgtUploadTaskComponent;
+  let fixture: ComponentFixture<WgtUploadTaskComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FlnLikeComponent ]
+      declarations: [ WgtUploadTaskComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FlnLikeComponent);
+    fixture = TestBed.createComponent(WgtUploadTaskComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -24,17 +24,17 @@ export class LikeService {
   ) { }
 
   getLikes(postId: string, t: number) {
-    return this.db.collectionGroup('likes', ref => ref.where('postId', '==', postId).orderBy('type')).get();
+    return this.db.collectionGroup<Like>('likes', ref => ref.where('postId', '==', postId).orderBy('type')).get();
   }
 
   getLikesByUidAndPostId(postId) {
     const {uid} = this.authService.getCurrentUser();
-    return this.db.collectionGroup('likes', ref => ref.where('postId', '==', postId).where('user.uid', '==', uid).orderBy('type')).get();
+    return this.db
+    .collectionGroup<Like>('likes', ref => ref.where('postId', '==', postId).where('user.uid', '==', uid).orderBy('type')).get();
   }
 
-  getLikesByUid() {
-    const {uid} = this.authService.getCurrentUser();
-    return this.db.collectionGroup('likes', ref => ref.where('user.uid', '==', uid).orderBy('type')).get();
+  getLikesByUid(uid) {
+    return this.db.collectionGroup<Like>('likes', ref => ref.where('user.uid', '==', uid).orderBy('type')).get();
   }
 
   addLike(dataId: string, like: Like) {
@@ -42,7 +42,7 @@ export class LikeService {
     const likeId = this.db.createId();
     const likeDTO = this.cleanUndefined(like);
     likeDTO.likeId = likeId;
-    const query = this.db.doc(`user-activities/${uid}/likes/${likeId}`).set(likeDTO);
+    this.db.doc(`user-activities/${uid}/likes/${likeId}`).set(likeDTO);
     return of(likeDTO);
   }
 
@@ -72,7 +72,6 @@ export class LikeService {
       .collection('likes', ref => ref.where('user.uid', '==', uid));
     return query;
   }
-
 
   getLikesRef(data, t: number) {
     const path = this.getPath(data, t);

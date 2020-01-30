@@ -13,5 +13,4 @@ export const postRouterConfig: Routes = [
             { path: 'p/:id/edit', component: PostEditComponent },
         ]
     },
-   
 ];

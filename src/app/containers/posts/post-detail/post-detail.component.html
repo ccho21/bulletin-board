@@ -48,13 +48,14 @@
             <div class="d-post-detail pl-3">
               <div class="row mx-0 d-post-detail-functions">
                 <div>
-                  <app-fln-like [post]="updatedPost"></app-fln-like>
+                  <app-wgt-like [post]="updatedPost"></app-wgt-like>
                 </div>
                 <div class=" ml-2 flex-grow-1">
                   <i class="nc-icon nc-chat-33"></i>
                 </div>
                 <div class="ml-2">
-                  <i class="nc-icon nc-bookmark-2"></i>
+                  <app-wgt-bookmark [post]="updatedPost"></app-wgt-bookmark>
+                 
                 </div>
               </div>
               <div class="row mx-0 d-post-detail-likes" *ngIf="getFirstLikeDisplayName(updatedPost) else noLikes">
@@ -83,7 +84,7 @@
             </div>
             <!-- comment -->
             <div class="d-post-comment-write">
-              <app-fln-comment></app-fln-comment>
+              <app-wgt-comment></app-wgt-comment>
             </div>
           </div>
         </div>

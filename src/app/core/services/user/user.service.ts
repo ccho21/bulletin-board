@@ -13,13 +13,13 @@ import { UserActivities } from '@app/shared/models/user-activities';
 
 
 @Injectable({
-  providedIn          : 'root'
+  providedIn: 'root'
 })
 export class UserService {
 
   constructor(
-    private db        : AngularFirestore,
-    private logger    : LoggerService,
+    private db: AngularFirestore,
+    private logger: LoggerService,
     //  private userActivitiesService    : UserActivitiesService
   ) { }
 
@@ -27,11 +27,11 @@ export class UserService {
     sign up with username/password and sign in with social auth  
     provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
   setUserData(user: User) {
-    const userRef     : AngularFirestoreDocument<any> = this.db.doc(`users/${user.uid}`);
+    const userRef: AngularFirestoreDocument<any> = this.db.doc(`users/${user.uid}`);
     /* open activities */
     this.createActivities(user.uid);
     return userRef.set(user, {
-      merge           : true
+      merge: true
     });
   }
 
@@ -39,9 +39,7 @@ export class UserService {
     this.db.collection<UserActivities>('user-activities', ref => ref.where('uid', '==', uid)).get().subscribe(res => {
       if (res.docs.length === 0) {
         const activitiesDTO: UserActivities = {
-          uid,
-          likes       : [],
-          bookmarks   : []
+          uid
         };
         this.db.collection<UserActivities>('user-activities').doc(uid).set(activitiesDTO);
       }

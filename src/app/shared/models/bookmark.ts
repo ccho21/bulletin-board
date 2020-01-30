@@ -3,4 +3,3 @@ export interface Bookmark {
     postId: string;
     uid: string;
   }
-  

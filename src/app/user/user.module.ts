@@ -3,8 +3,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 // Boostrap
-import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -14,22 +13,14 @@ import {
   MatDialogModule,
   MatProgressSpinnerModule
 } from '@angular/material';
-import { AboutComponent } from '../components/about/about.component';
-import { ContactUsComponent } from '../components/contact-us/contact-us.component';
-import { ProjectsComponent } from '../components/projects/projects.component';
-import { MainComponent } from './main.component';
-import { ResumeComponent } from '../components/resume/resume.component';
-
-// Main
-import { MainRoutingModule } from './main-routing.module';
+// User
+import { UserRoutingModule } from './user-routing.module';
 // import { PostModule } from '@app/containers/posts/post.module';
+import { UserComponent } from './user.component';
+import { PipesModule } from '@app/core/pipes/pipes.module';
 @NgModule({
   declarations: [
-    MainComponent,
-    AboutComponent,
-    ContactUsComponent,
-    ProjectsComponent,
-    ResumeComponent,
+    UserComponent
   ],
   imports: [
     CommonModule,
@@ -42,8 +33,12 @@ import { MainRoutingModule } from './main-routing.module';
     MatInputModule,
     MatSliderModule,
     MatDialogModule,
-    MainRoutingModule,
-    // PostModule
+    UserRoutingModule,
+    // PostModule,
+    PipesModule
+  ],
+  exports: [
+    UserComponent
   ]
 })
-export class MainModule {}
+export class UserModule {}

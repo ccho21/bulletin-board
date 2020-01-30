@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FlnRichEditorComponent } from './fln-rich-editor.component';
+import { WgtBookmarkComponent } from './wgt-bookmark.component';
 
-describe('FlnRichEditorComponent', () => {
-  let component: FlnRichEditorComponent;
-  let fixture: ComponentFixture<FlnRichEditorComponent>;
+describe('WgtBookmarkComponent', () => {
+  let component: WgtBookmarkComponent;
+  let fixture: ComponentFixture<WgtBookmarkComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FlnRichEditorComponent ]
+      declarations: [ WgtBookmarkComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FlnRichEditorComponent);
+    fixture = TestBed.createComponent(WgtBookmarkComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

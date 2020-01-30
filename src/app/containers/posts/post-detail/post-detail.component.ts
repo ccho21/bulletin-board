@@ -15,6 +15,7 @@ import { PostStateService } from '../post-state.service';
 import { ModalService } from '@app/core/services/modal/modal.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '@app/core/services/auth/auth.service';
+import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
 @Component({
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
@@ -46,7 +47,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     private postStateService: PostStateService,
     private modalService: ModalService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private bookmarkService: BookmarkService
   ) { }
 
   ngOnInit() {
@@ -89,9 +91,14 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           const p = res;
           // book mark, like, view goes to this by forkjoin
           return this.getLikesByPostIdAndUid(p);
+        }),
+        concatMap(res => {
+          const p = res;
+          return this.getBookmarksByPostIdAndUid(p);
         })
       ).subscribe((result: any) => {
         this.logger.info('### GET POST DETAIL FINAL', result);
+
         this.updatedPost = result;
         this.postIndex = this.postStateService.setPost(this.updatedPost);
         this.logger.info('### post INDEX', this.postIndex);
@@ -108,7 +115,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   checkValidArrow(postIndex) {
-    this.logger.info('### postIndex ',postIndex);
+    this.logger.info('### postIndex ', postIndex);
     this.logger.info('### length ', this.postListLength);
     this.logger.info(this.leftArrowValid, this.rightArrowValid);
     if (postIndex === this.postListLength - 1) {
@@ -130,13 +137,16 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   getLikesByPostIdAndUid(post) {
     return this.likeService.getLikesByUidAndPostId(post.postId).pipe(
       concatMap(res => {
+
         const likes = res.docs.map(like => like.data());
         const comments = new Map();
-
-        /* MAPPING COMMENTS */
+        /* RESET LIKES AND MAPPING COMMENTS */
         post.comments.forEach(comment => {
+          comment.isLiked = null;
           comments.set(comment.commentId, comment);
         });
+        post.isLiked = null;
+
         likes.forEach(like => {
           if (like.type === 1) {
             post.isLiked = like;
@@ -145,7 +155,23 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           }
         });
         post.comments = Array.from(comments).map(cur => cur[1]);
-        this.logger.info('### updated POST BY ADDING LIKE STATUS ', post);
+        return of(post);
+      })
+    );
+  }
+
+  getBookmarksByPostIdAndUid(post) {
+    return this.bookmarkService.getBookmarksByUidAndPostId(post.postId).pipe(
+      concatMap(res => {
+        this.logger.info(res);
+        if (res.docs.length) {
+          const bookmark = res.docs[0].data();
+          if (bookmark) {
+            post.isBookmarked = bookmark;
+          }
+        } else {
+          post.isBookmarked = null;
+        }
         return of(post);
       })
     );
@@ -167,7 +193,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   updatePost(post) {
-    // this.postService.updatePost(post.postId, post);
     this.logger.info('### update post should be implemented');
   }
 
@@ -188,7 +213,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   getFirstLikeDisplayName(post): string {
-    // this.logger.info('### get first like display name', post);
     const p = post.likes.filter(p => p.type === 1);
     if (p.length) {
       return p[0].user.displayName;

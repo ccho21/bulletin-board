@@ -15,5 +15,4 @@ export const mainRouterConfig: Routes = [
             { path: '', loadChildren: () => import('@app/containers/posts/post.module.ts').then(mod => mod.PostModule) },
         ]
     },
-
 ];

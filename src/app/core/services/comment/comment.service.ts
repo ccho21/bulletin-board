@@ -35,8 +35,7 @@ export class CommentService {
       .collectionGroup<Comment>('comments', ref => ref.where('postId', '==', postId).orderBy('createdAt', 'asc')).get();
   }
 
-  getCommentsByUid() {
-    const { uid } = this.authService.getCurrentUser();
+  getCommentsByUid(uid) {
     return this.db
       .collectionGroup<Comment>('comments', ref => ref.where('author.uid', '==', uid).orderBy('createdAt')).get();
   }
