@@ -15,7 +15,7 @@ import {
 } from '@angular/material';
 // User
 import { UserRoutingModule } from './user-routing.module';
-// import { PostModule } from '@app/containers/posts/post.module';
+import { PostModule } from '@app/containers/posts/post.module';
 import { UserComponent } from './user.component';
 import { PipesModule } from '@app/core/pipes/pipes.module';
 @NgModule({
@@ -34,7 +34,7 @@ import { PipesModule } from '@app/core/pipes/pipes.module';
     MatSliderModule,
     MatDialogModule,
     UserRoutingModule,
-    // PostModule,
+    PostModule,
     PipesModule
   ],
   exports: [

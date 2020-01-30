@@ -22,7 +22,7 @@ import { ResumeComponent } from '../components/resume/resume.component';
 
 // Main
 import { MainRoutingModule } from './main-routing.module';
-// import { PostModule } from '@app/containers/posts/post.module';
+import { PostModule } from '@app/containers/posts/post.module';
 @NgModule({
   declarations: [
     MainComponent,
@@ -43,7 +43,7 @@ import { MainRoutingModule } from './main-routing.module';
     MatSliderModule,
     MatDialogModule,
     MainRoutingModule,
-    // PostModule
+    PostModule
   ]
 })
 export class MainModule {}

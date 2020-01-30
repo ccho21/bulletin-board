@@ -11,7 +11,7 @@ import { MainComponent } from './main.component';
 
 export const mainRouterConfig: Routes = [
     {
-        path: 'home', component: MainComponent, children: [
+        path: '', component: MainComponent, children: [
             { path: '', loadChildren: () => import('@app/containers/posts/post.module.ts').then(mod => mod.PostModule) },
         ]
     },

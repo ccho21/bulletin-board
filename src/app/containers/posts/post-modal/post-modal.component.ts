@@ -55,14 +55,9 @@ export class PostModalComponent implements OnDestroy, OnInit {
         });
         this.detailDialogRef.componentInstance.postId = postId;
         this.detailDialogRef.afterClosed().subscribe(res => {
-          this.logger.info('###############AFTER CLOSED ', this.postStateService.getPosts());
           if (!res) {
-
-           
-            this.logger.info('### Location',  this.location.path());
-            this.logger.info('### route URL', this.route);
-            this.logger.info('### route URL', this.router.routerState);
-            this.router.navigateByUrl(this.router.routerState.snapshot.url);
+            const base = this.router.routerState.snapshot.url.split('/p/');
+            this.router.navigateByUrl(base[0]);
           }
         }, error => {
           alert(error);
@@ -74,7 +69,8 @@ export class PostModalComponent implements OnDestroy, OnInit {
 
         this.createDialogRef.afterClosed().subscribe(res => {
           if (!res) {
-            this.router.navigateByUrl(this.router.routerState.snapshot.url);
+            const base = this.router.routerState.snapshot.url.split('/p/');
+            this.router.navigateByUrl(base[0]);
           }
         }, error => {
           alert(error);
@@ -88,7 +84,8 @@ export class PostModalComponent implements OnDestroy, OnInit {
     if (postId) {
       this.router.navigateByUrl(`p/${postId}`);
     } else {
-      this.router.navigateByUrl(this.router.routerState.snapshot.url);
+      const base = this.router.routerState.snapshot.url.split('/p/');
+      this.router.navigateByUrl(base[0]);
     }
   }
 

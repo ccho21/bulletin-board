@@ -60,9 +60,11 @@ export class PostListComponent implements OnInit, OnDestroy {
       }),
       toArray(),
     ).subscribe(results => {
-      this.logger.info('### final Post LIST ###', results);
+      this.logger.info('### FIANL IN POST LIST ###', results);
       this.posts = results as Post[];
       this.postStateService.setPosts(this.posts);
+
+      this.logger.info('### get POSTS', this.postStateService.getPosts());
     });
   }
 
@@ -82,8 +84,9 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   clickPost(post, index) {
     this.postStateService.setPostIndex(index);
-    this.logger.info(this.route);
-    this.router.navigate([`p`, post.postId]);
+    const base = `${this.router.url}/p/${post.postId}`;
+    this.logger.info(this.router);
+    this.router.navigateByUrl(base);
   }
 
   ngOnDestroy() {

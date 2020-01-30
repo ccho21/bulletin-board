@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class PostStateService {
+export class PostStateService implements OnDestroy {
     private posts: Array<PostExtendedDTO> = [];
 
     private commentSubject = new Subject<Comment>();
@@ -43,6 +43,7 @@ export class PostStateService {
 
     setPost(post: Post): number {
         const pIndex = this.posts.findIndex(p => p.postId === post.postId);
+        this.logger.info('### posted', pIndex);
         this.logger.info('### posted', this.posts);
         this.posts[pIndex] = { ...post };
         return pIndex;
@@ -122,6 +123,10 @@ export class PostStateService {
     }
     getPostListLength() {
         return this.posts.length;
+    }
+
+    ngOnDestroy() {
+        this.logger.info('### POST STATE SERVICE DESTROYED');
     }
 }
 

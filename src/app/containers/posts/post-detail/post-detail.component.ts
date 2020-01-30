@@ -52,14 +52,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.logger.info('###catching postID', this.postId);
     this.getPost(this.postId);
-  }
-
-  isUserAuthor(post): boolean {
-    const { uid } = this.authService.getCurrentUser();
-    const authorUid = post.author.uid;
-    return uid === authorUid ? true : false;
   }
 
   getPost(postId): void {
@@ -112,6 +105,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         }
         this.hasPost = true;
       });
+  }
+
+  isUserAuthor(post): boolean {
+    const { uid } = this.authService.getCurrentUser();
+    const authorUid = post.author.uid;
+    return uid === authorUid ? true : false;
   }
 
   checkValidArrow(postIndex) {

@@ -12,7 +12,6 @@ import { UserComponent } from './user/user.component';
 import { AppComponent } from './app.component';
 
 export const rootRouterConfig: Routes = [
-  { path: '',  redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'user/:id', component: UserComponent,
   },

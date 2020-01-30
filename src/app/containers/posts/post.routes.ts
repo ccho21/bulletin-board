@@ -7,10 +7,14 @@ import { PostModalComponent } from './post-modal/post-modal.component';
 
 export const postRouterConfig: Routes = [
     {
-        path: '', component: PostListComponent, children: [
-            { path: 'p/create', component: PostModalComponent },
-            { path: 'p/:id', component: PostModalComponent },
-            { path: 'p/:id/edit', component: PostEditComponent },
+        path: 'p', component: PostListComponent, children: [
+            { path: 'create', component: PostModalComponent },
+            { path: ':id', component: PostModalComponent },
+            { path: ':id/edit', component: PostEditComponent },
         ]
     },
+
+    // { path: 'p/create', component: PostModalComponent },
+    // { path: 'p/:id', component: PostModalComponent },
+    // { path: 'p/:id/edit', component: PostEditComponent },
 ];
