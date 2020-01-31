@@ -33,6 +33,9 @@ export class UserComponent implements OnInit {
   numOfComments: number;
   numOfLikes: number;
   fullName: string;
+  postObservable: any;
+  bookmarkedObservable: any;
+  commentedObservable: any;
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
@@ -48,7 +51,6 @@ export class UserComponent implements OnInit {
     this.getUser().pipe(concatMap((res: User) => {
       const { uid, displayName, photoURL, emailVerified, email } = res;
       this.user = { uid, displayName, photoURL, emailVerified, email } as User;
-
       const nArr = displayName.split('_').map(cur => cur.charAt(0).toUpperCase() + cur.substring(1));
       this.logger.info(nArr);
       this.fullName = `${nArr[0] || ''} ${nArr[1] || ''} ${nArr[2] || ''}`;
@@ -59,17 +61,15 @@ export class UserComponent implements OnInit {
         this.getLikes(uid),
         this.bookmarkService.getBookmarkedPostId(uid)
       ]);
-    }),
-    concatMap(results => {
-      const postIds = results[3];
-      return this.postService.getBookmarkedPost(postIds);
-    })
-    ).subscribe((result) => {
+    })).subscribe((results) => {
+      const uid = this.user.uid;
       this.logger.info('### results from forkjoin in user component');
-      this.bookmarkedPosts = result.docs.map(cur => cur.data());
-    });
 
-    // post bookmarked
+      const postIds = results[3];
+      this.bookmarkedObservable = this.postService.getBookmarkedPost(postIds);
+
+      this.commentedObservable =  this.postService.getPostsByCommentId(uid);
+    });
   }
 
   getUser() {

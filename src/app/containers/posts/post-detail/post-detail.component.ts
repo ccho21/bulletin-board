@@ -52,6 +52,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.logger.info('### POST DETAIL IN NG ONINIT', this.postStateService.getPosts());
     this.getPost(this.postId);
   }
 

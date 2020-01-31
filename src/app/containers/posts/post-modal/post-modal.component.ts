@@ -46,7 +46,6 @@ export class PostModalComponent implements OnDestroy, OnInit {
   }
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.logger.info('### route START');
       // When router navigates on this component is takes the params and opens up the photo detail modal
       const postId = params.id;
       if (postId) {
@@ -80,11 +79,10 @@ export class PostModalComponent implements OnDestroy, OnInit {
     });
   }
   goToPost(postId?) {
-    this.logger.info('### through hrer');
+    const base = this.router.routerState.snapshot.url.split('/p/');
     if (postId) {
-      this.router.navigateByUrl(`p/${postId}`);
+      this.router.navigateByUrl(`${base[0]}/p/${postId}`);
     } else {
-      const base = this.router.routerState.snapshot.url.split('/p/');
       this.router.navigateByUrl(base[0]);
     }
   }

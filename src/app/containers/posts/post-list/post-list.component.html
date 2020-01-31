@@ -1,5 +1,4 @@
 <section>
-
   <div class="container">
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
@@ -17,7 +16,7 @@
         </a>
       </div>
     </div>
-    <div class="text-center">
+    <div class="text-center" *ngIf="isWriteable">
       <a href="#" class="btn btn-warning" [routerLink]="['p/create']"
         routerLinkActive="router-link-active">create</a>
     </div>

@@ -27,7 +27,9 @@ export class PostStateService implements OnDestroy {
     postIndex: number;
     constructor(
         private logger: LoggerService
-    ) { }
+    ) {
+        this.logger.info('######################## POST STATE SERVICE IN CONSTRUCTOR #######################');
+     }
     getPosts(): Array<PostExtendedDTO> {
         return this.posts.slice(0);
     }
@@ -126,7 +128,7 @@ export class PostStateService implements OnDestroy {
     }
 
     ngOnDestroy() {
-        this.logger.info('### POST STATE SERVICE DESTROYED');
+        this.logger.info('################ POST STATE SERVICE DESTROYED #######################');
     }
 }
 

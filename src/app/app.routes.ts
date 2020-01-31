@@ -12,6 +12,7 @@ import { UserComponent } from './user/user.component';
 import { AppComponent } from './app.component';
 
 export const rootRouterConfig: Routes = [
+  { path: '',  redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'user/:id', component: UserComponent,
   },
@@ -25,7 +26,7 @@ export const rootRouterConfig: Routes = [
     component: VerifyEmailComponent,
     canActivate: [SecureInnerPagesGuard]
   },
-  // { path: '**', component: MainComponent } // temporary
+  { path: '**', component: MainComponent } // temporary
 ];
 
 const routes: Routes = [];

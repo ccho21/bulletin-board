@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { PostService } from '../../../core/services/post/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
 import { LikeService } from '@app/core/services/like/like.service';
 import { concatMap, toArray } from 'rxjs/operators';
-import { of, Subscription, from, forkJoin } from 'rxjs';
+import { of, Subscription, from, forkJoin, Observable } from 'rxjs';
 import { CommentService } from '../../../core/services/comment/comment.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PostStateService } from '../post-state.service';
@@ -13,14 +13,17 @@ import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
-  styleUrls: ['./post-list.component.scss']
+  styleUrls: ['./post-list.component.scss'],
 })
-export class PostListComponent implements OnInit, OnDestroy {
+export class PostListComponent implements OnInit, OnDestroy, OnChanges
+ {
   posts: Array<Post> = [];
   isPostLiked;
   postSubscription: Subscription;
   filteredPostList;
 
+  @Input() postObservable: any;
+  @Input() isWriteable?: boolean;
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -32,19 +35,23 @@ export class PostListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.initData();
+    this.logger.info('#### POST LIST NG ONINIT POST OBSERVABLES');
   }
 
-  initData() {
-    this.getPosts();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes) {
+      this.logger.info('this.postObservable', this.postObservable);
+      this.getPosts(this.postObservable);
+    }
+
   }
 
-  getPosts() {
-    this.postSubscription = this.postService.getPosts().pipe(
-      concatMap(results => {
+  getPosts(postObservable) {
+    this.postSubscription = postObservable.pipe(
+      concatMap((results: any) => {
         return from(results.docs);
       }),
-      concatMap(res => {
+      concatMap((res: any) => {
         const post = res.data();
         return forkJoin([
           of(post),
@@ -52,10 +59,10 @@ export class PostListComponent implements OnInit, OnDestroy {
           this.commentService.getComments(post.postId)
         ]);
       }),
-      concatMap(results => {
+      concatMap((results: any) => {
         const post = results[0];
         post.likes = results[1].docs.map(cur => cur.data());
-        post.comments = results[2].docs.map(cur => cur.data());
+        post.comments = results[2].docs.map((cur: any) => cur.data());
         return of(post);
       }),
       toArray(),

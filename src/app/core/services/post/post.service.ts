@@ -104,21 +104,13 @@ export class PostService {
     this.updatePost(post.postId, post);
   }
 
-  getPostsByCommentId(comments: Comment[]) {
-    const requests: Array<Observable<Post>> = [];
-    const recentComments = comments.map(cur => {
-      return cur.postId;
-    });
-    const posts = Array.from(new Set(recentComments));
-    const filterPosts = posts.slice(0, 5);
-    filterPosts.forEach((postId, i) => {
-      requests.push(
-        this.db
-          .collection<Post>('posts')
-          .doc<Post>(postId)
-          .valueChanges()
-      );
-    });
-    return requests;
+  getPostsByCommentId(uid) {
+    const query = this.db
+      .collectionGroup<Comment>('comments'
+        , ref => ref.where('author.uid', '==', uid).orderBy('createdAt', 'asc')).get().pipe(concatMap(res => {
+          const postIds = res.docs.map(cur => cur.data().postId);
+          return this.db.collection<Post>('posts', ref => ref.where('postId', 'in', postIds)).get();
+        }));
+    return query;
   }
 }

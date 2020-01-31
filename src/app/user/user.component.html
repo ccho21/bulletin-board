@@ -40,17 +40,39 @@
       </div>
     </main>
     
-    <!-- <router-outlet></router-outlet> -->
-    <app-post-list></app-post-list>
+    
     <!-- User activities  -->
     <section class="col-md-12">
       <div class="border-bottom">
         <h4 class="mb-3">{{ user.displayName }} 's activities</h4>
       </div>
       <div class="row">
-        <div class="col-md-6">
-          <p class="mb-4">Posts the user bookmarked</p>
-          <div *ngFor="let bookmarkedPost of bookmarkedPosts">
+        <div class="col-md-10">
+          <div>
+            <h3 class="mb-4">Posts the user bookmarked</h3>
+          </div>
+          <div class="border-bottom">
+            <app-post-list [postObservable]="bookmarkedObservable"></app-post-list>
+          </div>
+        </div>
+        <hr>
+        <div class="col-md-10">
+          <div>
+            <h3 class="mb-4"> Posts the user commented </h3>
+          </div>
+          <div>
+            <app-post-list [postObservable]="commentedObservable"></app-post-list>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+
+
+<!-- <div *ngFor="let bookmarkedPost of bookmarkedPosts">
           <div *ngIf="bookmarkedPosts.length !== 0; else lpValid">
               <div class="media">
                 <a [routerLink]="['p/', bookmarkedPost.postId]" routerLinkActive="router-link-active">
@@ -66,44 +88,4 @@
                 </div>
               </div>
             </div>
-          </div>
-          <ng-template #lpValid>
-            <div>
-              No posts
-            </div>
-          </ng-template>
-        </div>
-        <div class="col-md-6">
-          <p class="mb-4">
-            Posts the user commented
-          </p>
-          <div *ngIf="likedPostsByComment.length !== 0; else lpcValid">
-            <div *ngFor="let p of likedPostsByComment">
-              <div class="media">
-                <!-- <a [routerLink]="['/posts', likedPostsByComment.postId]" routerLinkActive="router-link-active" >
-                    <img
-                      class="img-thumbnail img-responsive c-img-thumnail mr-3"
-                      src="{{ p.photoURL }}"
-                      alt="{{p.title}}"
-                    />
-                  </a> -->
-                <div class="media-body">
-                  <div class="d-flex justify-content-between">
-                    <h5 class="mt-0">{{ p.title }}</h5>
-                    <span>{{ p.createdAt | postTime  }}</span>
-                  </div>
-                  <p>{{ p.content }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <ng-template #lpcValid>
-            <div>
-              No posts
-            </div>
-          </ng-template>
-        </div>
-      </div>
-    </section>
-  </div>
-</div>
+          </div> -->

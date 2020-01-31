@@ -28,7 +28,7 @@ import { PipesModule } from '@app/core/pipes/pipes.module';
 
 import { CommentsComponent } from '@app/containers/comments/comments.component';
 import { CommentDetailComponent } from '@app/containers/comments/comment-detail/comment-detail.component';
-import { PostStateService } from './post-state.service';
+// import { PostStateService } from './post-state.service';
 import { PostModalComponent } from './post-modal/post-modal.component';
 
 import { WgtUploadTaskComponent } from '@app/core/widget/wgt-upload-task/wgt-upload-task.component';
@@ -36,6 +36,7 @@ import { WgtCommentComponent } from '@app/core/widget/wgt-comment/wgt-comment.co
 import { WgtLikeComponent } from '@app/core/widget/wgt-like/wgt-like.component';
 import { WgtBookmarkComponent } from '@app/core/widget/wgt-bookmark/wgt-bookmark.component';
 import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
+
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -53,7 +54,8 @@ import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
   entryComponents: [
     PostListComponent,
     PostDetailComponent,
-    PostNewComponent
+    PostNewComponent,
+    PostModalComponent
   ],
   imports: [
     PostRoutingModule,
@@ -77,7 +79,7 @@ import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
     PostService,
     LikeService,
     ViewService,
-    PostStateService,
+    // PostStateService,
     BookmarkService
   ],
   bootstrap: [PostListComponent],
