@@ -64,6 +64,8 @@ import { PipesModule } from './core/pipes/pipes.module';
 import { UserActivitiesService } from './core/services/user-activities/user-activities.service';
 import { UserModule } from './user/user.module';
 
+
+
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [

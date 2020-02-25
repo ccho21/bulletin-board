@@ -37,6 +37,8 @@ import { WgtLikeComponent } from '@app/core/widget/wgt-like/wgt-like.component';
 import { WgtBookmarkComponent } from '@app/core/widget/wgt-bookmark/wgt-bookmark.component';
 import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
 
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ComponentsModule } from '@app/components/components.module';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -69,7 +71,9 @@ import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
     MatInputModule,
     MatSliderModule,
     MatDialogModule,
-    PipesModule
+    PipesModule,
+    InfiniteScrollModule,
+    ComponentsModule
   ],
   exports: [
     PostListComponent,

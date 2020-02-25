@@ -25,6 +25,10 @@ export class MainComponent implements OnInit {
   focus1;
   postSubscription: Subscription;
   postObservable;
+
+  numberOfPosts: number = 6;
+  articleEnd: boolean;
+  showSpinner: boolean;
   constructor(
     public firebaseService: FirebaseService,
     private router: Router,
@@ -37,7 +41,7 @@ export class MainComponent implements OnInit {
   }
 
   getPosts() {
-    this.postObservable = this.postService.getPosts();
+    this.postObservable = this.postService.getPosts(this.numberOfPosts);
   }
 
 

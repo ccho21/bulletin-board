@@ -24,6 +24,12 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges
 
   @Input() postObservable: any;
   @Input() isWriteable?: boolean;
+
+  // infinit scrolling & spinner 
+  showSpinner: boolean = false;
+  numberOfPosts: number = 6;
+  postsEnd: boolean = false;
+  previousPosts: {}[] = [];
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -46,7 +52,15 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges
 
   }
 
+
+  onScroll() {
+    this.numberOfPosts += 6;
+    this.postObservable = this.postService.getPosts(this.numberOfPosts);
+    this.getPosts(this.postObservable);
+  }
+
   getPosts(postObservable) {
+    this.showSpinner = true;
     this.postSubscription = postObservable.pipe(
       concatMap((results: any) => {
         return from(results.docs);
@@ -70,9 +84,19 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges
       this.logger.info('### FIANL IN POST LIST ###', results);
       this.posts = results as Post[];
       this.postStateService.setPosts(this.posts);
-
       this.logger.info('### get POSTS', this.postStateService.getPosts());
+      this.showSpinner = false;
+      this.noMorePosts(results);
     });
+  }
+
+  noMorePosts(data): void { 
+    if(this.previousPosts.length === data.length) {
+      this.postsEnd = true;
+    } else {
+      this.previousPosts = data;
+      this.postsEnd = false;
+    }
   }
 
   deletePost(post) {

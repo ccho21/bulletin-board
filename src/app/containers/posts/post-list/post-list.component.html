@@ -1,20 +1,36 @@
-<section>
+<section >
   <div class="container">
-    <div class="row">
-      <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
-        <a (click)="clickPost(post, i)">
-          <div class="post">
-            <div class="post-box">
-              <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
-              </div>
-              <div class="post-content">
-                <div class="mr-4"> <i class="fa fa-heart"></i> {{post.likes.length}} </div>
-                <div> <i class="nc-icon nc-chat-33"></i> {{post.comments.length}} </div>
+    <div
+      class="search-results"
+      infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()"
+    >
+      <div class="row">
+        <div class="col-md-4 mb-4" *ngFor="let post of posts; index as i">
+          <a (click)="clickPost(post, i)">
+            <div class="post">
+              <div class="post-box" style="box-shadow: 3px 2px 5px;">
+                <div class="post-bg" [ngStyle]="{'backgroundImage': getBackgroundImageUrl(post)}">
+                </div>
+                <div class="post-content">
+                  <div class="mr-4"> <i class="fa fa-heart"></i> {{post.likes.length}} </div>
+                  <div> <i class="nc-icon nc-chat-33"></i> {{post.comments.length}} </div>
+                </div>
               </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
+    </div>
+    <app-spinner [show]="showSpinner"></app-spinner>
+    <div class="row">
+        <div class="mx-auto mt-5 mb-3 monoton" *ngIf="postsEnd">
+            <h3>
+                Sorry. no more posts
+            </h3>
+        </div>
     </div>
     <div class="text-center" *ngIf="isWriteable">
       <a href="#" class="btn btn-warning" [routerLink]="['p/create']"

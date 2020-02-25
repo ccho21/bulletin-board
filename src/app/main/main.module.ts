@@ -24,6 +24,7 @@ import { ResumeComponent } from '../components/resume/resume.component';
 import { MainRoutingModule } from './main-routing.module';
 import { PostModule } from '@app/containers/posts/post.module';
 import { PostStateService } from '@app/containers/posts/post-state.service';
+
 @NgModule({
   declarations: [
     MainComponent,
@@ -44,7 +45,8 @@ import { PostStateService } from '@app/containers/posts/post-state.service';
     MatSliderModule,
     MatDialogModule,
     MainRoutingModule,
-    PostModule
+    PostModule,
+
   ],
   providers: [
     PostStateService
