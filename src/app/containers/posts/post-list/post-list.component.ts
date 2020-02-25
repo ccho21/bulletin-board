@@ -27,7 +27,7 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges
 
   // infinit scrolling & spinner 
   showSpinner: boolean = false;
-  numberOfPosts: number = 6;
+  numberOfPosts: number = 6; 
   postsEnd: boolean = false;
   previousPosts: {}[] = [];
   constructor(
