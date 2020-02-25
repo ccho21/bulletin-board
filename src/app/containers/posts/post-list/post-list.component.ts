@@ -15,8 +15,7 @@ import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.scss'],
 })
-export class PostListComponent implements OnInit, OnDestroy, OnChanges
- {
+export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   posts: Array<Post> = [];
   isPostLiked;
   postSubscription: Subscription;
@@ -25,10 +24,10 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges
   @Input() postObservable: any;
   @Input() isWriteable?: boolean;
 
-  // infinit scrolling & spinner 
-  showSpinner: boolean = false;
-  numberOfPosts: number = 6;
-  postsEnd: boolean = false;
+  // infinit scrolling & spinner
+  showSpinner = false;
+  numberOfPosts = 6;
+  postsEnd = false;
   previousPosts: {}[] = [];
   constructor(
     private logger: LoggerService,
@@ -51,7 +50,6 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges
     }
 
   }
-
 
   onScroll() {
     this.numberOfPosts += 6;
@@ -90,8 +88,8 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges
     });
   }
 
-  noMorePosts(data): void { 
-    if(this.previousPosts.length === data.length) {
+  noMorePosts(data): void {
+    if (this.previousPosts.length === data.length) {
       this.postsEnd = true;
     } else {
       this.previousPosts = data;

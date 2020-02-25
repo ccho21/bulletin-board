@@ -1,120 +1,122 @@
-<div class="signup-modal-box">
-  <div class="container signup-modal">
-    <div class="mb-3">
-      <h3>Sign Up</h3>
-    </div>
-    <div>
-      <form [formGroup]="userForm">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Full name</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="First name"
-                formControlName="displayName"
-              />
-            </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" class="form-control" placeholder="Email" formControlName="email"/>
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                class="form-control"
-                placeholder="Password"
-                formControlName="password"
-              />
-            </div>
-
-            <div class="d-flex align-items-center">
-              <div class="mr-3">
+<div class="container">
+  <div class="signup-modal-box">
+    <div class="container signup-modal">
+      <div class="mb-3">
+        <h3>Sign Up</h3>
+      </div>
+      <div>
+        <form [formGroup]="userForm">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label>Full name</label>
                 <input
-                  hidden
-                  type="file"
-                  #uploader
-                  (change)="uploadFile($event)"
+                  type="text"
+                  class="form-control"
+                  placeholder="First name"
+                  formControlName="displayName"
                 />
-                <button
-                  _ngcontent-c4=""
-                  class="btn btn-outline-primary btn-round text-white"
-                  type="button"
-                  (click)="uploader.click()"
-                >
-                  Add profile photo
-                </button>
               </div>
-              <div *ngIf="file">
-                <button
-                  _ngcontent-c7=""
-                  class="btn btn-danger btn-round btn-sm"
-                  type="button"
-                >
-                  <i _ngcontent-c7="" class="nc-icon nc-album-2"></i>
-                  {{ file.file.name }}
-                </button>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" placeholder="Email" formControlName="email"/>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  formControlName="password"
+                />
+              </div>
+  
+              <div class="d-flex align-items-center">
+                <div class="mr-3">
+                  <input
+                    hidden
+                    type="file"
+                    #uploader
+                    (change)="uploadFile($event)"
+                  />
+                  <button
+                    _ngcontent-c4=""
+                    class="btn btn-outline-primary btn-round text-white"
+                    type="button"
+                    (click)="uploader.click()"
+                  >
+                    Add profile photo
+                  </button>
+                </div>
+                <div *ngIf="file">
+                  <button
+                    _ngcontent-c7=""
+                    class="btn btn-danger btn-round btn-sm"
+                    type="button"
+                  >
+                    <i _ngcontent-c7="" class="nc-icon nc-album-2"></i>
+                    {{ file.file.name }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <input
-            [disabled]="!isRegisterValid || isSubmitted"
-            type="button"
-            class="btn btn-default btn-block btn-round"
-            value="Register"
-            (click)="onSubmit()"
-          />
-        </div>
-
-        <!-- Continue with Google -->
-        <div class="social-line text-center mb-5">
-          <a href="" class="btn btn-neutral btn-facebook btn-just-icon mr-2">
-            <i class="fa fa-facebook-square"></i>
-          </a>
-          <a
-            href="#"
-            class="btn btn-neutral btn-google btn-just-icon mr-2"
-            (click)="authService.GoogleAuth()"
-          >
-            <i class="fa fa-google-plus"></i>
-          </a>
-          <a href="" class="btn btn-neutral btn-twitter btn-just-icon">
-            <i class="fa fa-twitter"></i>
-          </a>
-        </div>
-
-        <div class="form-group">
-          <!-- <button type="button" class="btn facebookBtn" (click)="authService.FacebookAuth()">
-                          <i class="fab fa-facebook"></i>
-                          Continue with Facebook
-                        </button> -->
-        </div>
-      </form>
+  
+          <div class="form-group">
+            <input
+              [disabled]="!isRegisterValid || isSubmitted"
+              type="button"
+              class="btn btn-default btn-block btn-round"
+              value="Register"
+              (click)="onSubmit()"
+            />
+          </div>
+  
+          <!-- Continue with Google -->
+          <div class="social-line text-center mb-5">
+            <a href="" class="btn btn-neutral btn-facebook btn-just-icon mr-2">
+              <i class="fa fa-facebook-square"></i>
+            </a>
+            <a
+              href="#"
+              class="btn btn-neutral btn-google btn-just-icon mr-2"
+              (click)="authService.GoogleAuth()"
+            >
+              <i class="fa fa-google-plus"></i>
+            </a>
+            <a href="" class="btn btn-neutral btn-twitter btn-just-icon">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </div>
+  
+          <div class="form-group">
+            <!-- <button type="button" class="btn facebookBtn" (click)="authService.FacebookAuth()">
+                            <i class="fab fa-facebook"></i>
+                            Continue with Facebook
+                          </button> -->
+          </div>
+        </form>
+      </div>
+  
+      <div class="redirectToLogin text-center">
+        <span>If you already have an account?</span>
+        <a
+          class="btn btn-link btn-danger text-white"
+          (click)="goToSignIn($event)"
+        >
+          Sign in</a
+        >
+      </div>
     </div>
-
-    <div class="redirectToLogin text-center">
-      <span>If you already have an account?</span>
-      <a
-        class="btn btn-link btn-danger text-white"
-        (click)="goToSignIn($event)"
+    <!-- <div class="modal-close">
+      <button
+        _ngcontent-c4=""
+        class="btn btn-danger btn-just-icon"
+        type="button"
+        (click)="activeModal.close()"
       >
-        Sign in</a
-      >
-    </div>
-  </div>
-  <div class="modal-close">
-    <button
-      _ngcontent-c4=""
-      class="btn btn-danger btn-just-icon"
-      type="button"
-      (click)="activeModal.close()"
-    >
-      <i _ngcontent-c4="" class="fa fa-remove"></i>
-    </button>
+        <i _ngcontent-c4="" class="fa fa-remove"></i>
+      </button>
+    </div> -->
   </div>
 </div>

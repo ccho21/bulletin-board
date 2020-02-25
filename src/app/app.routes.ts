@@ -6,13 +6,16 @@ import { MainComponent } from './main/main.component';
 
 import { VerifyEmailComponent } from './containers/auth/verify-email/verify-email.component';
 import { ForgotPasswordComponent } from './containers/auth/forgot-password/forgot-password.component';
-import { AuthGuard } from './shared/guard/auth.guard';
 import { SecureInnerPagesGuard } from './shared/guard/secure-inner-pages.guard';
 import { UserComponent } from './user/user.component';
 import { AppComponent } from './app.component';
+import { SignInComponent } from './components/sign-in/sign-in.component';
+import { SignUpComponent } from './components/sign-up/sign-up.component';
 
 export const rootRouterConfig: Routes = [
-  { path: '',  redirectTo: '/home', pathMatch: 'full' },
+  {
+    path: '', redirectTo: '/home', pathMatch: 'full'
+  },
   {
     path: 'user/:id', component: UserComponent,
   },
@@ -20,6 +23,14 @@ export const rootRouterConfig: Routes = [
     path: 'forgot-password',
     component: ForgotPasswordComponent,
     canActivate: [SecureInnerPagesGuard]
+  },
+  {
+    path: 'login',
+    component: SignInComponent
+  },
+  {
+    path: 'sign-up',
+    component: SignUpComponent
   },
   {
     path: 'verify-email-address',
