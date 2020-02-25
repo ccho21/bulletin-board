@@ -11,13 +11,14 @@ import { UserComponent } from './user/user.component';
 import { AppComponent } from './app.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
-
+import { AuthGuard } from './shared/guard/auth.guard';
 export const rootRouterConfig: Routes = [
   {
     path: '', redirectTo: '/home', pathMatch: 'full'
   },
   {
     path: 'user/:id', component: UserComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'forgot-password',

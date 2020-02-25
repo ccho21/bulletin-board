@@ -125,7 +125,10 @@ export class AuthService {
         this.loaderService.hide();
       })
       .catch(error => {
-        window.alert(error.message);
+        this.logger.info('### error', error.message);
+        this.loaderService.hide();
+        // should reset form and validate wrong field to red.
+
       }));
   }
 
@@ -180,11 +183,11 @@ export class AuthService {
             photoURL: result.user.photoURL
           });
           this.userService.setUserData(userData);
-          this.router.navigate(['/']);
+          this.router.navigate(['/home']);
         });
       })
       .catch(error => {
-        window.alert(error);
+        this.logger.info(error);
       });
   }
 

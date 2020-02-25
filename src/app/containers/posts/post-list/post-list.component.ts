@@ -45,10 +45,9 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes) {
-      this.logger.info('this.postObservable', this.postObservable);
+      this.logger.info('this.postObservable', changes);
       this.getPosts(this.postObservable);
     }
-
   }
 
   onScroll() {

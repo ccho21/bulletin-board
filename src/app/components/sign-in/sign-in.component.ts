@@ -27,8 +27,8 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
   }
   googleAuth() {
-    this.authService.GoogleAuth().subscribe(res => {
-      this.logger.info('### successfully signed in ', res);
+    this.authService.GoogleAuth().subscribe(_res => {
+      this.logger.info('### successfully signed in ');
       // this.activeModal.close();
       this.router.navigate(['home']);
     });

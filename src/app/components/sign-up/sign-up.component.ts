@@ -55,7 +55,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
   }
   signUp(userForm) {
     this.authService.signUp(userForm).subscribe(res => {
-      this.activeModal.close();
+
+      this.logger.info('### sign up successfully completed', res);
+      // this.activeModal.close();
     });
   }
   uploadFile(e) {
