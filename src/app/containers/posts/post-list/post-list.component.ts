@@ -125,7 +125,11 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   filterPosts(keyword) {
-    this.filteredPosts = this.posts.filter(post => post.content === keyword);
+    if (keyword) {
+      this.filteredPosts = this.posts.filter(post => post.content.toLowerCase().includes(keyword.toLowerCase()));
+    } else {
+      this.filteredPosts = this.posts.map(cur => ({...cur}));
+    }
   }
 
   noMorePosts(data): void {

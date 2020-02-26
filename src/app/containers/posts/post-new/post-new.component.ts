@@ -10,6 +10,7 @@ import { Subscription, Observable, forkJoin } from 'rxjs';
 import { UploadService } from '@app/core/services/upload/upload.service';
 import { Router } from '@angular/router';
 import { PostStateService } from '../post-state.service';
+import { ModalService } from '@app/core/services/modal/modal.service';
 
 @Component({
   selector: 'app-post-new',
@@ -35,7 +36,7 @@ export class PostNewComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private uploadService: UploadService,
     private router: Router,
-    private postStateService: PostStateService
+    private postStateService: PostStateService,
   ) {
     // subscribing to check uploading file and POST to DB is completed
     this.uploadSubscription = this.uploadService
@@ -95,7 +96,6 @@ export class PostNewComponent implements OnInit, OnDestroy {
       return;
     }
 
-
     const { displayName, uid, photoURL, email, emailVerified } = this.authService.getCurrentUser();
     const author: User = { displayName, uid, photoURL, email, emailVerified };
     const postDTO: Post = { ...this.postFormGroup.value, author, createdAt: new Date().toISOString(), likes: [], comments: [], views: 0 };
@@ -114,6 +114,10 @@ export class PostNewComponent implements OnInit, OnDestroy {
     });
   }
 
+  close() {
+    this.postStateService.postCloseEmit(true);
+    this.router.navigate(['home']);
+  }
   ngOnDestroy() {
     if (this.uploadSubscription) {
       this.uploadSubscription.unsubscribe();

@@ -161,10 +161,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   search() {
     this.logger.info('### search', this.keyword.value);
     const keyword = this.keyword.value;
-    if (keyword) {
-      this.postStateService.postSearchEmit(keyword);
-    }
-
+    this.postStateService.postSearchEmit(keyword);
   }
   cancel(e) {
     this.logger.info(e);
