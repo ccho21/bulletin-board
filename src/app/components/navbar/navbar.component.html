@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg fixed-top justify-content-center" color-on-scroll="500"
   [ngClass]="{ '': !navBackgroundColor }" (scroll)="scrollHandler($event)">
   <div class="col-md-10">
-    <div class="container d-lg-flex">
+    <div class="container d-lg-flex justify-content-center align-items-center">
       <div class="navbar-translate">
         <a class="navbar-brand" routerLink="">Charles Cho</a>
         <button class="navbar-toggler navbar-burger toggle" type="button" data-toggle="collapse"
@@ -13,9 +13,9 @@
         </button>
       </div>
       <!-- SEARCH -->
-      <div class="">
+      <div class="search-wrapper">
         <form (keyup.enter)="search()">
-          <div class="input-group">
+          <div class="input-group mb-3 mb-lg-0">
             <input class=" form-control" placeholder="Search" type="text" [formControl]="keyword" />
             <div class=" input-group-append">
               <span class=" input-group-text" (click)="search()"> <i class="nc-icon nc-zoom-split"> </i> </span>

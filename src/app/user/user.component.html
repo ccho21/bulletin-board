@@ -1,49 +1,48 @@
-<div class="nav-cover"></div>
 <!-- Main content -->
-<div class="container" *ngIf="user">
-  <div class="row justify-content-center">
-    <main class="col-md-12 mb-5">
-      <div class="inner-adjust">
-        <div class="border-bottom">
-          <h2 class="h2 mb-3">Hello {{ fullName }}</h2>
-        </div>
-        <!-- Show user data when logged in -->
-        <div class="row">
-          <div class="col-md-12">
-            <div class="media align-items-center mt-5">
-              <img class="img-circle img-no-padding img-responsive mr-5 c-user-img" src="{{user.photoURL}}"
-                alt="{{ user.displayName }}" />
-              <div class="media-body mb-3">
-                <p>
-                  Name: <strong>{{ fullName }}</strong>
-                </p>
-                <p>
-                  Email: <strong>{{ user.email }}</strong>
-                </p>
-                <p>
-                  Email Verified: <strong>{{ user.emailVerified }}</strong>
-                </p>
-                <hr />
-                <div class="d-flex">
-                  <p>{{ numOfPosts }} <strong> posts </strong></p>
-                  <p class="ml-4">
-                    {{ numOfComments }} <strong> comments </strong>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10">
+      <main class="section">
+        <div class="inner-adjust">
+          <div class="border-bottom">
+            <h2 class="h2 mb-3">Hello {{ fullName }}</h2>
+          </div>
+          <!-- Show user data when logged in -->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="media align-items-center mt-5">
+                <img class="img-circle img-no-padding img-responsive mr-5 c-user-img" src="{{user.photoURL}}"
+                  alt="{{ user.displayName }}" />
+                <div class="media-body mb-3">
+                  <p>
+                    Name: <strong>{{ fullName }}</strong>
                   </p>
-                  <p class="ml-4">
-                    {{ numOfLikes }} <strong> likes </strong>
+                  <p>
+                    Email: <strong>{{ user.email }}</strong>
                   </p>
+                  <p>
+                    Email Verified: <strong>{{ user.emailVerified }}</strong>
+                  </p>
+                  <hr />
+                  <div class="d-flex">
+                    <p>{{ numOfPosts }} <strong> posts </strong></p>
+                    <p class="ml-4">
+                      {{ numOfComments }} <strong> comments </strong>
+                    </p>
+                    <p class="ml-4">
+                      {{ numOfLikes }} <strong> likes </strong>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
-    
-    
-    <!-- User activities  -->
-    <section class="col-md-12">
-      <div class="row">
+      </main>
+
+      <!-- User activities  -->
+    <section>
+      <div>
         <ngb-tabset [destroyOnHide]="false" class="w-100">
           <ngb-tab>
             <ng-template ngbTabTitle><h4>Bookmarked Posts</h4></ng-template>
@@ -66,9 +65,14 @@
         </ngb-tabset>
       </div>
     </section>
+    </div>
   </div>
-</div>
 
+
+</div>
+    
+    
+    
 
 
 

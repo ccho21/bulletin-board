@@ -75,15 +75,29 @@
         }
     }
 
+    & .picsum-img-wrapper {
+        display:flex;
+        align-items: center;
+        & img {
+            height: auto;
+        }
+    }
+
     &-img {
+        display:flex;
+        align-items: center;
+        background-color: black;
         position: absolute;
         height: 100%;
         top: 0;
         left: 0;
         bottom: 0;
         right: 0;
+        & img {
+            width : 100%;
+        }
         .carousel-inner {
-            height:100%;
+            // height:100%;
         }
     }
 

@@ -109,11 +109,11 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
       ).subscribe(results => {
         if (results && results[0]) {
           this.posts = results as Post[];
-          this.postStateService.setPosts(this.posts);
           this.noMorePosts(results);
 
           this.logger.info('### FIANL IN POST LIST ###', this.posts);
           this.filteredPosts = this.posts.map(cur => ({...cur}));
+          this.postStateService.setPosts(this.filteredPosts);
         } else {
           this.message = this.noMessage;
           this.logger.info('### MESSAGE ########', this.message);
