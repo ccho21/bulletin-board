@@ -17,6 +17,8 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 import { from, Subscription } from 'rxjs';
 import { User } from '@models/user';
 import { ModalService } from '@app/core/services/modal/modal.service';
+import { FormControl } from '@angular/forms';
+import { PostStateService } from '@app/containers/posts/post-state.service';
 
 @Component({
   selector: 'app-navbar',
@@ -32,6 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean;
   logginSubsctiption: Subscription;
   user: User;
+  keyword: FormControl;
   constructor(
     public location: Location,
     private element: ElementRef,
@@ -39,6 +42,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private authService: AuthService,
     private router: Router,
+    private postStateService: PostStateService
   ) {
     this.sidebarVisible = false;
   }
@@ -53,6 +57,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.keyword = new FormControl('');
+    this.logger.info(this.keyword);
     this.authService.getSignedUser().subscribe((res: any) => {
       if (res) {
         const { displayName, uid, photoURL, email, emailVerified } = res;
@@ -151,6 +157,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     } else {
       return false;
     }
+  }
+  search() {
+    this.logger.info('### search', this.keyword.value);
+    const keyword = this.keyword.value;
+    if (keyword) {
+      this.postStateService.postSearchEmit(keyword);
+    }
+
   }
   cancel(e) {
     this.logger.info(e);

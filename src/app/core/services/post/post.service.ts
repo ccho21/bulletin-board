@@ -25,7 +25,7 @@ export class PostService {
 
   /* Get post list */
   getPosts(limitedPost) {
-    return this.db.collection<Post>('posts', ref => ref.limit(limitedPost)).get();
+    return this.db.collection<Post>('posts', ref => ref.orderBy('createdAt', 'desc').limit(limitedPost)).get();
   }
 
   getPostsByUid(uid) {

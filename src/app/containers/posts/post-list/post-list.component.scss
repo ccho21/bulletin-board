@@ -3,7 +3,11 @@
     height: 3rem;
   }
 }
-
+.c-post-content-detail {
+  flex-basis: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
 .post {
   &-box {
     position: relative;
@@ -29,6 +33,7 @@
           background-color: rgba(0, 0, 0, .4);
         }
         & .post-content {
+          flex-wrap: wrap;
           opacity: 1;
         }
       }

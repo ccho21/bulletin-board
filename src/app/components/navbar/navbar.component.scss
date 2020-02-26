@@ -1,7 +1,12 @@
+.input-group {
+  width: 500px;
+  max-width: 500px;
+  // display: none;
+}
 @media screen and (max-width: 991px) {
   .nav-item-desc {
     display:flex;
-    align-items: center;;
+    align-items: center;
   }
   .m-nav-icon {
     right: 0 !important;

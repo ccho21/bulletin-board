@@ -19,7 +19,7 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   posts: Array<Post> = [];
   isPostLiked;
   postSubscription: Subscription;
-  filteredPostList;
+  filteredPosts = [];
 
   @Input() postObservable: Observable<any>;
   @Input() isWriteable?: boolean;
@@ -48,6 +48,11 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit() {
     this.logger.info('#### POST LIST NG ONINIT POST OBSERVABLES', this.postObservable, this.noMessage);
     this.numberOfPosts = this.postLimit ? this.postLimit : 0;
+
+    this.postStateService.postSearchEmitted().subscribe(keyword => {
+      this.logger.info('## search working??', keyword);
+      this.filterPosts(keyword);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -103,20 +108,24 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
         toArray(),
       ).subscribe(results => {
         if (results && results[0]) {
-          this.logger.info('### FIANL IN POST LIST ###', results);
           this.posts = results as Post[];
           this.postStateService.setPosts(this.posts);
           this.noMorePosts(results);
+
+          this.logger.info('### FIANL IN POST LIST ###', this.posts);
+          this.filteredPosts = this.posts.map(cur => ({...cur}));
         } else {
           this.message = this.noMessage;
           this.logger.info('### MESSAGE ########', this.message);
           this.messageEmit.emit(this.message);
         }
-
-
         this.showSpinner = false;
       });
     }
+  }
+
+  filterPosts(keyword) {
+    this.filteredPosts = this.posts.filter(post => post.content === keyword);
   }
 
   noMorePosts(data): void {
