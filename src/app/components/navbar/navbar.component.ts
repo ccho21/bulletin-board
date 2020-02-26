@@ -153,12 +153,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
   cancel(e) {
-    const outsideClicked = !e;
+    this.logger.info(e);
+    /* const outsideClicked = !e;
     if (this.sidebarVisible) {
       if (outsideClicked) {
         this.sidebarToggle();
       }
-    }
+    } */
 
   }
   ngOnDestroy() {

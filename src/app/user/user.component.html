@@ -52,7 +52,7 @@
             <h3 class="mb-4">Posts the user bookmarked</h3>
           </div>
           <div class="border-bottom">
-            <app-post-list [postObservable]="bookmarkedObservable"></app-post-list>
+            <app-post-list [postObservable]="bookmarkedObservable" [numberOfPosts]="postLimit"></app-post-list>
           </div>
         </div>
         <hr>
@@ -61,7 +61,7 @@
             <h3 class="mb-4"> Posts the user commented </h3>
           </div>
           <div>
-            <app-post-list [postObservable]="commentedObservable"></app-post-list>
+            <app-post-list [postObservable]="commentedObservable" [numberOfPosts]="postLimit"></app-post-list>
           </div>
         </div>
       </div>

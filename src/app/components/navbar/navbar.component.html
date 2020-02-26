@@ -13,26 +13,30 @@
         </button>
       </div>
       <div class="navbar-collapse" id="navbarToggler">
-        <ul class="navbar-nav ml-auto align-items-end" (clickoutside)="cancel($event)">
+        <ul class="navbar-nav ml-auto" (clickoutside)="cancel($event)">
           <li class="nav-item" *ngIf="!isDocumentation()">
             <a class="nav-link" [routerLink]="['/home']" routerLinkActive="router-link-active">
-              <i class="nc-icon nc-bullet-list-67"></i>
-              <p class="d-lg-none">Forum</p>
+              <div class="nav-item-desc">
+                <i class="nc-icon nc-bullet-list-67 m-nav-icon"></i>
+              <span class="d-lg-none">Forum</span>
+              </div>
             </a>
           </li>
           <li class="nav-item" *ngIf="!isDocumentation()">
             <a class="nav-link">
-              <i class="nc-icon nc-email-85"></i>
-              <p class="d-lg-none">Message</p>
+              <div class="nav-item-desc">
+                <i class="nc-icon nc-email-85 m-nav-icon"></i>
+                <span class="d-lg-none">Message</span>
+              </div>
             </a>
           </li>
           <li class="nav-item" *ngIf="isLoggedIn">
             <div class="dropdown" ngbDropdown placement="bottom-right">
-              <a class="nav-link dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>
-                <i aria-hidden="true" class="nc-icon nc-single-02"></i>
-                <p class="d-lg-none">{{user.displayName}}</p>
+              <a class="nav-link dropdown-toggle m-nav-dropdown" id="dropdownBasic1" ngbDropdownToggle>
+                  <i aria-hidden="true" class="nc-icon nc-single-02 m-nav-icon"></i>
+                  <span class="d-lg-none">{{user.displayName}}</span>
               </a>
-              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-danger" x-placement="bottom-left">
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" x-placement="bottom-left">
 
                 <a class="dropdown-item" [routerLink]="['/user', user.uid]">My Profile</a>
                 <!-- <a class="dropdown-item">Dashboard </a> -->

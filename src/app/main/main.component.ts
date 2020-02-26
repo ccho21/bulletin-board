@@ -26,7 +26,7 @@ export class MainComponent implements OnInit {
   postSubscription: Subscription;
   postObservable;
 
-  numberOfPosts: number = 6;
+  numberOfPosts = 6;
   articleEnd: boolean;
   showSpinner: boolean;
   constructor(
@@ -41,6 +41,7 @@ export class MainComponent implements OnInit {
   }
 
   getPosts() {
+    this.numberOfPosts = 6;
     this.postObservable = this.postService.getPosts(this.numberOfPosts);
   }
 

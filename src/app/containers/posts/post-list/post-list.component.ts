@@ -23,10 +23,9 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() postObservable: any;
   @Input() isWriteable?: boolean;
-
+  @Input() numberOfPosts: number;
   // infinit scrolling & spinner
   showSpinner = false;
-  numberOfPosts = 6;
   postsEnd = false;
   previousPosts: {}[] = [];
   constructor(
@@ -40,23 +39,25 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.logger.info('#### POST LIST NG ONINIT POST OBSERVABLES');
+    this.logger.info('#### POST LIST NG ONINIT POST OBSERVABLES', this.postObservable);
+
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes) {
+    if (changes.postObservable) {
       this.logger.info('this.postObservable', changes);
       this.getPosts(this.postObservable);
     }
   }
 
   onScroll() {
-    this.numberOfPosts += 6;
     this.postObservable = this.postService.getPosts(this.numberOfPosts);
     this.getPosts(this.postObservable);
   }
 
   getPosts(postObservable) {
+    this.logger.info('### post observable', postObservable);
     this.showSpinner = true;
     this.postSubscription = postObservable.pipe(
       concatMap((results: any) => {

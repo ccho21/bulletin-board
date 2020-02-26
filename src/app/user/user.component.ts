@@ -36,6 +36,7 @@ export class UserComponent implements OnInit {
   postObservable: any;
   bookmarkedObservable: any;
   commentedObservable: any;
+  postLimit: number;
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
@@ -63,12 +64,20 @@ export class UserComponent implements OnInit {
       ]);
     })).subscribe((results) => {
       const uid = this.user.uid;
-      this.logger.info('### results from forkjoin in user component');
+      this.logger.info('### results from forkjoin in user component', results);
 
       const postIds = results[3];
-      this.bookmarkedObservable = this.postService.getBookmarkedPost(postIds);
+      this.postLimit = 6;
+      if (postIds.length) {
+        this.bookmarkedObservable = this.postService.getBookmarkedPost(postIds);
+      }
+      
+      if (uid) {
+        this.commentedObservable =  this.postService.getPostsByCommentId(uid);
+      }
 
-      this.commentedObservable =  this.postService.getPostsByCommentId(uid);
+      this.logger.info(' this.bookmarkedObservable',  this.bookmarkedObservable);
+      this.logger.info(' this.commentedObservable',  this.commentedObservable);
     });
   }
 
