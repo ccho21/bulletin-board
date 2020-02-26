@@ -14,6 +14,15 @@
       </div>
       <div class="navbar-collapse" id="navbarToggler">
         <ul class="navbar-nav ml-auto" (clickoutside)="cancel($event)">
+          
+          <li class="nav-item" *ngIf="!isDocumentation()">
+            <a class="nav-link" [routerLink]="['/about']" routerLinkActive="router-link-active">
+              <div class="nav-item-desc">
+                <i class="nc-icon nc-alert-circle-i m-nav-icon"></i>
+              <span class="d-lg-none">About</span>
+              </div>
+            </a>
+          </li>
           <li class="nav-item" *ngIf="!isDocumentation()">
             <a class="nav-link" [routerLink]="['/home']" routerLinkActive="router-link-active">
               <div class="nav-item-desc">

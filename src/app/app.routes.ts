@@ -12,9 +12,14 @@ import { AppComponent } from './app.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { AuthGuard } from './shared/guard/auth.guard';
+import { AboutComponent } from './components/about/about.component';
 export const rootRouterConfig: Routes = [
   {
     path: '', redirectTo: '/home', pathMatch: 'full'
+  },
+  {
+    path: 'about',
+    component: AboutComponent
   },
   {
     path: 'user/:id', component: UserComponent,

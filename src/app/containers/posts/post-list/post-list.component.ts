@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostBinding, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding, Input, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { PostService } from '../../../core/services/post/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
@@ -21,13 +21,20 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   postSubscription: Subscription;
   filteredPostList;
 
-  @Input() postObservable: any;
+  @Input() postObservable: Observable<any>;
   @Input() isWriteable?: boolean;
-  @Input() numberOfPosts: number;
+  @Input() postLimit: number;
+  @Input() bookmarkValid: boolean;
+  @Input() commentedValid: boolean;
+  @Input() noMessage?: string;
+  @Output() messageEmit: EventEmitter<any> = new EventEmitter<any>(); // Emit form value
+
   // infinit scrolling & spinner
+  numberOfPosts = 0;
   showSpinner = false;
   postsEnd = false;
   previousPosts: {}[] = [];
+  message: string;
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -39,53 +46,77 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.logger.info('#### POST LIST NG ONINIT POST OBSERVABLES', this.postObservable);
-
-
+    this.logger.info('#### POST LIST NG ONINIT POST OBSERVABLES', this.postObservable, this.noMessage);
+    this.numberOfPosts = this.postLimit ? this.postLimit : 0;
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.postObservable) {
-      this.logger.info('this.postObservable', changes);
+    if (changes.postObservable && this.postObservable) {
+      this.logger.info('### NG ON CHANGE ###', changes, this.postObservable);
       this.getPosts(this.postObservable);
     }
   }
 
   onScroll() {
-    this.postObservable = this.postService.getPosts(this.numberOfPosts);
-    this.getPosts(this.postObservable);
+    this.numberOfPosts += this.postLimit;
+    this.logger.info('### number of posts with Post limit ###', this.postLimit, this.numberOfPosts);
+    const observable = this.postService.getPosts(this.numberOfPosts);
+    if (this.bookmarkValid) {
+
+    } else if (this.commentedValid) {
+
+    } else {
+      this.getPosts(observable);
+    }
   }
 
   getPosts(postObservable) {
-    this.logger.info('### post observable', postObservable);
-    this.showSpinner = true;
-    this.postSubscription = postObservable.pipe(
-      concatMap((results: any) => {
-        return from(results.docs);
-      }),
-      concatMap((res: any) => {
-        const post = res.data();
-        return forkJoin([
-          of(post),
-          this.likeService.getLikes(post.postId, 1),
-          this.commentService.getComments(post.postId)
-        ]);
-      }),
-      concatMap((results: any) => {
-        const post = results[0];
-        post.likes = results[1].docs.map(cur => cur.data());
-        post.comments = results[2].docs.map((cur: any) => cur.data());
-        return of(post);
-      }),
-      toArray(),
-    ).subscribe(results => {
-      this.logger.info('### FIANL IN POST LIST ###', results);
-      this.posts = results as Post[];
-      this.postStateService.setPosts(this.posts);
-      this.logger.info('### get POSTS', this.postStateService.getPosts());
-      this.showSpinner = false;
-      this.noMorePosts(results);
-    });
+    if (postObservable) {
+      this.showSpinner = true;
+      this.postSubscription = postObservable.pipe(
+        concatMap((results: any) => {
+          this.logger.info('### post 1', results);
+          return results ? from(results.docs) : of(null);
+        }),
+        concatMap((res: any) => {
+          this.logger.info('### post 2', res);
+          if (res) {
+            const post = res.data();
+            return forkJoin([
+              of(post),
+              this.likeService.getLikes(post.postId, 1),
+              this.commentService.getComments(post.postId)
+            ]);
+          } else {
+            return of(null);
+          }
+        }),
+        concatMap((results: any) => {
+          this.logger.info('### post 3', results);
+          if (results) {
+            const post = results[0];
+            post.likes = results[1].docs.map(cur => cur.data());
+            post.comments = results[2].docs.map((cur: any) => cur.data());
+            return of(post);
+          } else { return of(null); }
+        }),
+        toArray(),
+      ).subscribe(results => {
+        if (results && results[0]) {
+          this.logger.info('### FIANL IN POST LIST ###', results);
+          this.posts = results as Post[];
+          this.postStateService.setPosts(this.posts);
+          this.noMorePosts(results);
+        } else {
+          this.message = this.noMessage;
+          this.logger.info('### MESSAGE ########', this.message);
+          this.messageEmit.emit(this.message);
+        }
+
+
+        this.showSpinner = false;
+      });
+    }
   }
 
   noMorePosts(data): void {
@@ -108,7 +139,7 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getBackgroundImageUrl(post) {
-    return `url(${post.photoURLs[0]})`;
+    return `url(${post.photoURLs[0] ? post.photoURLs[0] : ''})`;
   }
 
   clickPost(post, index) {

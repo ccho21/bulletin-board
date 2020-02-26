@@ -38,8 +38,8 @@ export class PostService {
     return this.db.collection<Post>('posts').doc(postId).get();
   }
 
-  getBookmarkedPost(postIds) {
-    return this.db.collection('posts', ref => ref.where('postId', 'in', postIds)).get();
+  getBookmarkedPost(postIds, limitedPost) {
+    return this.db.collection('posts', ref => ref.where('postId', 'in', postIds).limit(limitedPost)).get();
   }
 
   /* Create post */
@@ -104,12 +104,15 @@ export class PostService {
     this.updatePost(post.postId, post);
   }
 
-  getPostsByCommentId(uid) {
+  getPostsByCommentId(uid, limitedPost) {
     const query = this.db
       .collectionGroup<Comment>('comments'
         , ref => ref.where('author.uid', '==', uid).orderBy('createdAt', 'asc')).get().pipe(concatMap(res => {
           const postIds = res.docs.map(cur => cur.data().postId);
-          return this.db.collection<Post>('posts', ref => ref.where('postId', 'in', postIds)).get();
+          this.logger.info('### post IDS !!!!', postIds);
+          return postIds.length > 0  ? 
+          this.db.collection<Post>('posts', ref => ref.where('postId', 'in', postIds).limit(limitedPost)).get() : of(null);
+          // return of(res);
         }));
     return query;
   }

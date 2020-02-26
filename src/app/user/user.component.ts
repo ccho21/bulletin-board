@@ -37,6 +37,9 @@ export class UserComponent implements OnInit {
   bookmarkedObservable: any;
   commentedObservable: any;
   postLimit: number;
+  bookmarkedMessage = 'No posts bookmarked';
+  commentedPostMessage = 'No posts commented';
+  message = '';
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
@@ -48,7 +51,7 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.postLimit = 6;
     this.getUser().pipe(concatMap((res: User) => {
       const { uid, displayName, photoURL, emailVerified, email } = res;
       this.user = { uid, displayName, photoURL, emailVerified, email } as User;
@@ -68,16 +71,10 @@ export class UserComponent implements OnInit {
 
       const postIds = results[3];
       this.postLimit = 6;
-      if (postIds.length) {
-        this.bookmarkedObservable = this.postService.getBookmarkedPost(postIds);
+      if (postIds.length > 0) {
+        this.bookmarkedObservable = this.postService.getBookmarkedPost(postIds, this.postLimit);
       }
-      
-      if (uid) {
-        this.commentedObservable =  this.postService.getPostsByCommentId(uid);
-      }
-
-      this.logger.info(' this.bookmarkedObservable',  this.bookmarkedObservable);
-      this.logger.info(' this.commentedObservable',  this.commentedObservable);
+      this.commentedObservable =  this.postService.getPostsByCommentId(uid, this.postLimit);
     });
   }
 
@@ -89,6 +86,10 @@ export class UserComponent implements OnInit {
     );
   }
 
+  noMessage(event) {
+    this.logger.info('### event', event);
+    this.message = event;
+  }
   getPosts(uid) {
     return this.postService.getPostsByUid(uid).pipe(concatMap(res => {
       this.posts = res.docs.map(cur => cur.data());
