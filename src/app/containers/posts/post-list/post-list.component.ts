@@ -20,7 +20,7 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   isPostLiked;
   postSubscription: Subscription;
   filteredPosts = [];
-
+  default = 'https://firebasestorage.googleapis.com/v0/b/bulletin-board-d1815.appspot.com/o/uploads%2F1582757472106_placeholder.jpg?alt=media&token=cb624601-3ea1-45e8-a065-89c2a464e7ab';
   @Input() postObservable: Observable<any>;
   @Input() isWriteable?: boolean;
   @Input() postLimit: number;
@@ -112,7 +112,7 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
           this.noMorePosts(results);
 
           this.logger.info('### FIANL IN POST LIST ###', this.posts);
-          this.filteredPosts = this.posts.map(cur => ({...cur}));
+          this.filteredPosts = this.posts.map(cur => ({ ...cur }));
           this.postStateService.setPosts(this.filteredPosts);
         } else {
           this.message = this.noMessage;
@@ -128,7 +128,7 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
     if (keyword) {
       this.filteredPosts = this.posts.filter(post => post.content.toLowerCase().includes(keyword.toLowerCase()));
     } else {
-      this.filteredPosts = this.posts.map(cur => ({...cur}));
+      this.filteredPosts = this.posts.map(cur => ({ ...cur }));
     }
   }
 
@@ -152,8 +152,9 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getBackgroundImageUrl(post) {
-    return `url(${post.photoURLs[0] ? post.photoURLs[0] : ''})`;
+    return `url(${post.photoURLs[0] ? post.photoURLs[0] : this.default})`;
   }
+
 
   clickPost(post, index) {
     this.postStateService.setPostIndex(index);
