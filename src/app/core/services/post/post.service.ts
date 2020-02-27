@@ -111,7 +111,7 @@ export class PostService {
           const postIds = res.docs.map(cur => cur.data().postId);
           this.logger.info('### post IDS !!!!', postIds);
           return postIds.length > 0  ? 
-          this.db.collection<Post>('posts', ref => ref.where('postId', 'in', postIds).limit(limitedPost)).get() : of(null);
+          this.db.collection<Post>('posts', ref => ref.where('postId', 'in', postIds.slice(0,6)).limit(limitedPost)).get() : of(null);
           // return of(res);
         }));
     return query;

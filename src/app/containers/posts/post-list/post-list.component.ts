@@ -80,11 +80,9 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
       this.showSpinner = true;
       this.postSubscription = postObservable.pipe(
         concatMap((results: any) => {
-          this.logger.info('### post 1', results);
           return results ? from(results.docs) : of(null);
         }),
         concatMap((res: any) => {
-          this.logger.info('### post 2', res);
           if (res) {
             const post = res.data();
             return forkJoin([
@@ -97,7 +95,6 @@ export class PostListComponent implements OnInit, OnDestroy, OnChanges {
           }
         }),
         concatMap((results: any) => {
-          this.logger.info('### post 3', results);
           if (results) {
             const post = results[0];
             post.likes = results[1].docs.map(cur => cur.data());

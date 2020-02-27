@@ -11,4 +11,4 @@ const mainRoutes: Routes = mainRouterConfig;
     ],
   exports: [RouterModule]
 })
-export class MainRoutingModule { }
+export class MainRoutingModule {}
