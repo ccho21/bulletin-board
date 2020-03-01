@@ -24,6 +24,9 @@ export class PostStateService implements OnDestroy {
     private postCloseSubject = new Subject<any>();
     private postCloseSubjectSubscription$ = this.postCloseSubject.asObservable();
 
+    private postSearchSubject = new Subject<any>();
+    private postSearchSubjectSubscription$ = this.postSearchSubject.asObservable();
+
     postIndex: number;
     constructor(
         private logger: LoggerService
@@ -100,6 +103,15 @@ export class PostStateService implements OnDestroy {
 
     postCloseEmitted() {
         return this.postCloseSubjectSubscription$;
+    }
+
+    postSearchEmit(keyword) {
+        this.logger.info('$$$ working');
+        this.postSearchSubject.next(keyword);
+    }
+
+    postSearchEmitted() {
+        return this.postSearchSubjectSubscription$;
     }
 
     setPostIndex(postIndex) {

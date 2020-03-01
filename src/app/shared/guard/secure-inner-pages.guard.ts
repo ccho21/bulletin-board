@@ -17,12 +17,12 @@ export class SecureInnerPagesGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if(this.authService.isLoggedIn) {
-      this.logger.info('secure inner pages');
-      window.alert("You are not allowed to access this URL!");
-       this.router.navigate(['/'])
+    if (this.authService.isLoggedIn) {
+      this.logger.info('secure inner pages', state);
+      // window.alert('You are not allowed to access this URL!');
+      this.router.navigate(['/home']);
     }
     return true;
   }
-  
+
 }

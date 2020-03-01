@@ -1,24 +1,24 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FormGroup, FormControl } from "@angular/forms";
-import { AuthService } from "@app/core/services/auth/auth.service";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { AuthService } from '@app/core/services/auth/auth.service';
 // import { userFormGroup } from '@models/../forms/userForm.component';
-import { LoggerService } from "@app/core/services/logger/logger.service";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { UploadService } from "@app/core/services/upload/upload.service";
-import { Upload } from "@app/shared/models/upload";
-import { Subscription } from "rxjs";
+import { LoggerService } from '@app/core/services/logger/logger.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UploadService } from '@app/core/services/upload/upload.service';
+import { Upload } from '@app/shared/models/upload';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: "app-sign-up",
-  templateUrl: "./sign-up.component.html",
-  styleUrls: ["./sign-up.component.scss"]
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
   file: Upload;
   fileDTO;
-  isRegisterValid: boolean = true;
-  isSubmitted: boolean = false;
+  isRegisterValid = true;
+  isSubmitted = false;
   uploadSubscription: Subscription;
   constructor(
     public authService: AuthService,
@@ -55,12 +55,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
   }
   signUp(userForm) {
     this.authService.signUp(userForm).subscribe(res => {
-      this.activeModal.close();
+
+      this.logger.info('### sign up successfully completed', res);
+      // this.activeModal.close();
     });
   }
   uploadFile(e) {
     this.file = new Upload(e.target.files.item(0));
-    this.logger.info("files", this.file);
+    this.logger.info('files', this.file);
   }
   onSubmit() {
     // check form valid
@@ -85,7 +87,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   }
   goToSignIn(e) {
     e.preventDefault();
-    this.activeModal.close("SignIn");
+    this.activeModal.close('SignIn');
   }
   ngOnDestroy() {
     this.uploadSubscription.unsubscribe();

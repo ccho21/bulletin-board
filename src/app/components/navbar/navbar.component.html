@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg fixed-top justify-content-center" color-on-scroll="500"
   [ngClass]="{ '': !navBackgroundColor }" (scroll)="scrollHandler($event)">
   <div class="col-md-10">
-    <div class="container d-flex">
+    <div class="container d-lg-flex justify-content-center align-items-center">
       <div class="navbar-translate">
         <a class="navbar-brand" routerLink="">Charles Cho</a>
         <button class="navbar-toggler navbar-burger toggle" type="button" data-toggle="collapse"
@@ -12,27 +12,52 @@
           <span class="navbar-toggler-bar toggle"></span>
         </button>
       </div>
-      <div class="navbar-collapse" id="navbarToggler">
-        <ul class="navbar-nav ml-auto align-items-end" (clickoutside)="cancel($event)">
+      <!-- SEARCH -->
+      <div class="search-wrapper">
+        <form (keyup.enter)="search()">
+          <div class="input-group mb-3 mb-lg-0">
+            <input class=" form-control" placeholder="Search" type="text" [formControl]="keyword" />
+            <div class=" input-group-append">
+              <span class=" input-group-text" (click)="search()"> <i class="nc-icon nc-zoom-split"> </i> </span>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- SEARCH -->
+      <div class="navbar-collapse flex-grow-0" id="navbarToggler">
+        <ul class="navbar-nav ml-auto" (clickoutside)="cancel($event)">
+          
           <li class="nav-item" *ngIf="!isDocumentation()">
-            <a class="nav-link" [routerLink]="['/posts']" routerLinkActive="router-link-active">
-              <i class="nc-icon nc-bullet-list-67"></i>
-              <p class="d-lg-none">Forum</p>
+            <a class="nav-link" [routerLink]="['/about']" routerLinkActive="router-link-active">
+              <div class="nav-item-desc">
+                <i class="nc-icon nc-alert-circle-i m-nav-icon"></i>
+              <span class="d-lg-none">About</span>
+              </div>
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="!isDocumentation()">
+            <a class="nav-link" [routerLink]="['/home']" routerLinkActive="router-link-active">
+              <div class="nav-item-desc">
+                <i class="nc-icon nc-bullet-list-67 m-nav-icon"></i>
+              <span class="d-lg-none">Forum</span>
+              </div>
             </a>
           </li>
           <li class="nav-item" *ngIf="!isDocumentation()">
             <a class="nav-link">
-              <i class="nc-icon nc-email-85"></i>
-              <p class="d-lg-none">Message</p>
+              <div class="nav-item-desc">
+                <i class="nc-icon nc-email-85 m-nav-icon"></i>
+                <span class="d-lg-none">Message</span>
+              </div>
             </a>
           </li>
           <li class="nav-item" *ngIf="isLoggedIn">
             <div class="dropdown" ngbDropdown placement="bottom-right">
-              <a class="nav-link dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>
-                <i aria-hidden="true" class="nc-icon nc-single-02"></i>
-                <p class="d-lg-none">{{user.displayName}}</p>
+              <a class="nav-link dropdown-toggle m-nav-dropdown" id="dropdownBasic1" ngbDropdownToggle>
+                  <i aria-hidden="true" class="nc-icon nc-single-02 m-nav-icon"></i>
+                  <span class="d-lg-none">{{user.displayName}}</span>
               </a>
-              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-danger" x-placement="bottom-left">
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" x-placement="bottom-left">
 
                 <a class="dropdown-item" [routerLink]="['/user', user.uid]">My Profile</a>
                 <!-- <a class="dropdown-item">Dashboard </a> -->

@@ -14,32 +14,33 @@ import { LoaderService } from '@app/core/services/loader/loader.service';
 export class SignInComponent implements OnInit {
   focus;
   focus1;
-  test                                  : Date = new Date();
+  test: Date = new Date();
   password = new FormControl('');
   email = new FormControl('');
   constructor(
-    private logger                      : LoggerService,
-    private authService                 : AuthService,
-    private router                      : Router,
-    private activeModal                 : NgbActiveModal,
-    private loaderService               : LoaderService
+    private logger: LoggerService,
+    private authService: AuthService,
+    private router: Router,
+    private activeModal: NgbActiveModal,
+    private loaderService: LoaderService
   ) {}
   ngOnInit() {
   }
-  googleAuth () {
-    this.authService.GoogleAuth().subscribe(res => {
-      this.logger.info('### successfully signed in ', res);
-      this.activeModal.close();
+  googleAuth() {
+    this.authService.GoogleAuth().subscribe(_res => {
+      this.logger.info('### successfully signed in ');
+      // this.activeModal.close();
+      this.router.navigate(['home']);
     });
   }
   signin() {
     const email = this.email.value;
     const password = this.password.value;
-    if(email && password){
+    if (email && password) {
       this.logger.info(email, password);
       this.authService.signIn(email, password).subscribe(res => {
         this.logger.info('Sign in status', res);
-        if(res) {
+        if (res) {
           this.close();
         }
       }, err => {
@@ -50,19 +51,18 @@ export class SignInComponent implements OnInit {
     }
   }
 
-  goToSignUp(e){
+  goToSignUp(e) {
     e.preventDefault();
-    this.activeModal.close('SignUp');
+    this.router.navigateByUrl('/sign-up');
   }
-  goToLink(e){
+  goToLink(e) {
     e.preventDefault();
     this.close();
     this.router.navigateByUrl('/forgot-password');
   }
- 
+
   close(link?: string) {
-    this.activeModal.close();
+    // this.activeModal.close();
     this.router.navigateByUrl('/home');
   }
-
 }

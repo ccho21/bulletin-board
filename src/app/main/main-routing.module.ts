@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-
 import { mainRouterConfig } from './main.routes'; 
 
 const mainRoutes: Routes = mainRouterConfig;
@@ -11,4 +9,4 @@ const mainRoutes: Routes = mainRouterConfig;
     ],
   exports: [RouterModule]
 })
-export class MainRoutingModule { }
+export class MainRoutingModule {}

@@ -13,12 +13,13 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Location } from '@angular/common';
 import { LoggerService } from '@app/core/services/logger/logger.service';
-import { PopupService } from '@app/core/services/popup/popup.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { from, Subscription } from 'rxjs';
 import { User } from '@models/user';
 import { ModalService } from '@app/core/services/modal/modal.service';
-import { UserService } from '@app/core/services/user/user.service';
+import { FormControl } from '@angular/forms';
+import { PostStateService } from '@app/containers/posts/post-state.service';
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -33,13 +34,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean;
   logginSubsctiption: Subscription;
   user: User;
+  keyword: FormControl;
   constructor(
     public location: Location,
     private element: ElementRef,
     private logger: LoggerService,
     private modalService: ModalService,
     private authService: AuthService,
-    private userService: UserService,
+    private router: Router,
+    private postStateService: PostStateService
   ) {
     this.sidebarVisible = false;
   }
@@ -54,6 +57,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.keyword = new FormControl('');
+    this.logger.info(this.keyword);
     this.authService.getSignedUser().subscribe((res: any) => {
       if (res) {
         const { displayName, uid, photoURL, email, emailVerified } = res;
@@ -67,6 +72,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
         if (this.user) {
           this.logger.info('user successfuly signed in', this.user);
           this.isLoggedIn = true;
+          this.router.navigate(['home']);
+        } else {
+          this.router.navigate(['login']);
         }
       }
     });
@@ -82,13 +90,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
   }
   signInOpen() {
-    this.logger.info('sign In open?');
-    this.modalService.signInOpen();
+    this.router.navigate(['login']);
+    // this.logger.info('sign In open?');
+    // this.modalService.signInOpen();
   }
 
   signUpOpen() {
-    this.logger.info('sign up open?');
-    this.modalService.signUpOpen();
+    // this.logger.info('sign up open?');
+    // this.modalService.signUpOpen();
+    this.router.navigate(['sign-up']);
   }
 
   signOut() {
@@ -103,7 +113,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const toggleButton = this.toggleButton;
     const html = document.getElementsByTagName('html')[0];
 
-    setTimeout(function () {
+    setTimeout(() => {
       toggleButton.classList.add('toggled');
     }, 500);
     html.classList.add('nav-open');
@@ -148,13 +158,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return false;
     }
   }
+  search() {
+    this.logger.info('### search', this.keyword.value);
+    const keyword = this.keyword.value;
+    this.postStateService.postSearchEmit(keyword);
+  }
   cancel(e) {
-    const outsideClicked = !e;
+    this.logger.info(e);
+    /* const outsideClicked = !e;
     if (this.sidebarVisible) {
       if (outsideClicked) {
         this.sidebarToggle();
       }
-    }
+    } */
 
   }
   ngOnDestroy() {
