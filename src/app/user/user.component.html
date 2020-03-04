@@ -11,17 +11,17 @@
           <div class="row">
             <div class="col-md-12">
               <div class="media align-items-center mt-5">
-                <img class="img-circle img-no-padding img-responsive mr-5 c-user-img" src="{{user.photoURL}}"
+                <img class="img-circle img-no-padding img-responsive mr-5 c-user-img" *ngIf="user?.photoURL" src="{{user.photoURL}}"
                   alt="{{ user.displayName }}" />
                 <div class="media-body mb-3">
                   <p>
                     Name: <strong>{{ fullName }}</strong>
                   </p>
                   <p>
-                    Email: <strong>{{ user.email }}</strong>
+                    Email: <strong>{{ user?.email }}</strong>
                   </p>
                   <p>
-                    Email Verified: <strong>{{ user.emailVerified }}</strong>
+                    Email Verified: <strong>{{ user?.emailVerified }}</strong>
                   </p>
                   <hr />
                   <div class="d-flex">

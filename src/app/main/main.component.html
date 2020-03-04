@@ -24,6 +24,14 @@
       <h2 class="title text-center">Let's share our memories and experiences</h2>
     </div>
     <div class="my-5">
+      <div class="container d-flex justify-content-center">
+        <div class="btn-group col-lg-5">
+          <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'List'">List</label>
+          <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'View'">View</label>
+        </div>
+      </div>
+    </div>
+    <div class="my-5">
       <app-post-list [postObservable]="postObservable" [isWriteable]="true" [postLimit]="numberOfPosts"></app-post-list>
     </div>
   </div>

@@ -1,0 +1,10 @@
+<div class="card">
+    <img src="{{projectCard.image_url}}" alt="Avatar" style="width:100%">
+    <div class="container">
+        <h4 class="mb-3 text-center"><b>{{projectCard.title}}</b></h4>
+        <ul *ngFor="let description of projectCard.descriptions">
+            <li>{{description}}</li>
+        </ul>
+        <a class="my-3 mx-2 link-center" href="{{projectCard.reference}}"><span class="text-style-bold">Link: </span> {{projectCard.reference}}</a>
+    </div>
+</div>

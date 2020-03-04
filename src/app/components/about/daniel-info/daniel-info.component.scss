@@ -1,0 +1,46 @@
+img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+}
+  
+/* Container for skill bars */
+.skill-bar-container {
+  width: 100%; /* Full width */
+  height: 30px;
+  margin-bottom: 10px;
+  background-color: #ddd; /* Grey background */
+}
+
+.skills {
+  text-align: right; /* Right-align text */
+  padding-top: 4px; /* Add top padding */
+  padding-bottom: 10px; /* Add bottom padding */
+  color: white; /* White text color */
+}
+
+.html {height: 30px; width: 95%; background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);} 
+.css {height: 30px;width: 90%; background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);} 
+.js {height: 30px;width: 90%; background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);} 
+.jquery {height: 30px;width: 70%; background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);} 
+.angular {height: 30px;width: 85%; background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);} 
+
+// card section
+.card-section {
+  display: flex;
+  flex-direction: row;
+}
+.background-green {
+  background-color: #EDF2F1;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+  
+}
+.text-align-center {
+  text-align: center;
+}
+

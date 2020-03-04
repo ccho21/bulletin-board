@@ -1,6 +1,9 @@
-.c-image-circle {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    overflow: hidden;
+.full-width {
+    width: 100%;
+}   
+.eighty-percent-width {
+    width: 80%;
+}
+.row {
+    flex-wrap: initial;
 }

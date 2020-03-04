@@ -37,6 +37,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   leftArrowValid = true;
   rightArrowValid = true;
   isAuthor: boolean;
+  
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,

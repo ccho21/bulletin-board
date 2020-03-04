@@ -78,6 +78,7 @@ export class PostModalComponent implements OnDestroy, OnInit {
 
     });
   }
+  
   goToPost(postId?) {
     const base = this.router.routerState.snapshot.url.split('/p/');
     if (postId) {

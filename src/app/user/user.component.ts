@@ -55,6 +55,7 @@ export class UserComponent implements OnInit {
     this.getUser().pipe(concatMap((res: User) => {
       const { uid, displayName, photoURL, emailVerified, email } = res;
       this.user = { uid, displayName, photoURL, emailVerified, email } as User;
+      this.logger.info('### user', this.user)
       const nArr = displayName.split('_').map(cur => cur.charAt(0).toUpperCase() + cur.substring(1));
       this.logger.info(nArr);
       this.fullName = `${nArr[0] || ''} ${nArr[1] || ''} ${nArr[2] || ''}`;
@@ -70,6 +71,9 @@ export class UserComponent implements OnInit {
       this.logger.info('### results from forkjoin in user component', results);
 
       const postIds = results[3];
+      this.numOfPosts = results[0].length;
+      this.numOfComments = results[1].length
+      this.numOfLikes = results[2].length;
       this.postLimit = 6;
       if (postIds.length > 0) {
         this.bookmarkedObservable = this.postService.getBookmarkedPost(postIds, this.postLimit);
