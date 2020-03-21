@@ -39,6 +39,7 @@ import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ComponentsModule } from '@app/components/components.module';
+import { PostViewComponent } from './post-view/post-view.component';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -51,9 +52,11 @@ import { ComponentsModule } from '@app/components/components.module';
     CommentDetailComponent,
     WgtUploadTaskComponent,
     PostModalComponent,
-    WgtBookmarkComponent
+    WgtBookmarkComponent,
+    PostViewComponent
   ],
   entryComponents: [
+    PostViewComponent,
     PostListComponent,
     PostDetailComponent,
     PostNewComponent,
@@ -77,6 +80,7 @@ import { ComponentsModule } from '@app/components/components.module';
   ],
   exports: [
     PostListComponent,
+    PostViewComponent
   ],
   providers: [
     NgbActiveModal,

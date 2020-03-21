@@ -29,6 +29,9 @@ export class MainComponent implements OnInit {
   numberOfPosts = 6;
   articleEnd: boolean;
   showSpinner: boolean;
+
+  showDisplay: boolean = true;
+
   constructor(
     public firebaseService: FirebaseService,
     private router: Router,
@@ -84,4 +87,7 @@ export class MainComponent implements OnInit {
     return result;
   }
 
+  showList() {
+    this.showDisplay ? this.showDisplay=false : this.showDisplay=true;    
+  }
 }

@@ -8,6 +8,6 @@ import { PostDetailComponent } from './post-detail/post-detail.component';
 
 export const postRouterConfig: Routes = [
     { path: 'p/create', component: PostModalComponent },
-    { path: 'p/:id', component: PostDetailComponent},
-    { path: 'p/:id/edit', component: PostEditComponent },
+    { path: 'p/:id', component: PostModalComponent},
+    { path: 'p/:id/edit', component: PostEditComponent }
 ];

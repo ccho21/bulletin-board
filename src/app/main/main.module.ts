@@ -22,6 +22,7 @@ import { ResumeComponent } from '../components/resume/resume.component';
 import { DanielInfoComponent } from '../components/about/daniel-info/daniel-info.component';
 import { CharlesInfoComponent } from '../components/about/charles-info/charles-info.component';
 import { CardComponent } from '../components/about/daniel-info/card/card.component';
+
 // Main
 import { MainRoutingModule } from './main-routing.module';
 import { PostModule } from '@app/containers/posts/post.module';

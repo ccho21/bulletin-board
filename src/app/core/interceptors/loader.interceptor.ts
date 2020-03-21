@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 import { finalize } from "rxjs/operators";
 import { LoaderService } from "@app/core/services/loader/loader.service";
 import { LoggerService } from "../services/logger/logger.service";
+
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
   constructor(
