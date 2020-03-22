@@ -23,58 +23,39 @@ export class DanielInfoComponent implements OnInit {
         "Developed functionaries of creating, editing, deleting, liking, bookmarking a post as well as leaving a comment",
         "Applied the lazy loading for displaying posts in the main page as well as adding a spinner for being user friendly to all visitors."
       ], 
-      reference:"https://bulletin-board-d1815.firebaseapp.com/login",
-      image_url: "./assets/img/daniel.jpg"
+      reference:" https://bulletin-board-d1815.firebaseapp.com/login",
+      image_url: "./assets/img/daniel-olahh.jpg"
     },
     {
       title: "Shinhan Project",
       descriptions: [
-        "Implemented a wide variety of web pages including customization of the table, carousel, card and the mobile-responsive layout by using Bootstrap and jQueryforthe website of Shinhan Bank Canada. ",
-        "Developed the Mortgage Calculator, which fetched and updated data through the Restful API and used the Chart.js for the implementation of the line graph, while following the standard provided by the Government of Canada. ",
-        "Managed code via X version control and with a designer, respectfully discusses project-related topics "
+        "Implemented a wide variety of responsive and user-friendly web pages including customization of the animation, carousel and layout by using Bootstrap 4 and jQuery for the website project of Shinhan Bank Canada.",
+        "Developed accessible user interface and functionalities of the Mortgage Calculator, line graphs, and the Currency Exchange Calculator, which handled data through the Restful APIs while following the government standards of Canada.",
+        "Managed code via Git, and with a designer, respectfully discussed project-related topics such as the concept design for a website and the detailed specifications of each web page."
       ], 
       reference:" https://www.shinhan.ca/ ",
-      image_url: "./assets/img/daniel.jpg"
+      image_url: "./assets/img/back 4.jpeg"
     },
     {
-      title: "Shinhan Project",
+      title: "Canadian Park Information Blog",
       descriptions: [
-        "Implemented a wide variety of web pages including customization of the table, carousel, card and the mobile-responsive layout by using Bootstrap and jQueryforthe website of Shinhan Bank Canada. ",
-        "Developed the Mortgage Calculator, which fetched and updated data through the Restful API and used the Chart.js for the implementation of the line graph, while following the standard provided by the Government of Canada. ",
-        "Managed code via X version control and with a designer, respectfully discusses project-related topics "
+        "Implemented a Canadian Park Information Blog for users to obtain Ontario campsite information through using a Restful API.",
+        "Provided a leaderboard to share stories and experiences with others through Spring Framework(STS), MyBatis, and jQuery.",
+        "Developed user and leaderboard related APIs to manage data about Ontario Parks from a relational database MySQL.",
+        "Modified and built bootstrap 4 components as well as functionalities such as sorting and showing top popular five places, leaving a comment on each article and updating a user’s own profile."
       ], 
-      reference:" https://www.shinhan.ca/ ",
-      image_url: "./assets/img/daniel.jpg"
+      reference:"https://gitlab.com/daniel.tutoring/springmvc/-/tree/init",
+      image_url: "./assets/img/back 3.jpeg"
     },
     {
-      title: "Shinhan Project",
+      title: "My Personal Website",
       descriptions: [
-        "Implemented a wide variety of web pages including customization of the table, carousel, card and the mobile-responsive layout by using Bootstrap and jQueryforthe website of Shinhan Bank Canada. ",
-        "Developed the Mortgage Calculator, which fetched and updated data through the Restful API and used the Chart.js for the implementation of the line graph, while following the standard provided by the Government of Canada. ",
-        "Managed code via X version control and with a designer, respectfully discusses project-related topics "
+        "Used an existing bootstrap template and modified code to design and develop my personal website with user-friendly interface.",
+        "Improved user accessibility by following and surpassing the Web Accessibility standards stated by the Government of Canada.",
+        "Hosted meetings with classmates to give and receive constructive feedback based on how we coded our individual website."
       ], 
-      reference:" https://www.shinhan.ca/ ",
-      image_url: "./assets/img/daniel.jpg"
-    },
-    {
-      title: "Shinhan Project",
-      descriptions: [
-        "Implemented a wide variety of web pages including customization of the table, carousel, card and the mobile-responsive layout by using Bootstrap and jQueryforthe website of Shinhan Bank Canada. ",
-        "Developed the Mortgage Calculator, which fetched and updated data through the Restful API and used the Chart.js for the implementation of the line graph, while following the standard provided by the Government of Canada. ",
-        "Managed code via X version control and with a designer, respectfully discusses project-related topics "
-      ], 
-      reference:" https://www.shinhan.ca/ ",
-      image_url: "./assets/img/daniel.jpg"
-    },
-    {
-      title: "Shinhan Project",
-      descriptions: [
-        "Implemented a wide variety of web pages including customization of the table, carousel, card and the mobile-responsive layout by using Bootstrap and jQueryforthe website of Shinhan Bank Canada. ",
-        "Developed the Mortgage Calculator, which fetched and updated data through the Restful API and used the Chart.js for the implementation of the line graph, while following the standard provided by the Government of Canada. ",
-        "Managed code via X version control and with a designer, respectfully discusses project-related topics "
-      ], 
-      reference:" https://www.shinhan.ca/ ",
-      image_url: "./assets/img/daniel.jpg"
+      reference:"https://gitlab.com/daniel.tutoring/personal/-/tree/init/src/components/layout",
+      image_url: "./assets/img/back2.jpeg"
     },
   ]
   constructor() { }

@@ -52,6 +52,8 @@ export class PostViewComponent implements OnInit {
     console.log(this.isWriteable);
     console.log(this.postLimit);
   }
+
+  
   getPosts(postObservable) {
     if (postObservable) {
       this.showSpinner = true;
@@ -89,7 +91,7 @@ export class PostViewComponent implements OnInit {
           this.filteredPosts = this.posts.map(cur => ({ ...cur }));
           this.postStateService.setPosts(this.filteredPosts);
         } else {
-          this.message = this.noMessage;
+          // this.message = this.noMessage;
           this.logger.info('### MESSAGE ########', this.message);
           this.messageEmit.emit(this.message);
         }
