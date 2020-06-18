@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostBinding, Input, OnChanges, SimpleChanges, EventEmitter, Output  } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { PostService } from '../../../core/services/post/post.service';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { Post } from '../../../shared/models/post';
@@ -8,16 +8,12 @@ import { of, Subscription, from, forkJoin, Observable } from 'rxjs';
 import { CommentService } from '../../../core/services/comment/comment.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PostStateService } from '../post-state.service';
-import { ModalService } from '@app/core/services/modal/modal.service';
-import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
-
 @Component({
-  selector: 'app-post-view',
-  templateUrl: './post-view.component.html',
-  styleUrls: ['./post-view.component.scss']
+  selector: 'app-post-list',
+  templateUrl: './post-list.component.html',
+  styleUrls: ['./post-list.component.scss'],
 })
-export class PostViewComponent implements OnInit {
-
+export class PostListComponent implements OnInit, OnDestroy, OnChanges {
   posts: Array<Post> = [];
   isPostLiked;
   postSubscription: Subscription;
@@ -26,17 +22,20 @@ export class PostViewComponent implements OnInit {
   @Input() postObservable: Observable<any>;
   @Input() isWriteable?: boolean;
   @Input() postLimit: number;
-  @Input() showDisplay: boolean;
+  @Input() bookmarkValid: boolean;
+  @Input() commentedValid: boolean;
+  @Input() noMessage?: string;
   @Output() messageEmit: EventEmitter<any> = new EventEmitter<any>(); // Emit form value
+
 
   // infinit scrolling & spinner 
   showSpinner: boolean = false;
-  numberOfPosts: number = 6; 
+  numberOfPosts: number = 0; 
   postsEnd: boolean = false;
-  
+
+
   previousPosts: {}[] = [];
   message: string;
-
   constructor(
     private logger: LoggerService,
     private postService: PostService,
@@ -48,12 +47,31 @@ export class PostViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.postObservable);
-    console.log(this.isWriteable);
-    console.log(this.postLimit);
+    this.logger.info('############ POST LIST #############');
+    this.postStateService.postSearchEmitted().subscribe(keyword => {
+      this.filterPosts(keyword);
+    });
   }
 
-  
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.postObservable && this.postObservable) {
+      this.logger.info('### NG ON CHANGE ###', changes, this.postObservable);
+      this.getPosts(this.postObservable);
+    }
+  }
+
+  onScroll() {
+    const lastPost = this.filteredPosts[this.filteredPosts.length -1];
+    const observable = this.postService.getPostsPaignated(lastPost, this.postLimit);
+    if (this.bookmarkValid) {
+
+    } else if (this.commentedValid) {
+
+    } else {
+      this.getPosts(observable);
+    }
+  }
+
   getPosts(postObservable) {
     if (postObservable) {
       this.showSpinner = true;
@@ -83,15 +101,16 @@ export class PostViewComponent implements OnInit {
         }),
         toArray(),
       ).subscribe(results => {
+        this.logger.info('##### results', results);
+        
         if (results && results[0]) {
-          this.posts = results as Post[];
-          this.noMorePosts(results);
-
-          this.logger.info('### FIANL IN POST LIST ###', this.posts);
+          const postsData = results as Post[];
+          this.posts = [...this.posts, ...postsData];
           this.filteredPosts = this.posts.map(cur => ({ ...cur }));
           this.postStateService.setPosts(this.filteredPosts);
         } else {
-          // this.message = this.noMessage;
+          this.noMorePosts(results);
+          this.message = this.noMessage;
           this.logger.info('### MESSAGE ########', this.message);
           this.messageEmit.emit(this.message);
         }
@@ -99,6 +118,7 @@ export class PostViewComponent implements OnInit {
       });
     }
   }
+
   filterPosts(keyword) {
     if (keyword) {
       this.filteredPosts = this.posts.filter(post => post.content.toLowerCase().includes(keyword.toLowerCase()));
@@ -108,12 +128,35 @@ export class PostViewComponent implements OnInit {
   }
 
   noMorePosts(data): void {
-    if (this.previousPosts.length === data.length) {
-      this.postsEnd = true;
-    } else {
-      this.previousPosts = data;
-      this.postsEnd = false;
-    }
+    this.postsEnd = data.length === 0? true : false;
   }
 
+  deletePost(post) {
+    const postId = post.postId;
+    this.postService.deletePost(postId);
+  }
+
+  editPost(post) {
+    this.logger.info(post);
+    this.router.navigateByUrl(`p/${post.postId}/edit`);
+  }
+
+  getBackgroundImageUrl(post) {
+    return `url(${post.photoURLs[0] ? post.photoURLs[0] : this.default})`;
+  }
+
+
+  clickPost(post, index) {
+    this.postStateService.setPostIndex(index);
+    const base = `${this.router.url}/p/${post.postId}`;
+    this.logger.info(this.router);
+    this.router.navigateByUrl(base);
+  }
+
+  ngOnDestroy() {
+    this.logger.info('### post list is destroyed#######');
+    if (this.postSubscription) {
+      this.postSubscription.unsubscribe();
+    }
+  }
 }

@@ -15,10 +15,10 @@ import {
 } from '@angular/material';
 // User
 import { UserRoutingModule } from './user-routing.module';
-import { PostModule } from '@app/containers/posts/post.module';
+import { PostModule } from '@app/components/posts/post.module';
 import { UserComponent } from './user.component';
 import { PipesModule } from '@app/core/pipes/pipes.module';
-import { PostStateService } from '@app/containers/posts/post-state.service';
+import { PostStateService } from '@app/components/posts/post-state.service';
 @NgModule({
   declarations: [
     UserComponent

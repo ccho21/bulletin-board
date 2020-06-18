@@ -2,7 +2,8 @@ import {
   Component,
   OnInit,
   Input,
-  OnDestroy
+  OnDestroy,
+  OnChanges
 } from '@angular/core';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { CommentService } from '@app/core/services/comment/comment.service';
@@ -13,7 +14,7 @@ import { User } from '@app/shared/models/user';
 import { Subscription, forkJoin } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { LikeService } from '@app/core/services/like/like.service';
-import { PostStateService } from '@app/containers/posts/post-state.service';
+import { PostStateService } from '@app/components/posts/post-state.service';
 import { Like } from '@app/shared/models/like';
 import { ActivatedRoute } from '@angular/router';
 
@@ -24,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss']
 })
-export class CommentsComponent implements OnInit, OnDestroy {
+export class CommentsComponent implements OnInit, OnDestroy, OnChanges {
 
   comment: Comment;
   user: User;
@@ -43,16 +44,23 @@ export class CommentsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.commentForm = new FormControl('');
-    // this.logger.info('### POST in Comment Component', this.post);
-
-    this.commentList = this.getComments(this.post);
-    this.logger.info('### COMMMENTS', this.commentList);
-
-    this.commentSubscription = this.postStateService.getCommentDTO().subscribe(res => {
-      // this.logger.info('### COMMMENT DTO BEFORE ADDED', res);
-      this.addComment(res);
-    });
+    this.logger.info('############ COMMENT LIST #############');
+    // this.commentList = this.getComments(this.post);
+  }
+  ngOnChanges(change) {
+    this.logger.info('############ NG ON CHANGES IN COMMNET LIST #############', change.post.currentValue);
+    if(change.post.currentValue) {
+      this.post = change.post.currentValue;
+      this.commentForm = new FormControl('');
+      this.commentList = this.getComments(this.post);
+      const comments = this.postStateService.getPost(this.post.postId);
+      this.logger.info('#### ', comments);
+      // this.logger.info('### COMMMENTS', this.commentList);
+  
+      this.commentSubscription = this.postStateService.getCommentDTO().subscribe(res => {
+        this.addComment(res);
+      });
+    }
   }
 
   getComments(post) {

@@ -26,8 +26,8 @@ import { LikeService } from '@app/core/services/like/like.service';
 import { ViewService } from '@app/core/services/view/view.service';
 import { PipesModule } from '@app/core/pipes/pipes.module';
 
-import { CommentsComponent } from '@app/containers/comments/comments.component';
-import { CommentDetailComponent } from '@app/containers/comments/comment-detail/comment-detail.component';
+import { CommentsComponent } from '@app/components/comments/comments.component';
+import { CommentDetailComponent } from '@app/components/comments/comment-detail/comment-detail.component';
 // import { PostStateService } from './post-state.service';
 import { PostModalComponent } from './post-modal/post-modal.component';
 
@@ -39,7 +39,6 @@ import { BookmarkService } from '@app/core/services/bookmark/bookmark.service';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ComponentsModule } from '@app/components/components.module';
-import { PostViewComponent } from './post-view/post-view.component';
 @NgModule({
   declarations: [
     PostDetailComponent,
@@ -53,10 +52,8 @@ import { PostViewComponent } from './post-view/post-view.component';
     WgtUploadTaskComponent,
     PostModalComponent,
     WgtBookmarkComponent,
-    PostViewComponent
   ],
   entryComponents: [
-    PostViewComponent,
     PostListComponent,
     PostDetailComponent,
     PostNewComponent,
@@ -80,7 +77,6 @@ import { PostViewComponent } from './post-view/post-view.component';
   ],
   exports: [
     PostListComponent,
-    PostViewComponent
   ],
   providers: [
     NgbActiveModal,

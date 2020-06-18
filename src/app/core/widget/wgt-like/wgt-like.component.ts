@@ -10,7 +10,7 @@ import { Like } from '@app/shared/models/like';
 import { UserActivitiesService } from '@app/core/services/user-activities/user-activities.service';
 import { Comment } from '@app/shared/models/comment';
 import { SubComment } from '@app/shared/models/sub-comment';
-import { PostStateService } from '@app/containers/posts/post-state.service';
+import { PostStateService } from '@app/components/posts/post-state.service';
 @Component({
   selector                          : 'app-wgt-like',
   templateUrl                       : './wgt-like.component.html',
@@ -38,23 +38,27 @@ export class WgtLikeComponent implements OnInit, OnDestroy {
   @Input() comment: Comment;
   @Input() subComment: SubComment;
   ngOnInit() {
-    this.initData();
-    this.checkLiked();
+    this.user = this.postStateService.getUser();
+    this.logger.info('###### WGT LIKE COMPONENT #####', this.user);
+    if(this.user) {
+      this.initData();
+      this.checkLiked();
+    }
+   
   }
 
   initData() {
-    this.user                       = this.authService.getCurrentUser();
-    if (this.post) {
-      this.data                     = this.post;
-      this.mode                     = MODE.POST;
-      this.type                     = 1;
-      this.isPost                   = true;
-    }
-    if (this.comment) {
-      this.data                     = this.comment;
-      this.mode                     = MODE.COMMENT;
-      this.type                     = 2;
-    }
+      if (this.post) {
+        this.data                     = this.post;
+        this.mode                     = MODE.POST;
+        this.type                     = 1;
+        this.isPost                   = true;
+      }
+      if (this.comment) {
+        this.data                     = this.comment;
+        this.mode                     = MODE.COMMENT;
+        this.type                     = 2;
+      }
   }
 
   checkLiked() {

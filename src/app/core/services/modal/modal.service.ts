@@ -8,8 +8,8 @@ import { SignUpComponent } from '@app/components/sign-up/sign-up.component';
 import { SignInComponent } from '@app/components/sign-in/sign-in.component';
 import { AuthService } from '../auth/auth.service';
 
-import { PostModalComponent } from '@app/containers/posts/post-modal/post-modal.component';
-import { PostDetailComponent } from '@app/containers/posts/post-detail/post-detail.component';
+import { PostModalComponent } from '@app/components/posts/post-modal/post-modal.component';
+import { PostDetailComponent } from '@app/components/posts/post-detail/post-detail.component';
 @Injectable({
   providedIn: 'root'
 })

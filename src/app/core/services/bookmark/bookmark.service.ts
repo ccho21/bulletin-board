@@ -30,6 +30,7 @@ export class BookmarkService {
     return this.db.doc(`user-activities/${uid}`)
       .collection<Bookmark>('bookmarks', ref => ref.where('postId', '==', postId).where('uid', '==', uid)).get();
   }
+  
   getBookmarkedPostId(uid) {
     return this.db
       .collectionGroup<Bookmark>('bookmarks', ref => ref.where('uid', '==', uid).orderBy('postId', 'asc')).get().pipe(concatMap(res => {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Post } from '../../../shared/models/post';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from '../../../core/services/post/post.service';
@@ -32,12 +32,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   hasImage: boolean;
   postId: string;
   postIndex: number;
-
+  isLoggedIn: boolean;
   postListLength: number;
   leftArrowValid = true;
   rightArrowValid = true;
   isAuthor: boolean;
-  
+  uid: string;
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
@@ -49,19 +49,40 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private router: Router,
     private authService: AuthService,
-    private bookmarkService: BookmarkService
+    private bookmarkService: BookmarkService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    this.logger.info('### POST DETAIL IN NG ONINIT', this.postStateService.getPosts());
-    this.getPost(this.postId);
-  }
+    const posts = this.postStateService.getPosts();
+    if(!posts.length) {
+      this.goHome();
+    }  
+    this.logger.info('################ POST DETAIL ##################', this.postId);
+    this.authService.getSignedUser().subscribe((res: any) => {
+      if(res) {
+        this.getPost(this.postId);
 
-  getPost(postId): void {
+        const { displayName, uid, photoURL, email, emailVerified } = res;
+        this.user = {displayName, uid, photoURL, email, emailVerified};
+        this.logger.info('### user in post detail', this.user);
+        this.isLoggedIn = true;
+        this.postStateService.setUser(this.user)
+      }
+      else {
+        this.isLoggedIn = false;
+        this.getPostAsGuest(this.postId);
+      }
+    });
+  }
+  goHome() {
+    this.postStateService.postCloseEmit(true);
+  }
+  getPostAsGuest(postId): void {
     let request: Observable<any>;
     const post = this.findPost(postId);
     if (!post) {
-      let p;
+      let p: any;
       request = this.postService.getPost(postId).pipe(
         concatMap((res: firebase.firestore.DocumentSnapshot) => {
           p = { ...res.data() } as Post;
@@ -71,7 +92,43 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           ]);
         }),
         concatMap(results => {
-          this.logger.info('### likes ', results[1]);
+          p.comments = results[0].docs.map(cur => cur.data());
+          p.likes = results[1].docs.map(cur => cur.data());
+          return of(p);
+        })
+      );
+    } else {
+      request = of(post);
+    }
+    request.subscribe((result: any) => {
+
+        this.updatedPost = result;
+        this.postIndex = this.postStateService.setPost(this.updatedPost);
+
+        this.checkValidArrow(this.postIndex);
+        if (this.updatedPost.photoURLs.length) {
+          this.hasImage = true;
+        }
+        this.hasPost = true;
+      });
+  }
+
+
+
+  getPost(postId): void {
+    let request: Observable<any>;
+    const post = this.findPost(postId);
+    if (!post) {
+      let p: any;
+      request = this.postService.getPost(postId).pipe(
+        concatMap((res: firebase.firestore.DocumentSnapshot) => {
+          p = { ...res.data() } as Post;
+          return forkJoin([
+            this.commentService.getComments(p.postId),
+            this.likeService.getLikes(p.postId, 1)
+          ]);
+        }),
+        concatMap(results => {
           p.comments = results[0].docs.map(cur => cur.data());
           p.likes = results[1].docs.map(cur => cur.data());
           return of(p);
@@ -92,12 +149,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           return this.getBookmarksByPostIdAndUid(p);
         })
       ).subscribe((result: any) => {
-        this.logger.info('### GET POST DETAIL FINAL', result);
-
         this.updatedPost = result;
         this.postIndex = this.postStateService.setPost(this.updatedPost);
-        this.logger.info('### post INDEX', this.postIndex);
-
         // check if the current user matches with author of the post.
         this.isAuthor = this.isUserAuthor(this.updatedPost);
 
@@ -116,9 +169,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   checkValidArrow(postIndex) {
-    this.logger.info('### postIndex ', postIndex);
-    this.logger.info('### length ', this.postListLength);
-    this.logger.info(this.leftArrowValid, this.rightArrowValid);
     if (postIndex === this.postListLength - 1) {
       this.rightArrowValid = false;
     } else if (postIndex === 0) {
@@ -128,7 +178,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   //
   findPost(postId) {
     const posts = this.postStateService.getPosts();
-    this.logger.info('########### POSTS!!! in post detail ', posts);
     const postIndex = posts.findIndex(post => post.postId === postId);
     this.postListLength = posts.length;
     this.postIndex = postIndex;
@@ -137,8 +186,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   getLikesByPostIdAndUid(post) {
     return this.likeService.getLikesByUidAndPostId(post.postId).pipe(
-      concatMap(res => {
-
+      concatMap((res: any) => {
         const likes = res.docs.map(like => like.data());
         const comments = new Map();
         /* RESET LIKES AND MAPPING COMMENTS */
@@ -164,7 +212,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   getBookmarksByPostIdAndUid(post) {
     return this.bookmarkService.getBookmarksByUidAndPostId(post.postId).pipe(
       concatMap(res => {
-        this.logger.info(res);
         if (res.docs.length) {
           const bookmark = res.docs[0].data();
           if (bookmark) {
@@ -180,9 +227,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   //
 
   displayUsers(post, content) {
-    this.logger.info('### display Users', this.postLikes);
     this.modalService.openVerticallyCentered(content).subscribe(res => {
-      this.logger.info('### modal result ', res);
     });
   }
 
@@ -194,7 +239,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   updatePost(post) {
-    this.logger.info('### update post should be implemented');
   }
 
 

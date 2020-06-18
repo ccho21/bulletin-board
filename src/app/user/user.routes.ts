@@ -7,7 +7,7 @@ import { UserComponent } from './user.component';
 export const userRouterConfig: Routes = [
     {
         path: 'user/:id', component: UserComponent, children: [
-            { path: '', loadChildren: () => import('@app/containers/posts/post.module.ts').then(mod => mod.PostModule) },
+            { path: '', loadChildren: () => import('@app/components/posts/post.module.ts').then(mod => mod.PostModule) },
         ]
     },
 ];

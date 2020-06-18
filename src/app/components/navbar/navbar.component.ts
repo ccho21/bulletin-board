@@ -18,7 +18,7 @@ import { from, Subscription } from 'rxjs';
 import { User } from '@models/user';
 import { ModalService } from '@app/core/services/modal/modal.service';
 import { FormControl } from '@angular/forms';
-import { PostStateService } from '@app/containers/posts/post-state.service';
+import { PostStateService } from '@app/components/posts/post-state.service';
 
 @Component({
   selector: 'app-navbar',
@@ -57,6 +57,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.logger.info('### navbar ng ON INIT ###');
     this.keyword = new FormControl('');
     this.logger.info(this.keyword);
     this.authService.getSignedUser().subscribe((res: any) => {
@@ -76,6 +77,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
         } else {
           this.router.navigate(['login']);
         }
+      } else {
+        this.isLoggedIn = false;
       }
     });
 

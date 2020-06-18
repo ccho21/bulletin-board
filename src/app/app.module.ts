@@ -49,14 +49,14 @@ import { UploadService } from './core/services/upload/upload.service';
 import { AuthService } from './core/services/auth/auth.service';
 
 // Import canActivate guard services
-import { SecureInnerPagesGuard } from './shared/guard/secure-inner-pages.guard';
-import { AuthGuard } from './shared/guard/auth.guard';
+import { SecureInnerPagesGuard } from './core/guard/secure-inner-pages.guard';
+import { AuthGuard } from './core/guard/auth.guard';
 
 // Modules and Components
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ComponentsModule } from './components/components.module';
-import { MainModule } from './main/main.module';
+import { MainModule } from './containers/main/main.module';
 import { ClickOutsideDirective } from './core/directives/click-outside.directive';
 
 // PIPE

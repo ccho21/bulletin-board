@@ -6,7 +6,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 import { User } from '@app/shared/models/user';
 import { CommentService } from '@app/core/services/comment/comment.service';
 import { Comment } from '@app/shared/models/comment';
-import { PostStateService } from '@app/containers/posts/post-state.service';
+import { PostStateService } from '@app/components/posts/post-state.service';
 import { Subscription } from 'rxjs';
 
 @Component({

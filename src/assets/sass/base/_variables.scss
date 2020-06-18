@@ -4,3 +4,63 @@ $main-color-black : rgba(51,51,51, 1);
 $main-color-white : rgba(255, 255, 255, 1);
 $main-black-transparent: rgba(51,51,51, .9);
 $main-color-grey : rgb(238,238,238);
+
+@for $i from 1 through 100 {
+    $base: 5;
+    $marginTop: $base * $i;
+    $marginBottom: $base * $i;
+    $marginRight: $base * $i;
+    $marginLeft: $base * $i;
+    $paddingRight: $base * $i;
+    $paddingLeft: $base * $i;
+    $paddingTop: $base * $i;
+    $paddingBottom: $base * $i;
+    $paddingX: $base * $i;
+    $paddingY: $base * $i;
+    $marginX: $base * $i;
+    $marginY: $base * $i;
+    $width: $base * $i;
+    .mt-#{$marginTop} {
+        margin-top: $marginTop + 0px;
+    }
+    .mb-#{$marginBottom} {
+        margin-bottom: $marginBottom + 0px;
+    }
+    .mr-#{$marginRight} {
+        margin-right: $marginTop + 0px;
+    }
+    .ml-#{$marginLeft} {
+        margin-left: $marginTop + 0px;
+    }
+    .pt-#{$paddingTop} {
+        padding-top: $paddingTop + 0px;
+    }
+    .pb-#{$paddingBottom} {
+        padding-bottom: $paddingBottom + 0px;
+    }
+    .pr-#{$paddingTop} {
+        padding-right: $paddingTop + 0px;
+    }
+    .pl-#{$paddingBottom} {
+        padding-left: $paddingBottom + 0px;
+    }
+    .mx-#{$marginX} {
+        margin-right: $marginX + 0px;
+        margin-left: $marginX + 0px;
+    }
+    .my-#{$marginY} {
+        margin-top: $marginY + 0px;
+        margin-bottom: $marginY + 0px;
+    }
+    .px-#{$paddingX} {
+        padding-right: $paddingX + 0px;
+        padding-left: $paddingX + 0px;
+    }
+    .py-#{$paddingY} {
+        padding-top: $paddingY + 0px;
+        padding-bottom: $paddingY + 0px;
+    }
+    .w-#{$width} {
+        width: $width + 0%;
+    }
+}

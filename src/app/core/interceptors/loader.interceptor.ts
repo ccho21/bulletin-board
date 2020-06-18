@@ -20,7 +20,6 @@ export class LoaderInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    this.logger.info("### loader service is called");
     this.loaderService.show();
     return next.handle(req).pipe(
       finalize(() => {

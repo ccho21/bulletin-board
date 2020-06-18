@@ -4,7 +4,7 @@ import {
 } from '@angular/fire/firestore';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { of, forkJoin, from, Observable, Observer } from 'rxjs';
-import {  take} from 'rxjs/operators';
+import {  take, concatMap} from 'rxjs/operators';
 import { Like } from '@app/shared/models/like';
 import { Post } from '@app/shared/models/post';
 import { AuthService } from '../auth/auth.service';
@@ -16,6 +16,7 @@ import { HelperService } from '../helper/helper.service';
   providedIn: 'root'
 })
 export class LikeService {
+  isLoggedIn: boolean;
   constructor(
     private db: AngularFirestore,
     private logger: LoggerService,
@@ -28,7 +29,7 @@ export class LikeService {
   }
 
   getLikesByUidAndPostId(postId) {
-    const {uid} = this.authService.getCurrentUser();
+    const { uid } = this.authService.getCurrentUser();
     return this.db
     .collectionGroup<Like>('likes', ref => ref.where('postId', '==', postId).where('user.uid', '==', uid).orderBy('type')).get();
   }

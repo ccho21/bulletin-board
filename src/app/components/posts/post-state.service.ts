@@ -11,7 +11,8 @@ import { Subject } from 'rxjs';
 })
 export class PostStateService implements OnDestroy {
     private posts: Array<PostExtendedDTO> = [];
-
+    private isLoggedIn = false;
+    private user: any;
     private commentSubject = new Subject<Comment>();
     private commentSubjectSubscription$ = this.commentSubject.asObservable();
 
@@ -30,9 +31,14 @@ export class PostStateService implements OnDestroy {
     postIndex: number;
     constructor(
         private logger: LoggerService
-    ) {
-        this.logger.info('######################## POST STATE SERVICE IN CONSTRUCTOR #######################');
-     }
+    ) {}
+    getUser() {
+        return this.user;
+    }
+    setUser(user) {
+        this.user = user;
+    }
+
     getPosts(): Array<PostExtendedDTO> {
         return this.posts.slice(0);
     }
@@ -72,7 +78,7 @@ export class PostStateService implements OnDestroy {
         const likes = post.likes.filter(like => like.type === 2);
         return likes;
     }
-    
+
     /* SUBJECT */
     updateCommentDTO(commentDTO) {
         this.commentSubject.next(commentDTO);

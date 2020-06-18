@@ -10,50 +10,50 @@ import { CommentService } from '@app/core/services/comment/comment.service';
 import { SubCommentService } from '@app/core/services/sub-comment/sub-comment.service';
 import { HelperService } from '@app/core/services/helper/helper.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
-@Injectable({
+import * as firebase from 'firebase/app';@Injectable({
   providedIn: 'root'
 })
 export class PostService {
   constructor(
-    private db: AngularFirestore,
+    private af: AngularFirestore,
     private logger: LoggerService,
     private helperService: HelperService,
-    private commentService: CommentService,
-    private subCommentService: SubCommentService,
-    private authService: AuthService
   ) { }
 
   /* Get post list */
-  getPosts(limitedPost) {
-    return this.db.collection<Post>('posts', ref => ref.orderBy('createdAt', 'desc').limit(limitedPost)).get();
+  getPosts(postLimit) {
+    return this.af.collection<Post>('posts', ref => ref.orderBy('createdAt', 'desc').limit(postLimit)).get();
+  }
+  getPostsPaignated (lastPost, postLimit) {
+    return this.af.collection<Post>('posts', ref => ref.orderBy('createdAt', 'desc').startAfter(lastPost.createdAt).limit(postLimit)).get();
   }
 
   getPostsByUid(uid) {
-    return this.db
+    return this.af
       .collection<Post>('posts', ref => ref.where('author.uid', '==', `${uid}`)).get();
   }
 
   /* Get post */
   getPost(postId: string) {
-    return this.db.collection<Post>('posts').doc(postId).get();
+    return this.af.collection<Post>('posts').doc(postId).get();
   }
 
   getBookmarkedPost(postIds, limitedPost) {
-    return this.db.collection('posts', ref => ref.where('postId', 'in', postIds).limit(limitedPost)).get();
+    return this.af.collection('posts', ref => ref.where('postId', 'in', postIds).limit(limitedPost)).get();
   }
 
   /* Create post */
   addPost(post: Post) {
-    const id = this.db.createId();
+    const id = this.af.createId();
     post.postId = id;
-    const query = this.db
+    const query = this.af
       .collection<Post>('posts').doc(post.postId).set(post);
     return of(query);
   }
 
   /* Update post */
   updatePost(id, post: Post) {
-    const query = this.db
+    const query = this.af
       .collection<Post>('posts')
       .doc(id)
       .update(post);
@@ -68,7 +68,7 @@ export class PostService {
     postIds.forEach((post, i) => {
       const postId = post.postId;
       requests.push(
-        this.db
+        this.af
           .collection<Post>('posts')
           .doc<Post>(postId)
           .valueChanges()
@@ -79,10 +79,10 @@ export class PostService {
 
   /* Delete post */
   deletePost(id: string) {
-    const postRef = this.db
+    const postRef = this.af
       .collection<Post>('posts', ref => ref.where('postId', '==', id));
-    const commentRef = this.db.collectionGroup<Comment>('comments', ref => ref.where('postId', '==', id).orderBy('createdAt'));
-    const likeRef = this.db.collectionGroup('likes', ref => ref.where('postId', '==', id).orderBy('type'));
+    const commentRef = this.af.collectionGroup<Comment>('comments', ref => ref.where('postId', '==', id).orderBy('createdAt'));
+    const likeRef = this.af.collectionGroup('likes', ref => ref.where('postId', '==', id).orderBy('type'));
 
     const query = forkJoin([
       of(this.helperService.deleteCollection(postRef)),
@@ -105,13 +105,13 @@ export class PostService {
   }
 
   getPostsByCommentId(uid, limitedPost) {
-    const query = this.db
+    const query = this.af
       .collectionGroup<Comment>('comments'
         , ref => ref.where('author.uid', '==', uid).orderBy('createdAt', 'asc')).get().pipe(concatMap(res => {
           const postIds = res.docs.map(cur => cur.data().postId);
           this.logger.info('### post IDS !!!!', postIds);
           return postIds.length > 0  ? 
-          this.db.collection<Post>('posts', ref => ref.where('postId', 'in', postIds.slice(0,6)).limit(limitedPost)).get() : of(null);
+          this.af.collection<Post>('posts', ref => ref.where('postId', 'in', postIds.slice(0,6)).limit(limitedPost)).get() : of(null);
           // return of(res);
         }));
     return query;

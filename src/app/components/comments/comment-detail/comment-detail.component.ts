@@ -12,24 +12,24 @@ import { Post } from '@app/shared/models/post';
 
 import { Subscription, of, from, forkJoin } from 'rxjs';
 import { toArray, concatMap } from 'rxjs/operators';
-import { PostStateService } from '@app/containers/posts/post-state.service';
+import { PostStateService } from '@app/components/posts/post-state.service';
 import { ModalService } from '@app/core/services/modal/modal.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 
 @Component({
-  selector   : 'app-comment-detail',
+  selector: 'app-comment-detail',
   templateUrl: './comment-detail.component.html',
-  styleUrls  : ['./comment-detail.component.scss']
+  styleUrls: ['./comment-detail.component.scss']
 })
 export class CommentDetailComponent implements OnInit {
 
   @Input() post: Post;
   @Input() comment: Comment;
-         addCommentValid: boolean;
-         commentForm: FormControl;
-         editCommentValid: boolean;
-         isCommentVisible = false;
-         subCommentList: Array<Comment> = [];
+  addCommentValid: boolean;
+  commentForm: FormControl;
+  editCommentValid: boolean;
+  isCommentVisible = false;
+  subCommentList: Array<Comment> = [];
 
   isAuthor: boolean;
 
@@ -43,10 +43,12 @@ export class CommentDetailComponent implements OnInit {
 
   ngOnInit() {
     this.commentForm = new FormControl('');
-
-    if (this.comment) {
-     this.isAuthor = this.isUserAuthor(this.comment);
-     this.logger.info('### is author', this.isAuthor);
+    const isLoggedIn = this.postStateService.getLogginStatus();
+    if (isLoggedIn) {
+      if (this.comment) {
+        this.isAuthor = this.isUserAuthor(this.comment);
+        this.logger.info('### is author', this.isAuthor);
+      }
     }
   }
 
@@ -57,8 +59,8 @@ export class CommentDetailComponent implements OnInit {
   }
 
   updateComment(commentDTO): void {
-    const postId     = this.post.postId;
-    const commentId  = commentDTO.commentId;
+    const postId = this.post.postId;
+    const commentId = commentDTO.commentId;
     commentDTO = this.cleanUp(commentDTO);
     this.commentService.updateComment(postId, commentId, commentDTO).subscribe(res => {
       this.logger.info('### updating comment is successful. ', res);
@@ -66,7 +68,7 @@ export class CommentDetailComponent implements OnInit {
   }
 
   deleteComment(comment): void {
-    this.commentService.deleteComment({...comment}).subscribe(res => {
+    this.commentService.deleteComment({ ...comment }).subscribe(res => {
       this.logger.info('comment is successfully deleted', res);
       // update post
     });
@@ -102,7 +104,7 @@ export class CommentDetailComponent implements OnInit {
     const commentDTO = { ...comment };
     if (newComment !== comment) {
       // updateAt - createdAt = (when it is the last update occured).
-      commentDTO.comment   = newComment;
+      commentDTO.comment = newComment;
       commentDTO.updatedAt = new Date().toISOString();
       this.updateComment(commentDTO);
     }
@@ -129,6 +131,6 @@ export class CommentDetailComponent implements OnInit {
 }
 
 enum COMMENT {
-  COMMENT     = 1,
+  COMMENT = 1,
   SUB_COMMENT = 2
 }

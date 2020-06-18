@@ -1,5 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, OnInit, Inject, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@app/core/services/logger/logger.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -26,7 +25,7 @@ export class PostModalComponent implements OnDestroy, OnInit {
     private logger: LoggerService,
     private matDialog: MatDialog,
     private postStateService: PostStateService,
-    private location: Location
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.postIdSubscription = this.postStateService.postIdEmitted().subscribe(res => {
       if (res) {
@@ -39,8 +38,11 @@ export class PostModalComponent implements OnDestroy, OnInit {
 
     this.postCloseSubscription = this.postStateService.postCloseEmitted().subscribe(res => {
       if (res) {
-        this.createDialogRef.close('close');
-        this.goToPost();
+        /* TODO: FIX IT WITHOUT SET TIME OUT FUNCTION */
+        setTimeout(() => {
+          this.detailDialogRef.close('close');
+          this.goToPost();
+        }, 200);
       }
     });
   }

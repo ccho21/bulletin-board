@@ -22,7 +22,7 @@ import { VerifyEmailComponent } from '../containers/auth/verify-email/verify-ema
 import { SpinnerComponent } from './spinner/spinner.component';
 
 // infinite scrolling
-import { AtomSpinnerModule } from 'angular-epic-spinners';
+import { HalfCircleSpinnerModule } from 'angular-epic-spinners';
 
 
 @NgModule({
@@ -39,7 +39,7 @@ import { AtomSpinnerModule } from 'angular-epic-spinners';
     MatSliderModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    AtomSpinnerModule
+    HalfCircleSpinnerModule
   ],
   declarations: [
     SignUpComponent,
@@ -47,7 +47,6 @@ import { AtomSpinnerModule } from 'angular-epic-spinners';
     VerifyEmailComponent,
     SignInComponent,
     SpinnerComponent,
-
   ],
   entryComponents   : [SignInComponent, SignUpComponent],
   exports           : [SpinnerComponent],
